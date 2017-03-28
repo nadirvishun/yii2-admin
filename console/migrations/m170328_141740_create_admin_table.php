@@ -3,11 +3,11 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `user`.
+ * Handles the creation of table `admin`.
  */
-class m170328_081817_create_user_table extends Migration
+class m170328_141740_create_admin_table extends Migration
 {
-    const TBL_NAME = '{{%user}}';
+    const TBL_NAME = '{{%admin}}';
 
     /**
      * @inheritdoc
@@ -16,7 +16,7 @@ class m170328_081817_create_user_table extends Migration
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
-            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB COMMENT="前台会员表"';
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB COMMENT="后台管理员表"';
         }
 
         $this->createTable(self::TBL_NAME, [
@@ -29,14 +29,12 @@ class m170328_081817_create_user_table extends Migration
             'mobile' => $this->string(20)->notNull()->unique()->comment('手机号'),
             'avatar' => $this->string()->notNull()->comment('用户头像'),
             'sex' => $this->smallInteger(1)->notNull()->comment('用户性别：0未知，1男，2女'),
-            'reg_client_type' => $this->smallInteger(1)->notNull()->comment('注册客户端：1为安卓，2为苹果,3为wap，4为pc'),
             'last_login_ip' => $this->string(20)->notNull()->comment('最近一次登录的IP'),
             'last_login_time' => $this->bigInteger()->unsigned()->notNull()->comment('最近一次登录的时间'),
-            'last_login_client' => $this->smallInteger(1)->unsigned()->notNull()->comment('最近一次登录的客户端类型'),
             'status' => $this->smallInteger()->unsigned()->notNull()->defaultValue(10)->comment('账号状态'),
             'created_at' => $this->bigInteger()->unsigned()->notNull()->comment('创建时间'),
             'updated_at' => $this->bigInteger()->unsigned()->notNull()->comment('更新时间')
-        ], $tableOptions);
+        ],$tableOptions);
     }
 
     /**
