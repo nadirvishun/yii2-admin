@@ -45,6 +45,27 @@ return [
             ],
         ],
         */
+        //翻译
+        'i18n' => [
+            'translations' => [
+                '*' => [
+                    'class' => 'yii\i18n\PhpMessageSource'
+                ],
+            ],
+        ],
+        /**
+         * 后台模板颜色（不需要了，直接用js来修改颜色）
+         * "skin-blue","skin-black","skin-red","skin-yellow","skin-purple","skin-green","skin-blue-light",
+         *"skin-black-light","skin-red-light","skin-yellow-light","skin-purple-light","skin-green-light"
+         */
+//        'assetManager' => [
+//            'bundles' => [
+//                'dmstr\web\AdminLteAsset' => [
+//                    'skin' => 'skin-purple',
+//                ],
+//            ],
+//        ],
+
     ],
     'params' => $params,
 ];

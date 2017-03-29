@@ -52,9 +52,6 @@ class Admin extends ActiveRecord implements IdentityInterface
     /**
      * 场景，区分
      */
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
@@ -79,21 +76,20 @@ class Admin extends ActiveRecord implements IdentityInterface
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'username' => '用户名',
-            'auth_key' => '认证Key',
-            'password_hash' => '密码',
-            'password_hash_repeat' => '确认密码',
-            'password_reset_token' => '密码重置Token',
-            'email' => '邮箱',
-            'mobile' => '手机号',
-            'avatar' => '头像',
-            'sex' => '性别',
-            'last_login_ip' => '最近登录IP',
-            'last_login_time' => '最近登录时间',
-            'status' => '状态',
-            'created_at' => '创建时间',
-            'updated_at' => '更新时间',
+            'id' => Yii::t('admin', 'ID'),
+            'username' => Yii::t('admin', 'Username'),
+            'auth_key' => Yii::t('admin', 'Auth Key'),
+            'password_hash' => Yii::t('admin', 'Password Hash'),
+            'password_reset_token' => Yii::t('admin', 'Password Reset Token'),
+            'email' => Yii::t('admin', 'Email'),
+            'mobile' => Yii::t('admin', 'Mobile'),
+            'avatar' => Yii::t('admin', 'Avatar'),
+            'sex' => Yii::t('admin', 'Sex'),
+            'last_login_ip' => Yii::t('admin', 'Last Login Ip'),
+            'last_login_time' => Yii::t('admin', 'Last Login Time'),
+            'status' => Yii::t('admin', 'Status'),
+            'created_at' => Yii::t('admin', 'Created At'),
+            'updated_at' => Yii::t('admin', 'Updated At'),
         ];
     }
 
