@@ -39,6 +39,7 @@ class InitController extends \yii\console\Controller
             }
             return 1;                                   // 命令行返回1表示有异常
         }
+        echo 'Create successfully!';
         return 0;                                       // 返回0表示一切OK
     }
 }

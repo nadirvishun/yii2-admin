@@ -20,7 +20,7 @@ return [
     'Updated At' => '更新时间',
 
     'Password' => '密码',
-    'Remember Me'=>'记住密码',
+    'Remember Me'=>'记住我',
     'Admin Login'=>'后台登录',
     'forgot password'=>'忘记密码？',
     'Sign in'=>'登录',

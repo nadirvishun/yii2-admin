@@ -20,7 +20,7 @@ $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed201
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="hold-transition skin_blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini">
 <!--下面也没什么必要了，改用js来控制样式-->
 <!--<body class="hold-transition --><? //= \dmstr\helpers\AdminLteHelper::skinClass() ?><!-- sidebar-mini">-->
 <?php $this->beginBody() ?>
