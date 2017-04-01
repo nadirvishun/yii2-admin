@@ -5,17 +5,14 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Admin */
 
-$this->title = Yii::t('admin', 'Update {modelClass}: ', [
-    'modelClass' => 'Admin',
-]) . $model->id;
+$this->title = Yii::t('admin', 'Update Admin');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('admin', 'Admins'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('admin', 'Update');
+$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="admin-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
+<div class="admin-update box box-primary">
+    <div class="box-header with-border">
+        <i class="fa fa-fw fa-anchor"></i><h3 class="box-title"><?=Yii::t('common','content')?></h3>
+    </div>
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>

@@ -47,9 +47,10 @@ class AdminSearch extends Admin
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-             'pagination' => [
-                 'pageSize' => 1,
+            'pagination' => [
+                'pageSize' => 1,
             ],
+             //'sort' => ['attributes' => ['id']],
         ]);
 
         $this->load($params);

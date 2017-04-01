@@ -3,6 +3,7 @@
  * Admin及后台登录语言文件
  */
 return [
+    //admin/model
     'ID' => 'ID',
     'Username' => '用户名',
     'Auth Key' => '认证Key',
@@ -18,10 +19,15 @@ return [
     'Status' => '状态',
     'Created At' => '创建时间',
     'Updated At' => '更新时间',
-
+    //admin/crud
+    'Admins' => '后台管理员',
+    'Create Admin' => '创建新用户',
+    'Update Admin' => '修改用户信息',
+    'View Admin' => '查看用户信息',
+    //login
     'Password' => '密码',
-    'Remember Me'=>'记住我',
-    'Admin Login'=>'后台登录',
-    'forgot password'=>'忘记密码？',
-    'Sign in'=>'登录',
+    'Remember Me' => '记住我',
+    'Admin Login' => '后台登录',
+    'forgot password' => '忘记密码？',
+    'Sign in' => '登录',
 ];

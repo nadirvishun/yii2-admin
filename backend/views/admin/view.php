@@ -6,20 +6,19 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Admin */
 
-$this->title = $model->id;
+$this->title = Yii::t('admin', 'View Admin');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('admin', 'Admins'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="admin-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('admin', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('admin', 'Delete'), ['delete', 'id' => $model->id], [
+        <?= Html::a(Yii::t('common', 'update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('common', 'delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => Yii::t('admin', 'Are you sure you want to delete this item?'),
+                'confirm' => Yii::t('common', 'Are you sure you want to delete this item?'),
                 'method' => 'post',
             ],
         ]) ?>

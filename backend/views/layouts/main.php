@@ -1,24 +1,21 @@
 <?php
+use kartik\dialog\Dialog;
 use yii\helpers\Html;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
-backend\assets\AppAsset::register($this);
 dmstr\web\AdminLteAsset::register($this);
-//修改表格的样式，也可以直接自定义bootstrap样式，然后将全部的bootstrap样式替换掉，这里直接在这里添加了
-$this->registerCss("
-    .kv-merged-header{border-bottom:1px solid #e7ecf1 !important}
-    .table-hover > tbody > tr:hover {background-color: #eef1f5;}
-    .table > thead > tr > th,
-    .table > tbody > tr > th,
-    .table > tfoot > tr > th,
-    .table > thead > tr > td,
-    .table > tbody > tr > td,
-    .table > tfoot > tr > td {
-        border: 1px solid #e7ecf1;
-    }
-");
+backend\assets\AppAsset::register($this);
+
 $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+?>
+<!--引入弹出框小部件-->
+<?= Dialog::widget([
+    'libName' => 'krajeeDialog',
+    'options' => [
+        'draggable' => true,
+    ]
+]);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

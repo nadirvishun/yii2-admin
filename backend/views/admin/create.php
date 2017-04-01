@@ -10,10 +10,10 @@ $this->title = Yii::t('admin', 'Create Admin');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('admin', 'Admins'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="admin-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
+<div class="admin-create box box-success">
+    <div class="box-header with-border">
+        <i class="fa fa-fw fa-anchor"></i><h3 class="box-title"><?=Yii::t('common','content')?></h3>
+    </div>
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
