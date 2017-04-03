@@ -29,7 +29,7 @@ class m170328_081817_create_user_table extends Migration
             'mobile' => $this->string(20)->notNull()->unique()->comment('手机号'),
             'avatar' => $this->string()->notNull()->comment('用户头像'),
             'sex' => $this->smallInteger(1)->notNull()->comment('用户性别：0未知，1男，2女'),
-            'reg_client_type' => $this->smallInteger(1)->notNull()->comment('注册客户端：1为安卓，2为苹果,3为wap，4为pc'),
+            'reg_client_type' => $this->smallInteger(1)->unsigned()->notNull()->comment('注册客户端：1为安卓，2为苹果,3为wap，4为pc'),
             'last_login_ip' => $this->string(20)->notNull()->comment('最近一次登录的IP'),
             'last_login_time' => $this->bigInteger()->unsigned()->notNull()->comment('最近一次登录的时间'),
             'last_login_client' => $this->smallInteger(1)->unsigned()->notNull()->comment('最近一次登录的客户端类型'),

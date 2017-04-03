@@ -20,15 +20,17 @@ class m170328_083427_create_access_token_table extends Migration
         }
 
         $this->createTable(self::TBL_NAME, [
-            'access_token' => $this->string(40)->notNull()->comment('token,主要用于移动端'),
+            'access_token' => $this->string(40)->notNull()->comment('接口token'),
             'user_id' => $this->integer()->unsigned()->notNull()->comment('用户ID'),
-            'expires' => $this->bigInteger()->notNull()->comment('过期时间'),
-            'client_type' => $this->smallInteger(1)->notNull()->comment('客户端类型，1为安卓，2为ios，3为wap'),
-            'device_id' => $this->string()->notNull()->unique()->comment('客户端设备号')
+            'access_expires' => $this->bigInteger()->unsigned()->notNull()->comment('access_token过期时间'),
+            'client_type' => $this->smallInteger(1)->unsigned()->notNull()->comment('客户端类型，1为安卓，2为ios，3为wap'),
+            'refresh_token'=>$this->string(40)->notNull()->comment('刷新token'),
+            'refresh_expires'=>$this->bigInteger()->unsigned()->notNull()->comment('refresh_token过期时间')
         ], $tableOptions);
         //添加主键及索引
         $this->addPrimaryKey('access_token', self::TBL_NAME, 'access_token');
         $this->createIndex('user_id', self::TBL_NAME, 'user_id');
+        $this->createIndex('refresh_token', self::TBL_NAME, 'refresh_token');
     }
 
     /**

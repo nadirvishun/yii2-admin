@@ -5,7 +5,7 @@ use yii\helpers\StringHelper;
 
 /* @var $this yii\web\View */
 /* @var $generator yii\gii\generators\crud\Generator */
-
+//todo,增加treeview
 $urlParams = $generator->generateUrlParams();
 $nameAttribute = $generator->getNameAttribute();
 
@@ -69,14 +69,34 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                 'vAlign' => 'middle',
                 'template' => '{view} {update} {delete}',
                 'buttons' => [
-                    'view' => function ($url, $model) {
-                        return Html::a('<i class="fa fa-fw fa-eye"></i>', ['view', 'id' => $model->id], ['title' => Yii::t('common', 'view'), 'class' => 'btn btn-xs btn-info']);
+                    'view' => function ($url, $model, $key) {
+                        $options=[
+                            'title' => Yii::t('common', 'view'),
+                            'aria-label' => Yii::t('common', 'view'),
+                            'data-pjax' => '0',
+                            'class' => 'btn btn-xs btn-info'
+                        ];
+                        return Html::a('<i class="fa fa-fw fa-eye"></i>', ['view', 'id' => $model->id], $options);
                     },
-                    'update' => function ($url, $model) {
-                        return Html::a('<i class="fa fa-fw fa-edit"></i>', ['update', 'id' => $model->id], ['title' => Yii::t('common', 'update'), 'class' => 'btn btn-xs btn-warning']);
+                    'update' => function ($url, $model, $key) {
+                        $options=[
+                            'title' => Yii::t('common', 'update'),
+                            'aria-label' => Yii::t('common', 'update'),
+                            'data-pjax' => '0',
+                            'class' => 'btn btn-xs btn-warning'
+                        ];
+                        return Html::a('<i class="fa fa-fw fa-pencil"></i>', ['update', 'id' => $model->id], $options);
                     },
-                    'delete' => function ($url, $model) {
-                        return Html::a('<i class="fa fa-fw fa-trash"></i>', ['delete', 'id' => $model->id], ['title' => Yii::t('common', 'delete'), 'class' => 'btn btn-xs btn-danger']);
+                    'delete' => function ($url, $model, $key) {
+                        $options=[
+                            'title' => Yii::t('common', 'delete'),
+                            'aria-label' => Yii::t('common', 'delete'),
+                            'data-pjax' => '0',
+                            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+                            'data-method' => 'post',
+                            'class' => 'btn btn-xs btn-danger'
+                        ];
+                        return Html::a('<i class="fa fa-fw fa-trash"></i>', ['delete', 'id' => $model->id], $options);
                     }
                 ],
             ]
@@ -84,7 +104,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         'panel' => [
             'heading' => false,
             'before' => '<div class="box-header pull-left">
-                    <i class="fa fa-fw fa-gear"></i><h3 class="box-title">' . Yii::t('common', 'manage') . '</h3>
+                    <i class="fa fa-fw fa-sun-o"></i><h3 class="box-title">' . Yii::t('common', 'message_manage') . '</h3>
                 </div>',
             'after' => '<div class="pull-left" style="margin-top: 8px">{summary}</div><div class="kv-panel-pager pull-right">{pager}</div><div class="clearfix"></div>',
             'footer' => false,
@@ -97,8 +117,8 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         'toolbar' => [
             [
                 'content' =>
-                    Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'], ['data-pjax' => 0, 'class' => 'btn btn-success', 'title' => Yii::t('common', 'create')]) . ' ' .
-                    Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('common', 'reset')])
+                    Html::a('<i class="fa fa-plus"></i>', ['create'], ['data-pjax' => 0, 'class' => 'btn btn-success', 'title' => Yii::t('common', 'create')]) . ' ' .
+                    Html::a('<i class="fa fa-repeat"></i>', ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('common', 'reset')])
             ],
             '{toggleData}',
             '{export}'

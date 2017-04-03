@@ -12,10 +12,10 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="admin-create box box-success">
     <div class="box-header with-border">
-        <i class="fa fa-fw fa-anchor"></i><h3 class="box-title"><?=Yii::t('common','content')?></h3>
+        <i class="fa fa-fw fa-plus"></i>
+        <h3 class="box-title"><?= Yii::t('common', 'message_create') ?></h3>
     </div>
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
-
 </div>

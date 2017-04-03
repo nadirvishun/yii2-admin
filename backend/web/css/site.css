@@ -133,6 +133,11 @@ a.desc:after {
 /*恢复input圆角*/
 .form-control{border-radius:4px}
 .box-body{padding: 15px}
+/*面包屑格式*/
+.content-header .backend-breadcrum{
+    float:left;
+    position:static;
+}
 /*用于input的长度管控*/
 .c-xs-1 {
     width: 8.33333%; }

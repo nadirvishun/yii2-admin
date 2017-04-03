@@ -9,9 +9,13 @@ return [
     'delete' => '删除',
     'submit' => '提交',
     'reset' => '重置',
+    'search'=>'搜索',
     'forbidden' => '禁止',
     'batch' => '批量',
-    'content' => '详情信息',
-    'manage' => '管理列表',
-    'Are you sure you want to delete this item?' => '确定删除？'
+    'message_view' => '详情信息',
+    'message_manage' => '管理信息',
+    'message_create'=>'新增信息',
+    'message_update'=>'修改信息',
+    'verifyCode'=>'验证码',
+    'click change verifyCode'=>'点击更换验证码'
 ];

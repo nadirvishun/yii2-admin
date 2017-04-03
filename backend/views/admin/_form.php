@@ -40,7 +40,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'updated_at')->textInput(['maxlength' => true,'class'=>'form-control c-md-5']) ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('common','create') : Yii::t('common','update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('common','create') : Yii::t('common','update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-warning']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
