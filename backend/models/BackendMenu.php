@@ -3,6 +3,8 @@
 namespace backend\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%backend_menu}}".
@@ -22,6 +24,9 @@ use Yii;
  */
 class BackendMenu extends \yii\db\ActiveRecord
 {
+    const STATUS_HIDE = 0;//隐藏
+    const STATUS_VISIBLE = 1;//显示
+
     /**
      * @inheritdoc
      */
@@ -33,13 +38,30 @@ class BackendMenu extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+            BlameableBehavior::className()
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
-            [['pid', 'name', 'url', 'url_param', 'icon', 'sort', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'required'],
-            [['pid', 'status', 'sort', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
+            [['pid', 'name', 'url'], 'required'],
+            ['status', 'default', 'value' => self::STATUS_VISIBLE],
+            ['status', 'in', 'range' => [self::STATUS_VISIBLE, self::STATUS_HIDE]],
+            ['sort', 'default', 'value' => 0],
+            [['pid', 'sort', 'status'], 'integer'],
             [['name', 'url', 'icon'], 'string', 'max' => 64],
-            [['url_param'], 'string', 'max' => 255],
+            ['pid', 'exist', 'targetAttribute' => 'id', 'isEmpty' => function ($value) {
+                return empty($value);
+            }],//父ID有效性,当为0时不验证
+            [['url_param', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'string', 'max' => 255],
         ];
     }
 

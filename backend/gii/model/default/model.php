@@ -19,6 +19,8 @@ echo "<?php\n";
 namespace <?= $generator->ns ?>;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "<?= $generator->generateTableName($tableName) ?>".
@@ -52,6 +54,17 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
         return Yii::$app->get('<?= $generator->db ?>');
     }
 <?php endif; ?>
+
+    /**
+    * @inheritdoc
+    */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+            BlameableBehavior::className()
+        ];
+    }
 
     /**
      * @inheritdoc

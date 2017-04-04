@@ -8,7 +8,7 @@
 echo "<?php\n";
 ?>
 /**
-* 语言文件模板
+* 语言文件
 */
 return [
 <?php foreach ($labels as $name => $label): ?>

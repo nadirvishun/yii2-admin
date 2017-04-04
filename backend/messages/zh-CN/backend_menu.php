@@ -1,18 +1,23 @@
 <?php
 /**
-* 语言文件模板
+* 后台菜单语言文件
 */
 return [
-    'ID' => '请输入中文',
-    'Pid' => '请输入中文',
-    'Name' => '请输入中文',
-    'Url' => '请输入中文',
-    'Url Param' => '请输入中文',
-    'Icon' => '请输入中文',
-    'Status' => '请输入中文',
-    'Sort' => '请输入中文',
-    'Created By' => '请输入中文',
-    'Created At' => '请输入中文',
-    'Updated By' => '请输入中文',
-    'Updated At' => '请输入中文',
+    'ID' => 'ID',
+    'Pid' => '父ID',
+    'Name' => '名称',
+    'Url' => 'Url',
+    'Url Param' => 'Url参数',
+    'Icon' => '图标',
+    'Status' => '状态',
+    'Sort' => '排序',
+    'Created By' => '创建人',
+    'Created At' => '创建时间',
+    'Updated By' => '更新人',
+    'Updated At' => '更新时间',
+
+    'Backend Menus'=>'后台菜单',
+    'Create Backend Menu' => '创建后台菜单',
+    'Update Backend Menu' => '修改后台菜单',
+    'View Backend Menu' => '查看后台菜单',
 ];
