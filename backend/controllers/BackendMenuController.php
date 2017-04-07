@@ -2,9 +2,11 @@
 
 namespace backend\controllers;
 
+use backend\models\TestTree;
 use Yii;
 use backend\models\BackendMenu;
 use backend\models\BackendMenuSearch;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -45,12 +47,20 @@ class BackendMenuController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new BackendMenuSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+//        $searchModel = new BackendMenuSearch();
+//        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+//
+//        return $this->render('index_1', [
+//            'searchModel' => $searchModel,
+//            'dataProvider' => $dataProvider,
+//        ]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => BackendMenu::find(),
+        ]);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+//            'initial' => $initial,
         ]);
     }
 
@@ -129,6 +139,33 @@ class BackendMenuController extends Controller
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * 移动节点
+     * @param $id
+     * @param $target
+     * @param $position
+     */
+    function actionMove($id, $target, $position)
+    {
+        $model = BackendMenu::findOne($id);
+
+        $t = BackendMenu::findOne($target);
+
+        switch ($position) {
+            case 0:
+                $model->insertBefore($t);
+                break;
+
+            case 1:
+                $model->appendTo($t);
+                break;
+
+            case 2:
+                $model->insertAfter($t);
+                break;
         }
     }
 }

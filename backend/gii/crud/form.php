@@ -11,6 +11,7 @@ echo $form->field($generator, 'baseControllerClass');
 echo $form->field($generator, 'indexWidgetType')->dropDownList([
     'grid' => 'GridView',
     'list' => 'ListView',
+    'tree' => 'TreeView',//增加tree
 ]);
 echo $form->field($generator, 'enableI18N')->checkbox();
 echo $form->field($generator, 'enablePjax')->checkbox();

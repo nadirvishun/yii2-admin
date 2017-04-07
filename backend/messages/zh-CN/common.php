@@ -3,6 +3,7 @@
  * 通用语言文件
  */
 return [
+    'Actions'=>'操作',
     'create' => '新建',
     'update' => '更新',
     'view' => '查看',

@@ -13,7 +13,15 @@ echo "<?php\n";
 ?>
 
 use yii\helpers\Html;
-use <?= $generator->indexWidgetType === 'grid' ? "kartik\\grid\\GridView" : "yii\\widgets\\ListView" ?>;
+<?php //修改grid为kartik，增加treegrid ?>
+<?php if ($generator->indexWidgetType === 'grid'): ?>
+use kartik\grid\GridView
+<?php elseif ($generator->indexWidgetType === 'list'): ?>
+use yii\widgets\ListView
+<?php elseif ($generator->indexWidgetType === 'tree'): ?>
+use dkhlystov\widgets\TreeGrid;
+//use leandrogehlen\treegrid\TreeGrid;
+<?php endif; ?>
 <?= $generator->enablePjax ? 'use yii\widgets\Pjax;' : '' ?>
 
 /* @var $this yii\web\View */
@@ -23,17 +31,15 @@ use <?= $generator->indexWidgetType === 'grid' ? "kartik\\grid\\GridView" : "yii
 $this->title = <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-index">
+<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-index grid-view box box-primary">
 
 <?php if(!empty($generator->searchModelClass)): ?>
-<?= "    <?php " . ($generator->indexWidgetType === 'grid' ? "// " : "") ?>echo $this->render('_search', ['model' => $searchModel]); ?>
+<?= "    <?php " . ($generator->indexWidgetType === 'grid' || $generator->indexWidgetType === 'tree' ? "// " : "") ?>echo $this->render('_search', ['model' => $searchModel]); ?>
 <?php endif; ?>
-
 
 <?= $generator->enablePjax ? '<?php Pjax::begin(); ?>' : '' ?>
 <?php if ($generator->indexWidgetType === 'grid'): ?>
     <?= "<?= " ?>GridView::widget([
-        'options' => ['class' => 'grid-view box box-primary'],
         'dataProvider' => $dataProvider,
         'hover' => true,
         <?= !empty($generator->searchModelClass) ? "'filterModel' => \$searchModel,\n        'columns' => [\n" : "'columns' => [\n"; ?>
@@ -66,11 +72,12 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 
             [
                 'class' => '\kartik\grid\ActionColumn',
+                'header' => Yii::t('common', 'Actions'),
                 'vAlign' => 'middle',
                 'template' => '{view} {update} {delete}',
                 'buttons' => [
                     'view' => function ($url, $model, $key) {
-                        $options=[
+                        $options = [
                             'title' => Yii::t('common', 'view'),
                             'aria-label' => Yii::t('common', 'view'),
                             'data-pjax' => '0',
@@ -79,7 +86,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                         return Html::a('<i class="fa fa-fw fa-eye"></i>', ['view', 'id' => $model->id], $options);
                     },
                     'update' => function ($url, $model, $key) {
-                        $options=[
+                        $options = [
                             'title' => Yii::t('common', 'update'),
                             'aria-label' => Yii::t('common', 'update'),
                             'data-pjax' => '0',
@@ -88,7 +95,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                         return Html::a('<i class="fa fa-fw fa-pencil"></i>', ['update', 'id' => $model->id], $options);
                     },
                     'delete' => function ($url, $model, $key) {
-                        $options=[
+                        $options = [
                             'title' => Yii::t('common', 'delete'),
                             'aria-label' => Yii::t('common', 'delete'),
                             'data-pjax' => '0',
@@ -125,7 +132,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         ],
 
     ]); ?>
-<?php else: ?>
+<?php elseif ($generator->indexWidgetType === 'list'): ?>
     <?= "<?= " ?>ListView::widget([
         'dataProvider' => $dataProvider,
         'itemOptions' => ['class' => 'item'],
@@ -133,6 +140,80 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
             return Html::a(Html::encode($model-><?= $nameAttribute ?>), ['view', <?= $urlParams ?>]);
         },
     ]) ?>
+<?php elseif ($generator->indexWidgetType === 'tree'): ?>
+    <div class="box-header with-border">
+        <i class="fa fa-fw fa-sun-o"></i>
+        <h3 class="box-title"><?= "<?= " ?>Yii::t('common', 'message_manage') ?></h3>
+    </div>
+    <?= "<?= " ?>TreeGrid::widget([
+        'tableOptions' => ['class' => 'table table-bordered  table-hover table-striped'],
+        'dataProvider' => $dataProvider,
+        'parentIdAttribute' => 'pid',
+        'showRoots' => true,
+        'lazyLoad' => false,
+//        'moveAction' => ['move'],
+        'columns' => [
+
+<?php
+$count = 0;
+if (($tableSchema = $generator->getTableSchema()) === false) {
+    foreach ($generator->getColumnNames() as $name) {
+        if (++$count < 6) {
+            echo "            '" . $name . "',\n";
+        } else {
+            echo "            // '" . $name . "',\n";
+        }
+    }
+} else {
+    foreach ($tableSchema->columns as $column) {
+        $format = $generator->generateColumnFormat($column);
+        if (++$count < 6) {
+            echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+        } else {
+            echo "            // '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+        }
+    }
+}
+?>
+
+            [
+                'class' => '\yii\grid\ActionColumn',
+                'header' => Yii::t('common', 'Actions'),
+                'template' => '{view} {update} {delete}',
+                'buttons' => [
+                    'view' => function ($url, $model, $key) {
+                        $options = [
+                            'title' => Yii::t('common', 'view'),
+                            'aria-label' => Yii::t('common', 'view'),
+                            'data-pjax' => '0',
+                            'class' => 'btn btn-xs btn-info'
+                        ];
+                        return Html::a('<i class="fa fa-fw fa-eye"></i>', ['view', 'id' => $model->id], $options);
+                    },
+                    'update' => function ($url, $model, $key) {
+                        $options = [
+                            'title' => Yii::t('common', 'update'),
+                            'aria-label' => Yii::t('common', 'update'),
+                            'data-pjax' => '0',
+                            'class' => 'btn btn-xs btn-warning'
+                        ];
+                        return Html::a('<i class="fa fa-fw fa-pencil"></i>', ['update', 'id' => $model->id], $options);
+                    },
+                    'delete' => function ($url, $model, $key) {
+                        $options = [
+                            'title' => Yii::t('common', 'delete'),
+                            'aria-label' => Yii::t('common', 'delete'),
+                            'data-pjax' => '0',
+                            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+                            'data-method' => 'post',
+                            'class' => 'btn btn-xs btn-danger'
+                        ];
+                        return Html::a('<i class="fa fa-fw fa-trash"></i>', ['delete', 'id' => $model->id], $options);
+                    }
+                ]
+            ],
+        ]
+    ]); ?>
 <?php endif; ?>
 <?= $generator->enablePjax ? '<?php Pjax::end(); ?>' : '' ?>
 </div>

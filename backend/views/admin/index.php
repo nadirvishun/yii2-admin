@@ -10,13 +10,11 @@ use kartik\grid\GridView;
 $this->title = Yii::t('admin', 'Admins');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="admin-index">
+<div class="admin-index grid-view box box-primary">
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-
     <?= GridView::widget([
-        'options' => ['class' => 'grid-view box box-primary'],
         'dataProvider' => $dataProvider,
         'hover' => true,
         'filterModel' => $searchModel,
@@ -31,8 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
 //            'auth_key',
 //            'password_hash',
 //            'password_reset_token',
-             'email:email',
-             'mobile',
+            'email:email',
+            'mobile',
             // 'avatar',
             // 'sex',
             // 'last_login_ip',
@@ -43,11 +41,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'class' => '\kartik\grid\ActionColumn',
+                'header' => Yii::t('common', 'Actions'),
                 'vAlign' => 'middle',
                 'template' => '{view} {update} {delete}',
                 'buttons' => [
                     'view' => function ($url, $model, $key) {
-                        $options=[
+                        $options = [
                             'title' => Yii::t('common', 'view'),
                             'aria-label' => Yii::t('common', 'view'),
                             'data-pjax' => '0',
@@ -56,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         return Html::a('<i class="fa fa-fw fa-eye"></i>', ['view', 'id' => $model->id], $options);
                     },
                     'update' => function ($url, $model, $key) {
-                        $options=[
+                        $options = [
                             'title' => Yii::t('common', 'update'),
                             'aria-label' => Yii::t('common', 'update'),
                             'data-pjax' => '0',
@@ -65,7 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         return Html::a('<i class="fa fa-fw fa-pencil"></i>', ['update', 'id' => $model->id], $options);
                     },
                     'delete' => function ($url, $model, $key) {
-                        $options=[
+                        $options = [
                             'title' => Yii::t('common', 'delete'),
                             'aria-label' => Yii::t('common', 'delete'),
                             'data-pjax' => '0',
