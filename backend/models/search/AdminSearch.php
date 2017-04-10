@@ -1,16 +1,16 @@
 <?php
 
-namespace backend\models;
+namespace backend\models\search;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\models\BackendMenu;
+use backend\models\Admin;
 
 /**
- * BackendMenuSearch represents the model behind the search form about `backend\models\BackendMenu`.
+ * AdminSearch represents the model behind the search form about `backend\models\Admin`.
  */
-class BackendMenuSearch extends BackendMenu
+class AdminSearch extends Admin
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class BackendMenuSearch extends BackendMenu
     public function rules()
     {
         return [
-            [['id', 'pid', 'status', 'sort', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
-            [['name', 'url', 'url_param', 'icon'], 'safe'],
+            [['id', 'sex', 'last_login_time', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['username', 'auth_key', 'password_hash', 'password_reset_token', 'email', 'mobile', 'avatar', 'last_login_ip'], 'safe'],
         ];
     }
 
@@ -41,13 +41,12 @@ class BackendMenuSearch extends BackendMenu
      */
     public function search($params)
     {
-        $query = BackendMenu::find();
+        $query = Admin::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' =>false
            // 'pagination' => [
            //     'pageSize' => 20,
             //],
@@ -65,19 +64,21 @@ class BackendMenuSearch extends BackendMenu
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'pid' => $this->pid,
+            'sex' => $this->sex,
+            'last_login_time' => $this->last_login_time,
             'status' => $this->status,
-            'sort' => $this->sort,
-            'created_by' => $this->created_by,
             'created_at' => $this->created_at,
-            'updated_by' => $this->updated_by,
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'url', $this->url])
-            ->andFilterWhere(['like', 'url_param', $this->url_param])
-            ->andFilterWhere(['like', 'icon', $this->icon]);
+        $query->andFilterWhere(['like', 'username', $this->username])
+            ->andFilterWhere(['like', 'auth_key', $this->auth_key])
+            ->andFilterWhere(['like', 'password_hash', $this->password_hash])
+            ->andFilterWhere(['like', 'password_reset_token', $this->password_reset_token])
+            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'mobile', $this->mobile])
+            ->andFilterWhere(['like', 'avatar', $this->avatar])
+            ->andFilterWhere(['like', 'last_login_ip', $this->last_login_ip]);
 
         return $dataProvider;
     }

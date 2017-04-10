@@ -5,8 +5,9 @@ use dkhlystov\widgets\TreeGrid;
 //use leandrogehlen\treegrid\TreeGrid;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\models\BackendMenuSearch */
+/* @var $searchModel backend\models\search\BackendMenuSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $initial backend\controllers\BackendMenuController*/
 
 $this->title = Yii::t('backend_menu', 'Backend Menus');
 $this->params['breadcrumbs'][] = $this->title;
@@ -16,16 +17,26 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <div class="box-header with-border">
-        <i class="fa fa-fw fa-sun-o"></i>
-        <h3 class="box-title"><?= Yii::t('common', 'message_manage') ?></h3>
+        <div class="box-header pull-left">
+            <i class="fa fa-fw fa-sun-o"></i>
+            <h3 class="box-title"><?= Yii::t('common', 'message_manage') ?></h3>
+        </div>
+        <div class="btn-group pull-right">
+            <?= Html::a('<i class="fa fa-plus"></i>', ['create'], ['data-pjax' => 0, 'class' => 'btn btn-success', 'title' => Yii::t('common', 'create')]) . ' ' .
+            Html::a('<i class="fa fa-repeat"></i>', ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('common', 'reset')])?>
+        </div>
     </div>
-    <?= TreeGrid::widget([
+    <?=
+    TreeGrid::widget([
+        'rowOptions'=>['class'=>'expanded'],//默认展开
         'tableOptions' => ['class' => 'table table-bordered  table-hover table-striped'],
         'dataProvider' => $dataProvider,
         'parentIdAttribute' => 'pid',
         'showRoots' => true,
         'lazyLoad' => false,
-//        'moveAction' => ['move'],
+        'emptyTextOptions'=>['class'=>'empty p-10'],
+        'initialNode'=>$initial,
+        'moveAction' => ['move'],
         'columns' => [
 
             'id',
@@ -44,16 +55,16 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => '\yii\grid\ActionColumn',
                 'header' => Yii::t('common', 'Actions'),
-                'template' => '{view} {update} {delete}',
+                'template' => '{create} {update} {delete}',
                 'buttons' => [
-                    'view' => function ($url, $model, $key) {
+                    'create' => function ($url, $model, $key) {
                         $options = [
-                            'title' => Yii::t('common', 'view'),
-                            'aria-label' => Yii::t('common', 'view'),
+                            'title' => Yii::t('common', 'create_sub'),
+                            'aria-label' => Yii::t('common', 'create_sub'),
                             'data-pjax' => '0',
-                            'class' => 'btn btn-xs btn-info'
+                            'class' => 'btn btn-xs btn-success'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-eye"></i>', ['view', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-plus"></i>', ['create', 'pid' => $model->id], $options);
                     },
                     'update' => function ($url, $model, $key) {
                         $options = [

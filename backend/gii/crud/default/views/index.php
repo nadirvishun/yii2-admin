@@ -142,11 +142,19 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     ]) ?>
 <?php elseif ($generator->indexWidgetType === 'tree'): ?>
     <div class="box-header with-border">
-        <i class="fa fa-fw fa-sun-o"></i>
-        <h3 class="box-title"><?= "<?= " ?>Yii::t('common', 'message_manage') ?></h3>
+        <div class="box-header pull-left">
+            <i class="fa fa-fw fa-sun-o"></i>
+            <h3 class="box-title"><?= "<?= " ?>Yii::t('common', 'message_manage') ?></h3>
+        </div>
+        <div class="btn-group pull-right">
+            <?= "<?=" ?> Html::a('<i class="fa fa-plus"></i>', ['create'], ['data-pjax' => 0, 'class' => 'btn btn-success', 'title' => Yii::t('common', 'create')]) . ' ' .
+            Html::a('<i class="fa fa-repeat"></i>', ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('common', 'reset')])?>
+        </div>
     </div>
     <?= "<?= " ?>TreeGrid::widget([
         'tableOptions' => ['class' => 'table table-bordered  table-hover table-striped'],
+        'rowOptions'=>['class'=>'expanded'],
+        'emptyTextOptions'=>['class'=>'empty p-10'],
         'dataProvider' => $dataProvider,
         'parentIdAttribute' => 'pid',
         'showRoots' => true,
@@ -179,16 +187,16 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
             [
                 'class' => '\yii\grid\ActionColumn',
                 'header' => Yii::t('common', 'Actions'),
-                'template' => '{view} {update} {delete}',
+                'template' => '{create} {update} {delete}',
                 'buttons' => [
-                    'view' => function ($url, $model, $key) {
+                    'create' => function ($url, $model, $key) {
                         $options = [
-                            'title' => Yii::t('common', 'view'),
-                            'aria-label' => Yii::t('common', 'view'),
+                            'title' => Yii::t('common', 'create_sub'),
+                            'aria-label' => Yii::t('common', 'create_sub'),
                             'data-pjax' => '0',
-                            'class' => 'btn btn-xs btn-info'
+                            'class' => 'btn btn-xs btn-success'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-eye"></i>', ['view', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-plus"></i>', ['create', 'pid' => $model->id], $options);
                     },
                     'update' => function ($url, $model, $key) {
                         $options = [

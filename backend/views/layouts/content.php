@@ -32,7 +32,7 @@ use dmstr\widgets\Alert;
     </section>
 
     <section class="content">
-        <?= Alert::widget() ?>
+        <?= \common\widgets\Popup::widget() ?>
         <?= $content ?>
     </section>
 </div>

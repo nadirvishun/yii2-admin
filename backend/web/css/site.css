@@ -138,6 +138,8 @@ a.desc:after {
     float:left;
     position:static;
 }
+/*treegrid*/
+.p-10{padding:10px}
 /*用于input的长度管控*/
 .c-xs-1 {
     width: 8.33333%; }

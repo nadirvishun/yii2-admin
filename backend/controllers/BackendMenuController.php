@@ -2,10 +2,9 @@
 
 namespace backend\controllers;
 
-use backend\models\TestTree;
 use Yii;
 use backend\models\BackendMenu;
-use backend\models\BackendMenuSearch;
+use backend\models\search\BackendMenuSearch;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -45,7 +44,7 @@ class BackendMenuController extends Controller
      * Lists all BackendMenu models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($id = null)
     {
 //        $searchModel = new BackendMenuSearch();
 //        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -57,10 +56,10 @@ class BackendMenuController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => BackendMenu::find(),
         ]);
-
+        $initial = BackendMenu::findOne($id);
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-//            'initial' => $initial,
+            'initial' => $initial,
         ]);
     }
 
@@ -83,14 +82,25 @@ class BackendMenuController extends Controller
      */
     public function actionCreate()
     {
+        //如果仅仅是建下级，需要传递父级的id
+        $pid = Yii::$app->request->get('pid');
+        if ($pid !== null) {
+            $pid = intval($pid);
+            //判断pid是否存在
+            $info = BackendMenu::findOne(['pid' => $pid]);
+            if (empty($info)) {
+                $session = Yii::$app->session;
+                $session->setFlash('error', Yii::t('yii', Yii::t('common', 'Invalid Parameter')));
+                return $this->redirect(['index']);
+            }
+            $data = ['pid' => $pid];//额外传递过去
+        }
         $model = new BackendMenu();
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            $data['model'] = $model;
+            return $this->render('create', $data);
         }
     }
 
