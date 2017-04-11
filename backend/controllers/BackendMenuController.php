@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\components\Tree;
 use Yii;
 use backend\models\BackendMenu;
 use backend\models\search\BackendMenuSearch;
@@ -81,6 +82,11 @@ class BackendMenuController extends BaseController
      */
     public function actionCreate($pid = null)
     {
+        $list=BackendMenu::find()
+            ->asArray()
+            ->all();
+        $tree=Tree::getTreeOptions2($list,1);
+        print_r($tree);exit;
         //如果仅仅是建下级，需要传递父级的id
         if ($pid !== null) {
             //判断pid是否存在
@@ -88,8 +94,6 @@ class BackendMenuController extends BaseController
             $data = ['pid' => $pid];//额外传递过去
         }
         $model = new BackendMenu();
-        $list=$model->getBackendMenuOptions();
-        print_r($list);exit;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {//如果是post传递保存
             return $this->redirectSuccess(['index'], Yii::t('common', 'Create Success'));
         } else {//如果是展示页面

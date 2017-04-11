@@ -86,27 +86,4 @@ class BackendMenu extends \yii\db\ActiveRecord
             'updated_at' => Yii::t('backend_menu', 'Updated At'),
         ];
     }
-
-    public function getBackendMenuOptions($pid = 0)
-    {
-        $list = static::find()
-            ->select(['id','name'])
-            ->where(['pid' => $pid])
-            ->asArray()
-            ->all();
-        if (!empty($list)) {
-            foreach ($list as $key => $value) {
-                $options[$value['id']] = $value['name'];
-                $optionsTmp = $this->getBackendMenuOptions($value['id']);
-                if (!empty($optionsTmp)) {
-                    $options = ArrayHelper::merge($options, $optionsTmp);
-                }
-            }
-        }
-        if (!empty($options)) {
-            return $options;
-        } else {
-            return [];
-        }
-    }
 }
