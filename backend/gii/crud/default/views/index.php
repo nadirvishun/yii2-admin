@@ -15,9 +15,9 @@ echo "<?php\n";
 use yii\helpers\Html;
 <?php //修改grid为kartik，增加treegrid ?>
 <?php if ($generator->indexWidgetType === 'grid'): ?>
-use kartik\grid\GridView
+use kartik\grid\GridView;
 <?php elseif ($generator->indexWidgetType === 'list'): ?>
-use yii\widgets\ListView
+use yii\widgets\ListView;
 <?php elseif ($generator->indexWidgetType === 'tree'): ?>
 use dkhlystov\widgets\TreeGrid;
 //use leandrogehlen\treegrid\TreeGrid;

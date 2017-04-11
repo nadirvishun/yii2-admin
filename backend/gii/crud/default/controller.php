@@ -117,7 +117,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $model = new <?= $modelClass ?>();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', <?= $urlParams ?>]);
+            //return $this->redirect(['view', <?= $urlParams ?>]);
+            return $this->redirectSuccess(['index'], Yii::t('common', 'Create Success'));
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -136,7 +137,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $model = $this->findModel(<?= $actionParams ?>);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', <?= $urlParams ?>]);
+            //return $this->redirect(['view', <?= $urlParams ?>]);
+            return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -154,7 +156,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         $this->findModel(<?= $actionParams ?>)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirectSuccess(['index'], Yii::t('common', 'Delete Success'));
     }
 
     /**
@@ -180,7 +182,7 @@ if (count($pks) === 1) {
         if (($model = <?= $modelClass ?>::findOne(<?= $condition ?>)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException(Yii::t('common', 'The requested page does not exist.'));
         }
     }
 }

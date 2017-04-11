@@ -6,7 +6,6 @@ use Yii;
 use backend\models\BackendMenu;
 use backend\models\search\BackendMenuSearch;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -14,7 +13,7 @@ use yii\filters\AccessControl;
 /**
  * BackendMenuController implements the CRUD actions for BackendMenu model.
  */
-class BackendMenuController extends Controller
+class BackendMenuController extends BaseController
 {
     /**
      * @inheritdoc
@@ -80,25 +79,20 @@ class BackendMenuController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($pid = null)
     {
         //如果仅仅是建下级，需要传递父级的id
-        $pid = Yii::$app->request->get('pid');
         if ($pid !== null) {
-            $pid = intval($pid);
             //判断pid是否存在
-            $info = BackendMenu::findOne(['pid' => $pid]);
-            if (empty($info)) {
-                $session = Yii::$app->session;
-                $session->setFlash('error', Yii::t('yii', Yii::t('common', 'Invalid Parameter')));
-                return $this->redirect(['index']);
-            }
+            $this->findModel($pid);
             $data = ['pid' => $pid];//额外传递过去
         }
         $model = new BackendMenu();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
+        $list=$model->getBackendMenuOptions();
+        print_r($list);exit;
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {//如果是post传递保存
+            return $this->redirectSuccess(['index'], Yii::t('common', 'Create Success'));
+        } else {//如果是展示页面
             $data['model'] = $model;
             return $this->render('create', $data);
         }
@@ -115,7 +109,7 @@ class BackendMenuController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -132,8 +126,7 @@ class BackendMenuController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        return $this->redirectSuccess(['index'], Yii::t('common', 'Delete Success'));
     }
 
     /**
@@ -148,7 +141,7 @@ class BackendMenuController extends Controller
         if (($model = BackendMenu::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException(Yii::t('common','The requested page does not exist.'));
         }
     }
 

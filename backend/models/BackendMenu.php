@@ -5,6 +5,7 @@ namespace backend\models;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%backend_menu}}".
@@ -84,5 +85,28 @@ class BackendMenu extends \yii\db\ActiveRecord
             'updated_by' => Yii::t('backend_menu', 'Updated By'),
             'updated_at' => Yii::t('backend_menu', 'Updated At'),
         ];
+    }
+
+    public function getBackendMenuOptions($pid = 0)
+    {
+        $list = static::find()
+            ->select(['id','name'])
+            ->where(['pid' => $pid])
+            ->asArray()
+            ->all();
+        if (!empty($list)) {
+            foreach ($list as $key => $value) {
+                $options[$value['id']] = $value['name'];
+                $optionsTmp = $this->getBackendMenuOptions($value['id']);
+                if (!empty($optionsTmp)) {
+                    $options = ArrayHelper::merge($options, $optionsTmp);
+                }
+            }
+        }
+        if (!empty($options)) {
+            return $options;
+        } else {
+            return [];
+        }
     }
 }

@@ -5,7 +5,7 @@ namespace backend\controllers;
 use Yii;
 use backend\models\Admin;
 use backend\models\search\AdminSearch;
-use yii\web\Controller;
+use backend\controllers\BaseController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -13,7 +13,7 @@ use yii\filters\AccessControl;
 /**
  * AdminController implements the CRUD actions for Admin model.
  */
-class AdminController extends Controller
+class AdminController extends BaseController
 {
     /**
      * @inheritdoc
@@ -76,7 +76,8 @@ class AdminController extends Controller
         $model = new Admin();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            //return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirectSuccess(['index'], Yii::t('common', 'Create Success'));
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -95,7 +96,8 @@ class AdminController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            //return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -113,7 +115,7 @@ class AdminController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirectSuccess(['index'], Yii::t('common', 'Delete Success'));
     }
 
     /**
@@ -128,7 +130,7 @@ class AdminController extends Controller
         if (($model = Admin::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException(Yii::t('common', 'The requested page does not exist.'));
         }
     }
 }
