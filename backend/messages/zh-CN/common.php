@@ -27,10 +27,13 @@ return [
     'Update Success' => '修改成功',
     'Delete Success' => '删除成功',
     //错误页面
-    'homePage'=>'首页',
-    'previousPage'=>'上一页',
+    'homePage' => '首页',
+    'previousPage' => '上一页',
     'The requested page does not exist.' => '请求的页面不存在',
     'The above error occurred while the Web server was processing your request.' => '服务器处理您的请求时得到上述错误',
     'Please contact us if you think this is a server error. Thank you.' => '如果您认为是服务器错误，请联系我们，谢谢',
     'Meanwhile, you may click {homePage} return to home page or click {previousPage} return to previous page.' => '您可以点击返回{homePage}，或者点击返回{previousPage}',
+
+    'Please Select...' => '请选择...',
+    'Unknown' => '未知',
 ];

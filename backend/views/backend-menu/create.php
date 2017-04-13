@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <h3 class="box-title"><?= Yii::t('common', 'message_create') ?></h3>
     </div>
     <?= $this->render('_form', [
-        'model' => $model,
+        'model'=>$model,
+        'treeOptions'=>$treeOptions
     ]) ?>
 </div>

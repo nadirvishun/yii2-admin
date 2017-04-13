@@ -23,7 +23,7 @@ class m170328_083427_create_access_token_table extends Migration
             'access_token' => $this->string(40)->notNull()->comment('接口token'),
             'user_id' => $this->integer()->unsigned()->notNull()->comment('用户ID'),
             'access_expires' => $this->bigInteger()->unsigned()->notNull()->comment('access_token过期时间'),
-            'client_type' => $this->smallInteger(1)->unsigned()->notNull()->comment('客户端类型，1为安卓，2为ios，3为wap'),
+            'client_type' => $this->boolean()->unsigned()->notNull()->comment('客户端类型，1为安卓，2为ios，3为wap'),
             'refresh_token'=>$this->string(40)->notNull()->comment('刷新token'),
             'refresh_expires'=>$this->bigInteger()->unsigned()->notNull()->comment('refresh_token过期时间')
         ], $tableOptions);

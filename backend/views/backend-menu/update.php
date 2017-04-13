@@ -16,5 +16,6 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <?= $this->render('_form', [
         'model' => $model,
+        'treeOptions' => $treeOptions
     ]) ?>
 </div>

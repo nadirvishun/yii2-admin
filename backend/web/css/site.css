@@ -140,6 +140,10 @@ a.desc:after {
 }
 /*treegrid*/
 .p-10{padding:10px}
+/*kv-select2与adminlte之间的冲突，以kv为准*/
+.select2-container .select2-selection--single .select2-selection__rendered {
+    margin-top: 0;
+}
 /*用于input的长度管控*/
 .c-xs-1 {
     width: 8.33333%; }

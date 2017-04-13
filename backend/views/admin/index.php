@@ -1,5 +1,7 @@
 <?php
 
+use backend\models\Admin;
+use kartik\widgets\Select2;
 use yii\helpers\Html;
 use kartik\grid\GridView;
 
@@ -35,7 +37,21 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'sex',
             // 'last_login_ip',
             // 'last_login_time',
-            // 'status',
+            [
+                'class' => '\kartik\grid\DataColumn',
+                'attribute' => 'status',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filterWidgetOptions' => [
+                    'data' => Admin::getStatusOptions(),
+                    'options' => [
+                        'prompt' => Yii::t('common', 'Please Select...'),
+                    ],
+                ],
+                'value' => function ($model, $key, $index, $column) {
+                    return Admin::getStatusOptions($model->status);
+                }
+            ],
+
             // 'created_at',
             // 'updated_at',
 

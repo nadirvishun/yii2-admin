@@ -7,6 +7,7 @@ use Yii;
 use backend\models\BackendMenu;
 use backend\models\search\BackendMenuSearch;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -82,22 +83,25 @@ class BackendMenuController extends BaseController
      */
     public function actionCreate($pid = null)
     {
-        $list=BackendMenu::find()
-            ->asArray()
-            ->all();
-        $tree=Tree::getTreeOptions2($list,1);
-        print_r($tree);exit;
-        //如果仅仅是建下级，需要传递父级的id
-        if ($pid !== null) {
-            //判断pid是否存在
-            $this->findModel($pid);
-            $data = ['pid' => $pid];//额外传递过去
-        }
         $model = new BackendMenu();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {//如果是post传递保存
             return $this->redirectSuccess(['index'], Yii::t('common', 'Create Success'));
         } else {//如果是展示页面
+            //获取默认状态
+            $model->loadDefaultValues();
+            //如果仅仅是建下级，需要传递父级的id
+            if ($pid !== null) {
+                //判断pid是否存在
+                $this->findModel($pid);
+                $model->pid = $pid;
+            }
             $data['model'] = $model;
+            $list = BackendMenu::find()
+                ->asArray()
+                ->all();
+            $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];
+            $data['treeOptions'] = ArrayHelper::merge($rootOption, Tree::getTreeOptions($list));
+
             return $this->render('create', $data);
         }
     }
@@ -115,8 +119,15 @@ class BackendMenuController extends BaseController
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
         } else {
+            //显示树下拉菜单
+            $list = BackendMenu::find()
+                ->asArray()
+                ->all();
+            $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];
+            $treeOptions = ArrayHelper::merge($rootOption, Tree::getTreeOptions2($list));
             return $this->render('update', [
                 'model' => $model,
+                'treeOptions' => $treeOptions
             ]);
         }
     }
@@ -145,7 +156,7 @@ class BackendMenuController extends BaseController
         if (($model = BackendMenu::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException(Yii::t('common','The requested page does not exist.'));
+            throw new NotFoundHttpException(Yii::t('common', 'The requested page does not exist.'));
         }
     }
 

@@ -26,8 +26,8 @@ use yii\helpers\ArrayHelper;
  */
 class Admin extends ActiveRecord implements IdentityInterface
 {
-    const STATUS_DELETED = 0;//账户禁止
-    const STATUS_ACTIVE = 10;//账户正常
+    const STATUS_FORBID = 0;//账户禁止
+    const STATUS_ACTIVE = 1;//账户正常
     const SEX_UNKNOW = 0;//性别未知
     const SEX_MAN = 1;//性别男
     const SEX_WOMAN = 2;//性别女
@@ -49,6 +49,7 @@ class Admin extends ActiveRecord implements IdentityInterface
             TimestampBehavior::className(),
         ];
     }
+
     /**
      * 场景，区分
      */
@@ -56,7 +57,7 @@ class Admin extends ActiveRecord implements IdentityInterface
     {
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_FORBID]],
             // ['password_hash','compare'],//debug，需要测试
             [['username'], 'match', 'pattern' => '/^[a-z]\w*$/i'],
             [['created_at', 'updated_at', 'last_login_time'], 'integer'],
@@ -223,30 +224,15 @@ class Admin extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     *  Get chinese status
+     *  获取下拉菜单列表或者某一名称
      */
-    public static function getZhStatus($status = false)
+    public static function getStatusOptions($status = false)
     {
         $status_array = [
-            '' => '请选择',
-            self::STATUS_DELETED => '禁止',
-            self::STATUS_ACTIVE => '正常'
+            self::STATUS_FORBID => Yii::t('admin', 'Forbid'),
+            self::STATUS_ACTIVE => Yii::t('admin', 'Active')
         ];
-        return $status == false ? $status_array : ArrayHelper::getValue($status_array, $status, '未知');
+        return $status == false ? $status_array : ArrayHelper::getValue($status_array, $status, Yii::t('common','Unknown'));
     }
 
-    /**
-     * @param bool $insert
-     * @return bool
-     */
-    public function beforeSave($insert)
-    {
-        if ($this->isNewRecord) {
-            $this->generateAuthKey();
-        }
-//        if (!empty($this->password)) {
-//            $this->setPassword($this->password);
-//        }
-        return parent::beforeSave($insert);
-    }
 }

@@ -19,6 +19,8 @@ return [
     'Status' => '状态',
     'Created At' => '创建时间',
     'Updated At' => '更新时间',
+    'Forbid'=>'禁止',
+    'Active'=>'正常',
     //admin/crud
     'Admins' => '后台管理员',
     'Create Admin' => '创建新用户',

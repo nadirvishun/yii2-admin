@@ -15,9 +15,13 @@ return [
     'Created At' => '创建时间',
     'Updated By' => '更新人',
     'Updated At' => '更新时间',
+    'Hide'=>'隐藏',
+    'Visible'=>'显示',
 
     'Backend Menus'=>'后台菜单',
     'Create Backend Menu' => '创建后台菜单',
     'Update Backend Menu' => '修改后台菜单',
     'View Backend Menu' => '查看后台菜单',
+
+    'Root Tree'=>'顶级菜单'
 ];

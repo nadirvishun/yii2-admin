@@ -101,7 +101,7 @@ class Popup extends \yii\base\Widget
                     // 如果是成功，需要增加3s后自动关闭，其余警告等则不需要
                     if ($type == 'success') {
                         $view->registerJs("
-                            setTimeout(function(){ dialogShow.close() }, 3000);
+                            setTimeout(function(){ dialogShow.close() }, 2000);
                         ");
                     }
                 }

@@ -23,7 +23,8 @@
         "kartik-v/yii2-date-range": "*",
         "crazydb/yii2-ueditor": "*",
         "leandrogehlen/yii2-treegrid": "*",
-        "dkhlystov/yii2-treegrid": "*"
+        "dkhlystov/yii2-treegrid": "*",
+        "kartik-v/yii2-widgets": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

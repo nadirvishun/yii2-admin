@@ -15,32 +15,33 @@ use yii\widgets\ActiveForm;
         'options' => ['class' => 'box-body']
     ]); ?>
 
-    <?= $form->field($model, 'username')->textInput(['maxlength' => true,'class'=>'form-control c-md-5']) ?>
+    <?= $form->field($model, 'username', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'auth_key')->textInput(['maxlength' => true,'class'=>'form-control c-md-5']) ?>
+    <?= $form->field($model, 'auth_key', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'password_hash')->textInput(['maxlength' => true,'class'=>'form-control c-md-5']) ?>
+    <?= $form->field($model, 'password_hash', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'password_reset_token')->textInput(['maxlength' => true,'class'=>'form-control c-md-5']) ?>
+    <?= $form->field($model, 'password_reset_token', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'email')->textInput(['maxlength' => true,'class'=>'form-control c-md-5']) ?>
+    <?= $form->field($model, 'email', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'mobile')->textInput(['maxlength' => true,'class'=>'form-control c-md-5']) ?>
+    <?= $form->field($model, 'mobile', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'sex')->textInput(['class'=>'form-control c-md-5']) ?>
+    <?= $form->field($model, 'sex', ['options' => ['class' => 'form-group c-md-5']])->textInput() ?>
 
-    <?= $form->field($model, 'last_login_ip')->textInput(['maxlength' => true,'class'=>'form-control c-md-5']) ?>
+    <?= $form->field($model, 'last_login_ip', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'last_login_time')->textInput(['maxlength' => true,'class'=>'form-control c-md-5']) ?>
+    <?= $form->field($model, 'last_login_time', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'status')->textInput(['class'=>'form-control c-md-5']) ?>
+    <?= $form->field($model, 'status', ['options' => ['class' => 'form-group c-md-5']])->textInput() ?>
 
-    <?= $form->field($model, 'created_at')->textInput(['maxlength' => true,'class'=>'form-control c-md-5']) ?>
+    <?= $form->field($model, 'created_at', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'updated_at')->textInput(['maxlength' => true,'class'=>'form-control c-md-5']) ?>
+    <?= $form->field($model, 'updated_at', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('common','create') : Yii::t('common','update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-warning']) ?>
+
     </div>
 
     <?php ActiveForm::end(); ?>

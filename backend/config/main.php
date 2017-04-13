@@ -45,6 +45,10 @@ return [
             ],
         ],
         */
+        //缓存
+        'cache' => [
+            'class' => 'yii\caching\FileCache',//文件缓存
+        ],
         //翻译
         'i18n' => [
             'translations' => [
@@ -63,6 +67,10 @@ return [
 //                'dmstr\web\AdminLteAsset' => [
 //                    'skin' => 'skin-purple',
 //                ],
+//            ],
+//            //谷歌字体库，如果想修改的话可以在这里重新定位新的css文件，目前没有必要
+//            'assetMap' => [
+//                'AdminLTE.min.css' => '@web/css/AdminLTE.min.css',
 //            ],
 //        ],
 

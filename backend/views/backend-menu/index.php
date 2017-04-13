@@ -1,13 +1,16 @@
 <?php
 
+use backend\models\BackendMenu;
+use dmstr\widgets\Menu;
 use yii\helpers\Html;
 use dkhlystov\widgets\TreeGrid;
+
 //use leandrogehlen\treegrid\TreeGrid;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\search\BackendMenuSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-/* @var $initial backend\controllers\BackendMenuController*/
+/* @var $initial backend\controllers\BackendMenuController */
 
 $this->title = Yii::t('backend_menu', 'Backend Menus');
 $this->params['breadcrumbs'][] = $this->title;
@@ -23,30 +26,46 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="btn-group pull-right">
             <?= Html::a('<i class="fa fa-plus"></i>', ['create'], ['data-pjax' => 0, 'class' => 'btn btn-success', 'title' => Yii::t('common', 'create')]) . ' ' .
-            Html::a('<i class="fa fa-repeat"></i>', ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('common', 'reset')])?>
+            Html::a('<i class="fa fa-repeat"></i>', ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('common', 'reset')]) ?>
         </div>
     </div>
     <?=
     TreeGrid::widget([
-        'rowOptions'=>['class'=>'expanded'],//默认展开
+        'rowOptions' => ['class' => 'expanded'],//默认展开
         'tableOptions' => ['class' => 'table table-bordered  table-hover table-striped'],
         'dataProvider' => $dataProvider,
         'parentIdAttribute' => 'pid',
         'showRoots' => true,
         'lazyLoad' => false,
-        'emptyTextOptions'=>['class'=>'empty p-10'],
-        'initialNode'=>$initial,
+        'emptyTextOptions' => ['class' => 'empty p-10'],
+        'initialNode' => $initial,
         'moveAction' => ['move'],
         'columns' => [
-
+            'name',
             'id',
             'pid',
-            'name',
-            'url:url',
-            'url_param:url',
-            // 'icon',
-            // 'status',
-            // 'sort',
+            [
+                'attribute' => 'url',
+                'value' => function ($model, $key, $index, $column) {
+                    return Html::a($model->url,BackendMenu::mergeUrl($model->url,$model->url_param),['target'=>'_blank']);
+                },
+                'format'=>'raw'
+            ],
+            'url_param',
+            [
+                'attribute' => 'icon',
+                'value' => function ($model, $key, $index, $column) {
+                    return "<i class='".Menu::$iconClassPrefix.$model->icon."'></i>&nbsp;&nbsp;".$model->icon;
+                },
+                'format'=>'raw'
+            ],
+            [
+                'attribute' => 'status',
+                'value' => function ($model, $key, $index, $column) {
+                    return BackendMenu::getStatusOptions($model->status);
+                }
+            ],
+            'sort',
             // 'created_by',
             // 'created_at',
             // 'updated_by',

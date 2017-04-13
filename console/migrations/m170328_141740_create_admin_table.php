@@ -28,10 +28,10 @@ class m170328_141740_create_admin_table extends Migration
             'email' => $this->string()->notNull()->unique()->comment('邮箱'),
             'mobile' => $this->string(20)->notNull()->unique()->comment('手机号'),
             'avatar' => $this->string()->notNull()->comment('用户头像'),
-            'sex' => $this->smallInteger(1)->notNull()->comment('用户性别：0未知，1男，2女'),
+            'sex' => $this->boolean()->notNull()->comment('用户性别：0未知，1男，2女'),
             'last_login_ip' => $this->string(20)->notNull()->comment('最近一次登录的IP'),
             'last_login_time' => $this->bigInteger()->unsigned()->notNull()->comment('最近一次登录的时间'),
-            'status' => $this->smallInteger()->unsigned()->notNull()->defaultValue(10)->comment('账号状态'),
+            'status' => $this->boolean()->unsigned()->notNull()->defaultValue(1)->comment('账号状态'),
             'created_at' => $this->bigInteger()->unsigned()->notNull()->comment('创建时间'),
             'updated_at' => $this->bigInteger()->unsigned()->notNull()->comment('更新时间')
         ],$tableOptions);

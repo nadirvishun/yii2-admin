@@ -79,9 +79,9 @@ class Generator extends \yii\gii\generators\crud\Generator
                 return "\$form->field(\$model, '$attribute')->dropDownList("
                 . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)) . ", ['prompt' => ''])";
             } elseif ($column->phpType !== 'string' || $column->size === null) {
-                return "\$form->field(\$model, '$attribute')->$input()";
+                return "\$form->field(\$model, '$attribute', ['options' => ['class' => 'form-group c-md-5']])->$input()";
             } else {
-                return "\$form->field(\$model, '$attribute')->$input(['maxlength' => true,'class'=>'form-control c-md-5'])";
+                return "\$form->field(\$model, '$attribute', ['options' => ['class' => 'form-group c-md-5']])->$input(['maxlength' => true])";
             }
         }
     }
