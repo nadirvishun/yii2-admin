@@ -116,20 +116,27 @@ class BackendMenuController extends BaseController
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
-        } else {
-            //显示树下拉菜单
-            $list = BackendMenu::find()
-                ->asArray()
-                ->all();
-            $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];
-            $treeOptions = ArrayHelper::merge($rootOption, Tree::getTreeOptions2($list));
-            return $this->render('update', [
-                'model' => $model,
-                'treeOptions' => $treeOptions
-            ]);
+        if ($model->load(Yii::$app->request->post())) {
+            //单独验证下选择父ID不能为自身或其下级节点
+            $childIds = BackendMenu::getChildIds($model->id);
+            if (in_array($model->pid, $childIds)) {
+                $model->addError('pid', Yii::t('backend_menu', 'Parent ID can not be itself or its subordinate node'));
+            }
+            if (!$model->hasErrors() && $model->save()) {//hasErrors必须放在前面，因为save()时调用validate方法会清空错误
+                return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
+            }
         }
+        //显示树下拉菜单
+        $list = BackendMenu::find()
+            ->asArray()
+            ->all();
+        $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];
+        $treeOptions = ArrayHelper::merge($rootOption, Tree::getTreeOptions($list));
+        return $this->render('update', [
+            'model' => $model,
+            'treeOptions' => $treeOptions
+        ]);
+
     }
 
     /**

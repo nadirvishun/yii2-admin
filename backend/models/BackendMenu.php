@@ -87,6 +87,61 @@ class BackendMenu extends \yii\db\ActiveRecord
         ];
     }
 
+
+    /**
+     * 用while获取下级所有节点
+     * @param integer|array $ids
+     * @param bool $self 是否需要包含自身，默认包含
+     * @return array
+     */
+    public static function getChildIds($ids, $self = true)
+    {
+        if (!is_array($ids)) {
+            $ids = explode(',', $ids);
+        }
+        if ($self) {
+            $childIds = $ids;
+        } else {
+            $childIds = [];
+        }
+        while (!empty($ids)) {
+            $ids = static::find()
+                ->select('id')
+                ->where(['in', 'pid', $ids])
+                ->asArray()
+                ->column();
+            $childIds = array_merge($childIds, $ids);
+        }
+        return $childIds;
+    }
+
+    /**
+     * 另一种递归获取下级所有的节点
+     * @param integer|array $id
+     * @return array
+     */
+    public static function getChildIds2($ids, $self = true)
+    {
+        if (!is_array($ids)) {
+            $ids = explode(',', $ids);
+        }
+        if ($self == true) {
+            $selfId = $ids;
+        }
+        $childIds = static::find()
+            ->select('id')
+            ->where(['in', 'pid', $ids])
+            ->asArray()
+            ->column();
+        if (!empty($childIds)) {
+            $tmpIds = static::getChildIds2($childIds, false);//递归时设置$self为false，不再重复计算
+            $childIds = isset($selfId) ? array_merge($selfId, $childIds, $tmpIds) : array_merge($childIds, $tmpIds);
+        } else {
+            return isset($selfId) ? $selfId : [];
+        }
+        return $childIds;
+    }
+
     /**
      * 左侧菜单显示
      * 按照dmstr\widgets\Menu所要求格式组装
