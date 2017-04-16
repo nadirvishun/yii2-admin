@@ -346,16 +346,16 @@
         },
         {
             "name": "bower-asset/treegrid",
-            "version": "v0.1.5",
+            "version": "v0.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dkhlystov/jquery-treegrid.git",
-                "reference": "5227395b7a2de6e1692b53f9a9ddcb144194f0af"
+                "reference": "91853bf8b8fe8c2c618c01fc962e15a7c92b4a5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dkhlystov/jquery-treegrid/zipball/5227395b7a2de6e1692b53f9a9ddcb144194f0af",
-                "reference": "5227395b7a2de6e1692b53f9a9ddcb144194f0af",
+                "url": "https://api.github.com/repos/dkhlystov/jquery-treegrid/zipball/91853bf8b8fe8c2c618c01fc962e15a7c92b4a5a",
+                "reference": "91853bf8b8fe8c2c618c01fc962e15a7c92b4a5a",
                 "shasum": ""
             },
             "require": {
@@ -561,16 +561,16 @@
         },
         {
             "name": "dkhlystov/yii2-treegrid",
-            "version": "v0.1.5",
+            "version": "v0.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dkhlystov/yii2-treegrid.git",
-                "reference": "b4bd9a789ee1175081319fdd7499329682bf6725"
+                "reference": "54f891f785b8e3506e796014f39586aecf587ed3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/dkhlystov/yii2-treegrid/b4bd9a789ee1175081319fdd7499329682bf6725.zip",
-                "reference": "b4bd9a789ee1175081319fdd7499329682bf6725",
+                "url": "https://files.phpcomposer.com/files/dkhlystov/yii2-treegrid/54f891f785b8e3506e796014f39586aecf587ed3.zip",
+                "reference": "54f891f785b8e3506e796014f39586aecf587ed3",
                 "shasum": ""
             },
             "require": {
@@ -601,7 +601,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2016-12-23T18:34:39+00:00"
+            "time": "2017-04-13T04:34:20+00:00"
         },
         {
             "name": "dmstr/yii2-adminlte-asset",
@@ -1732,16 +1732,16 @@
         },
         {
             "name": "kartik-v/yii2-widget-select2",
-            "version": "v2.0.8",
+            "version": "v2.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-widget-select2.git",
-                "reference": "4d03239c1e28ef8d3b96ab7fe360f5cbda34fb69"
+                "reference": "03f202e9e2415f4c84e93a64074d85677fd0cc51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/kartik-v/yii2-widget-select2/4d03239c1e28ef8d3b96ab7fe360f5cbda34fb69.zip",
-                "reference": "4d03239c1e28ef8d3b96ab7fe360f5cbda34fb69",
+                "url": "https://files.phpcomposer.com/files/kartik-v/yii2-widget-select2/03f202e9e2415f4c84e93a64074d85677fd0cc51.zip",
+                "reference": "03f202e9e2415f4c84e93a64074d85677fd0cc51",
                 "shasum": ""
             },
             "require": {
@@ -1781,7 +1781,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2016-02-17T11:49:30+00:00"
+            "time": "2017-04-12T09:00:24+00:00"
         },
         {
             "name": "kartik-v/yii2-widget-sidenav",

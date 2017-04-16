@@ -9,6 +9,7 @@ namespace backend\gii\model;
 
 use Yii;
 use yii\gii\CodeFile;
+use yii\helpers\Inflector;
 
 
 /**
@@ -57,11 +58,11 @@ class Generator extends \yii\gii\generators\model\Generator
                 );
             }
 
-            //生成i18n的语言文件
+            //增加生成i18n的语言文件
             if ($this->enableI18N) {//如果勾选
-                //需要labels参数
+                //从注释中作为要翻译的语言
                 $params = [
-                    'labels' => $this->generateLabels($tableSchema),
+                    'messages' => $this->generateCommentMessage($tableSchema),
                 ];
                 //生成的文件路径及名称、跳转模板
                 $files[] = new CodeFile(
@@ -72,5 +73,33 @@ class Generator extends \yii\gii\generators\model\Generator
         }
 
         return $files;
+    }
+
+    /**
+     * 对于生成语言文件来说，都优先从注释中获取对应的翻译名称
+     * @param $table
+     * @return array
+     */
+    public function generateCommentMessage($table)
+    {
+        $message = [];
+        foreach ($table->columns as $column) {
+            //键与i18n自动生成的一致
+            if (!strcasecmp($column->name, 'id')) {
+                $key = 'ID';
+            } else {
+                $key = Inflector::camel2words($column->name);
+                if (!empty($key) && substr_compare($key, ' id', -3, 3, true) === 0) {
+                    $key = substr($key, 0, -3) . ' ID';
+                }
+            }
+            //值从注释中获取
+            if (!empty($column->comment)) {
+                $message[$key] = $column->comment;
+            } else {//如果没有注释，则为空
+                $message[$key] = '';
+            }
+        }
+        return $message;
     }
 }

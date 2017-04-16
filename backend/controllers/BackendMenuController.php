@@ -99,8 +99,10 @@ class BackendMenuController extends BaseController
             $list = BackendMenu::find()
                 ->asArray()
                 ->all();
+            //创建树实例
+            $tree = new Tree();
             $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];
-            $data['treeOptions'] = ArrayHelper::merge($rootOption, Tree::getTreeOptions($list));
+            $data['treeOptions'] = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
 
             return $this->render('create', $data);
         }
@@ -130,8 +132,10 @@ class BackendMenuController extends BaseController
         $list = BackendMenu::find()
             ->asArray()
             ->all();
+        //创建树实例
+        $tree = new Tree();
         $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];
-        $treeOptions = ArrayHelper::merge($rootOption, Tree::getTreeOptions($list));
+        $treeOptions = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
         return $this->render('update', [
             'model' => $model,
             'treeOptions' => $treeOptions
