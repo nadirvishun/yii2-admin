@@ -36,4 +36,6 @@ return [
 
     'Please Select...' => '请选择...',
     'Unknown' => '未知',
+    'Search...'=>'检索...',
+    'Online'=>'在线',
 ];

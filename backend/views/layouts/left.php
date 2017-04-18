@@ -8,17 +8,21 @@
                 <img src="<?= $directoryAsset ?>/img/user2-160x160.jpg" class="img-circle" alt="User Image"/>
             </div>
             <div class="pull-left info">
-                <p><?=Yii::$app->user->identity->username?></p>
-                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                <p><?= Yii::$app->user->identity->username ?></p>
+                <a href="#"><i class="fa fa-circle text-success"></i> <?= Yii::t('common', 'Online') ?></a>
             </div>
         </div>
 
         <!-- search form -->
-        <form action="#" method="get" class="sidebar-form">
+        <form action="<?= Yii::$app->request->getUrl() ?>" method="post" class="sidebar-form">
             <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Search..."/>
-              <span class="input-group-btn">
-                <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i>
+                <input type="text" name="backend-menu-search" class="form-control"
+                       value="<?= $this->context->backMenuSearch ?>"
+                       placeholder="<?= Yii::t('common', 'Search...') ?>"/>
+                <input name="_csrf-backend" type="hidden" id="_csrf-backend"
+                       value="<?= Yii::$app->request->csrfToken ?>">
+                <span class="input-group-btn">
+                <button type='submit' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i>
                 </button>
               </span>
             </div>
@@ -28,7 +32,7 @@
         <?= dmstr\widgets\Menu::widget(
             [
                 'options' => ['class' => 'sidebar-menu'],
-                'items' =>\backend\models\BackendMenu::getMenus()
+                'items' => \backend\models\BackendMenu::getMenus($this->context->backMenuSearch)
 //                    [
 //                    ['label' => 'Menu Yii2', 'options' => ['class' => 'header']],
 //                    ['label' => 'Gii', 'icon' => 'fa fa-file-code-o', 'url' => ['/gii']],
