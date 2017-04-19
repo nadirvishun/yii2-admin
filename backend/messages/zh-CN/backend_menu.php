@@ -24,7 +24,10 @@ return [
     'View Backend Menu' => '查看后台菜单',
 
     'Root Tree' => '顶级菜单',
-
     'Parent ID can not be itself or its subordinate node' => '父ID不能是自身或其下级节点',
+    'like "index/index"' => '例如："index/index',
+    'like "id=1&pid=2"' => '例如："id=1&pid=2"',
+    'support font awesome icon' => '支持font awesome 图标 ',
+
 
 ];

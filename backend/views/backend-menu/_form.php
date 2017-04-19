@@ -28,8 +28,14 @@ use yii\widgets\ActiveForm;
         ],
     ]) ?>
     <?= $form->field($model, 'name', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'url', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'url_param', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'url', ['options' => ['class' => 'form-group c-md-5']])
+        ->textInput(['maxlength' => true])
+        ->hint(Yii::t('backend_menu','like "index/index"'))
+    ?>
+    <?= $form->field($model, 'url_param', ['options' => ['class' => 'form-group c-md-5']])
+        ->textInput(['maxlength' => true])
+        ->hint(Yii::t('backend_menu','like "id=1&pid=2"'))
+    ?>
     <?= $form->field($model, 'icon', ['options' => ['class' => 'form-group c-md-5']])
         ->textInput(['maxlength' => true])
         ->hint(Yii::t('backend_menu','support font awesome icon'));

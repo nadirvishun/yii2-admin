@@ -32,5 +32,9 @@ return [
     'Admin Login' => '后台登录',
     'forgot password' => '忘记密码？',
     'Sign in' => '登录',
-    'Incorrect username or password.'=>'错误的用户名或密码'
+    'Incorrect username or password.'=>'错误的用户名或密码',
+    //header
+    'Profile'=>'编辑资料',
+    'Sign out'=>'登出'
+
 ];
