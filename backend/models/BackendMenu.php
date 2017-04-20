@@ -62,7 +62,8 @@ class BackendMenu extends \yii\db\ActiveRecord
             ['pid', 'exist', 'targetAttribute' => 'id', 'isEmpty' => function ($value) {
                 return empty($value);
             }],//父ID有效性,当为0时不验证
-            [['url_param', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'string', 'max' => 255],
+            [['url_param'], 'string', 'max' => 255],
+            [['created_by', 'created_at', 'updated_by', 'updated_at'], 'safe']
         ];
     }
 
@@ -222,6 +223,8 @@ class BackendMenu extends \yii\db\ActiveRecord
 
     /**
      *  获取下拉菜单列表或者某一名称
+     * @param bool $status
+     * @return array|mixed
      */
     public static function getStatusOptions($status = false)
     {
@@ -230,7 +233,7 @@ class BackendMenu extends \yii\db\ActiveRecord
             self::STATUS_HIDE => Yii::t('backend_menu', 'Hide'),
             self::STATUS_VISIBLE => Yii::t('backend_menu', 'Visible')
         ];
-        return $status == false ? $status_array : ArrayHelper::getValue($status_array, $status, Yii::t('common', 'Unknown'));
+        return $status === false ? $status_array : ArrayHelper::getValue($status_array, $status, Yii::t('common', 'Unknown'));
     }
 
 }

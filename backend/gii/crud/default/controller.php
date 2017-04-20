@@ -120,6 +120,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
             //return $this->redirect(['view', <?= $urlParams ?>]);
             return $this->redirectSuccess(['index'], Yii::t('common', 'Create Success'));
         } else {
+            $model->loadDefaultValues();
             return $this->render('create', [
                 'model' => $model,
             ]);

@@ -69,10 +69,10 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-           // 'pagination' => [
-           //     'pageSize' => 20,
+            //'pagination' => [
+                //'pageSize' => 20,
             //],
-             //'sort' => ['attributes' => ['id']],
+            //'sort' => ['defaultOrder' => ['id' => SORT_DESC]]
         ]);
 
         $this->load($params);
