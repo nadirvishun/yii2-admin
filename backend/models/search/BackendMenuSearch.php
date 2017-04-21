@@ -50,7 +50,7 @@ class BackendMenuSearch extends BackendMenu
            // 'pagination' => [
            //     'pageSize' => 20,
             //],
-             //'sort' => ['attributes' => ['id']],
+            //'sort' =>  ['defaultOrder' => ['id' => SORT_DESC]]
         ]);
 
         $this->load($params);

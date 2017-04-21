@@ -52,6 +52,7 @@ class Admin extends ActiveRecord implements IdentityInterface
 
     /**
      * 场景，区分
+     * 注意修改时可能会影响console中的初始化后台用户功能
      */
     public function rules()
     {
@@ -63,9 +64,10 @@ class Admin extends ActiveRecord implements IdentityInterface
             [['created_at', 'updated_at', 'last_login_time'], 'integer'],
             [['username', 'password_hash'], 'required'],
             [['username'], 'unique'],
-            [['email', 'mobile'], 'unique'],
             ['email', 'email'],
+            ['email', 'unique'],
             ['mobile', 'match', 'pattern' => '^1(3|4|5|7|8)[0-9]\d{8}$'],
+            ['mobile', 'unique'],
             ['sex', 'in', 'range' => [self::SEX_UNKNOW, self::SEX_MAN, self::SEX_WOMAN]],
             [['auth_key', 'last_login_ip', 'password_reset_token'], 'safe']
         ];
@@ -225,6 +227,8 @@ class Admin extends ActiveRecord implements IdentityInterface
 
     /**
      *  获取下拉菜单列表或者某一名称
+     * @param bool $status
+     * @return array|mixed
      */
     public static function getStatusOptions($status = false)
     {
@@ -232,7 +236,7 @@ class Admin extends ActiveRecord implements IdentityInterface
             self::STATUS_FORBID => Yii::t('admin', 'Forbid'),
             self::STATUS_ACTIVE => Yii::t('admin', 'Active')
         ];
-        return $status == false ? $status_array : ArrayHelper::getValue($status_array, $status, Yii::t('common','Unknown'));
+        return $status === false ? $status_array : ArrayHelper::getValue($status_array, $status, Yii::t('common', 'Unknown'));
     }
 
 }
