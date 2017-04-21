@@ -37,10 +37,13 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= "    <?php " . ($generator->indexWidgetType === 'grid' || $generator->indexWidgetType === 'tree' ? "// " : "") ?>echo $this->render('_search', ['model' => $searchModel]); ?>
 <?php endif; ?>
 
-<?= $generator->enablePjax ? '<?php Pjax::begin(); ?>' : '' ?>
+<?= $generator->enablePjax && $generator->indexWidgetType !== 'grid' ? '<?php Pjax::begin(); ?>' : '' ?>
 <?php if ($generator->indexWidgetType === 'grid'): ?>
     <?= "<?= " ?>GridView::widget([
         'dataProvider' => $dataProvider,
+<?php if($generator->enablePjax): ?>
+        'pjax' => true,
+<?php endif; ?>
         'hover' => true,
         <?= !empty($generator->searchModelClass) ? "'filterModel' => \$searchModel,\n        'columns' => [\n" : "'columns' => [\n"; ?>
             [
@@ -223,5 +226,5 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         ]
     ]); ?>
 <?php endif; ?>
-<?= $generator->enablePjax ? '<?php Pjax::end(); ?>' : '' ?>
+<?= $generator->enablePjax && $generator->indexWidgetType !== 'grid' ? '<?php Pjax::end(); ?>' : '' ?>
 </div>

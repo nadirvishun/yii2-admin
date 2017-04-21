@@ -33,6 +33,12 @@ class m170402_093152_create_backend_menu_table extends Migration
             'updated_by' => $this->integer()->unsigned()->notNull()->comment('更新人'),
             'updated_at' => $this->bigInteger()->unsigned()->notNull()->comment('更新时间')
         ], $tableOptions);
+        //增加后台菜单的初始显示
+        $time = time();
+        $this->batchInsert(self::TBL_NAME, ['pid', 'name', 'url', 'icon', 'sort', 'created_by', 'created_at', 'updated_by', 'updated_at'], [
+            [0, '控制面板', '/', 'dashboard', 0, 1, $time, 1, $time],
+            [1, '后台菜单', 'backend-menu/index', 'tree', 5, 1, $time, 1, $time]
+        ]);
     }
 
     /**
