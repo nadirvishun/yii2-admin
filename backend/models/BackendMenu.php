@@ -59,12 +59,26 @@ class BackendMenu extends \yii\db\ActiveRecord
             ['sort', 'default', 'value' => 0],
             [['pid', 'sort', 'status'], 'integer'],
             [['name', 'url', 'icon'], 'string', 'max' => 64],
+            //父ID有效性,当为0时不验证
             ['pid', 'exist', 'targetAttribute' => 'id', 'isEmpty' => function ($value) {
                 return empty($value);
-            }],//父ID有效性,当为0时不验证
+            }],
+            //当更新时，父ID不能为自身或其下级节点
+            ['pid', 'validatePid', 'on' => 'update'],
             [['url_param'], 'string', 'max' => 255],
             [['created_by', 'created_at', 'updated_by', 'updated_at'], 'safe']
         ];
+    }
+
+    /**
+     * 更新时验证选择的pid不能为本身及其下级节点
+     */
+    public function validatePid()
+    {
+        $childIds = static::getChildIds($this->id);
+        if (in_array($this->pid, $childIds)) {
+            $this->addError('pid', Yii::t('backend_menu', 'Parent ID can not be itself or its subordinate node'));
+        }
     }
 
     /**
@@ -118,7 +132,8 @@ class BackendMenu extends \yii\db\ActiveRecord
 
     /**
      * 另一种递归获取下级所有的节点
-     * @param integer|array $id
+     * @param $ids
+     * @param bool $self
      * @return array
      */
     public static function getChildIds2($ids, $self = true)
@@ -223,17 +238,17 @@ class BackendMenu extends \yii\db\ActiveRecord
 
     /**
      *  获取下拉菜单列表或者某一名称
-     * @param bool $status
+     * @param bool $key
      * @return array|mixed
      */
-    public static function getStatusOptions($status = false)
+    public static function getStatusOptions($key = false)
     {
-        $status_array = [
+        $arr = [
             '' => Yii::t('common', 'Please Select...'),
             self::STATUS_HIDE => Yii::t('backend_menu', 'Hide'),
             self::STATUS_VISIBLE => Yii::t('backend_menu', 'Visible')
         ];
-        return $status === false ? $status_array : ArrayHelper::getValue($status_array, $status, Yii::t('common', 'Unknown'));
+        return $key === false ? $arr : ArrayHelper::getValue($arr, $key, Yii::t('common', 'Unknown'));
     }
 
 }

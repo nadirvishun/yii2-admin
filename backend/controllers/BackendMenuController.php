@@ -43,6 +43,7 @@ class BackendMenuController extends BaseController
 
     /**
      * Lists all BackendMenu models.
+     * @param null | integer $id
      * @return mixed
      */
     public function actionIndex($id = null)
@@ -79,6 +80,7 @@ class BackendMenuController extends BaseController
     /**
      * Creates a new BackendMenu model.
      * If creation is successful, the browser will be redirected to the 'view' page.
+     * @param null|integer $pid
      * @return mixed
      */
     public function actionCreate($pid = null)
@@ -103,7 +105,6 @@ class BackendMenuController extends BaseController
             $tree = new Tree();
             $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];
             $data['treeOptions'] = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
-
             return $this->render('create', $data);
         }
     }
@@ -117,30 +118,23 @@ class BackendMenuController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post())) {
-            //单独验证下选择父ID不能为自身或其下级节点
-            $childIds = BackendMenu::getChildIds($model->id);
-            if (in_array($model->pid, $childIds)) {
-                $model->addError('pid', Yii::t('backend_menu', 'Parent ID can not be itself or its subordinate node'));
-            }
-            if (!$model->hasErrors() && $model->save()) {//hasErrors必须放在前面，因为save()时调用validate方法会清空错误
-                return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
-            }
+        $model->scenario = 'update';
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
+        } else {
+            //显示树下拉菜单
+            $list = BackendMenu::find()
+                ->asArray()
+                ->all();
+            //创建树实例
+            $tree = new Tree();
+            $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];
+            $treeOptions = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
+            return $this->render('update', [
+                'model' => $model,
+                'treeOptions' => $treeOptions
+            ]);
         }
-        //显示树下拉菜单
-        $list = BackendMenu::find()
-            ->asArray()
-            ->all();
-        //创建树实例
-        $tree = new Tree();
-        $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];
-        $treeOptions = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
-        return $this->render('update', [
-            'model' => $model,
-            'treeOptions' => $treeOptions
-        ]);
-
     }
 
     /**

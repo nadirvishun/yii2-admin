@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'name',
             'id',
-            'pid',
+//            'pid',
             [
                 'attribute' => 'url',
                 'value' => function ($model, $key, $index, $column) {

@@ -227,16 +227,16 @@ class Admin extends ActiveRecord implements IdentityInterface
 
     /**
      *  获取下拉菜单列表或者某一名称
-     * @param bool $status
+     * @param bool $key
      * @return array|mixed
      */
-    public static function getStatusOptions($status = false)
+    public static function getStatusOptions($key = false)
     {
-        $status_array = [
+        $arr = [
             self::STATUS_FORBID => Yii::t('admin', 'Forbid'),
             self::STATUS_ACTIVE => Yii::t('admin', 'Active')
         ];
-        return $status === false ? $status_array : ArrayHelper::getValue($status_array, $status, Yii::t('common', 'Unknown'));
+        return $key === false ? $arr : ArrayHelper::getValue($arr, $key, Yii::t('common', 'Unknown'));
     }
 
 }

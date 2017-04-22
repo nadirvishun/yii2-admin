@@ -4,7 +4,7 @@
  */
 return [
     'ID' => 'ID',
-    'Pid' => '父ID',
+    'Pid' => '上级菜单',
     'Name' => '名称',
     'Url' => 'Url',
     'Url Param' => 'Url参数',

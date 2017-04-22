@@ -4,6 +4,7 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\BackendMenu */
+/* @var $treeOptions backend\controllers\BackendMenuController*/
 
 $this->title = Yii::t('backend_menu', 'Update Backend Menu');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('backend_menu', 'Backend Menus'), 'url' => ['index']];

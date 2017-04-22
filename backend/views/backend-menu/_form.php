@@ -8,6 +8,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model backend\models\BackendMenu */
 /* @var $form yii\widgets\ActiveForm */
+/* @var $treeOptions backend\controllers\BackendMenuController*/
 ?>
 
 <div class="backend-menu-form">
