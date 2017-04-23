@@ -21,18 +21,27 @@ $this->params['breadcrumbs'][] = $this->title;
             'attributes' => [
                 'id',
                 'username',
-                'auth_key',
-                'password_hash',
-                'password_reset_token',
+//                'auth_key',
+//                'password_hash',
+//                'password_reset_token',
                 'email:email',
                 'mobile',
-                'avatar',
-                'sex',
+//                'avatar',
+                [
+                    'label' => $model->getAttributeLabel('sex'),
+                    'value' => \backend\models\Admin::getSexOptions($model->sex)
+                ],
                 'last_login_ip',
-                'last_login_time',
-                'status',
-                'created_at',
-                'updated_at',
+                [
+                    'label' => $model->getAttributeLabel('last_login_time'),
+                    'value' => $model->last_login_time ? Yii::$app->formatter->asDatetime($model->last_login_time) : Yii::t('common', 'Unknown')
+                ],
+                [
+                    'label' => $model->getAttributeLabel('status'),
+                    'value' => \backend\models\Admin::getStatusOptions($model->status)
+                ],
+                'created_at:datetime',
+                'updated_at:datetime',
             ],
         ]) ?>
         <p style="margin-top:10px">

@@ -30,10 +30,19 @@ class AdminController extends BaseController
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
+                    //目前没有rbac，暂时设定只有admin账号才能修改或删除所有后台管理员的信息
+                    [
+                        'actions' => ['update', 'delete'],
+                        'allow' => false,
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->username != 'admin';
+                        }
+                    ],
                     [
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+
                 ],
             ],
         ];
@@ -67,20 +76,21 @@ class AdminController extends BaseController
     }
 
     /**
-     * Creates a new Admin model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
+     * 新建管理员
      * @return mixed
      */
     public function actionCreate()
     {
         $model = new Admin();
-
+        $model->scenario = 'create';
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //return $this->redirect(['view', 'id' => $model->id]);
             return $this->redirectSuccess(['index'], Yii::t('common', 'Create Success'));
         } else {
+            $model->loadDefaultValues();
+            $act = 'create';
             return $this->render('create', [
                 'model' => $model,
+                'act' => $act
             ]);
         }
     }
@@ -94,15 +104,50 @@ class AdminController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $model->scenario = 'update';
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //return $this->redirect(['view', 'id' => $model->id]);
             return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
         } else {
+            //将密码字段清空
+            $model->password_hash = '';
+            $act = 'update';
             return $this->render('update', [
                 'model' => $model,
+                'act' => $act
             ]);
         }
+    }
+
+    /**
+     * 修改自身
+     * @return string|\yii\web\Response
+     */
+    public function actionModify()
+    {
+        //获取管理员自身的id
+        $id = Yii::$app->user->id;
+        $model = $this->findModel($id);
+        $model->scenario = 'modify';
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            //如果传递过来的密码为空,则不更新密码
+            if (empty($model->password_hash)) {
+                unset($model->password_hash);
+            } else {//否则重新加密后的密码写入
+                $model->setPassword($model->password_hash);
+            }
+            //必须在上面先validate，然后save必须为false，否则由于密码被加密后导致确认密码不一致
+            if ($model->save(false)) {
+                return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
+            }
+        }
+        //将密码字段清空
+        $model->password_hash = '';
+        $act = 'modify';
+        return $this->render('update', [
+            'model' => $model,
+            'act' => $act
+        ]);
+
     }
 
     /**
@@ -113,6 +158,10 @@ class AdminController extends BaseController
      */
     public function actionDelete($id)
     {
+        //删除时需要判定不能删除自身
+        if ($id == Yii::$app->user->id) {
+            return $this->redirectError(['index'], Yii::t('admin', 'Can not delete self'));
+        }
         $this->findModel($id)->delete();
 
         return $this->redirectSuccess(['index'], Yii::t('common', 'Delete Success'));

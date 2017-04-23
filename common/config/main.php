@@ -11,8 +11,25 @@ return [
         ]
     ],
     'components' => [
+        //翻译
+        'i18n' => [
+            'translations' => [
+                '*' => [
+                    'class' => 'yii\i18n\PhpMessageSource'
+                ],
+            ],
+        ],
+        //缓存，暂用文件缓存
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        //相关格式默认值,否则默认英文类的格式，调用Yii::$app->formatter->asDateTime()等函数时还需要设置第二个参数
+        'formatter' => [
+            'dateFormat' => 'yyyy-MM-dd',
+            'datetimeFormat' => 'yyyy-MM-dd HH:mm:ss',
+            'decimalSeparator' => ',',
+            'thousandSeparator' => '',
+            'currencyCode' => 'CNY',
+        ]
     ],
 ];
