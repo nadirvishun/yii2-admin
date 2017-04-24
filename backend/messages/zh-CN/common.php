@@ -7,6 +7,7 @@ return [
     'create' => '新建',
     'create_sub' => '新建下级',
     'update' => '更新',
+    'save' => '保存',
     'view' => '查看',
     'delete' => '删除',
     'submit' => '提交',
@@ -36,6 +37,8 @@ return [
 
     'Please Select...' => '请选择...',
     'Unknown' => '未知',
-    'Search...'=>'检索...',
-    'Online'=>'在线',
+    'Search...' => '检索...',
+    'Online' => '在线',
+    'Hide' => '隐藏',
+    'Visible' => '显示',
 ];

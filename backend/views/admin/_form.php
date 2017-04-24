@@ -26,7 +26,10 @@ use yii\widgets\ActiveForm;
             ->passwordInput(['maxlength' => true]);
         if ($act == 'modify') {//如果是修改自身，需要加提示
             echo $input->hint('不填写则不更改密码');
-        } ?>
+        } else {
+            echo $input;
+        }
+        ?>
         <?= $form->field($model, 'passwordRepeat', ['options' => ['class' => 'form-group c-md-5']])->passwordInput(['maxlength' => true]) ?>
     <?php endif; ?>
 

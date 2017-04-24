@@ -43,7 +43,6 @@ class BackendMenuController extends BaseController
 
     /**
      * Lists all BackendMenu models.
-     * @param null | integer $id
      * @return mixed
      */
     public function actionIndex($id = null)
@@ -55,8 +54,10 @@ class BackendMenuController extends BaseController
 //            'searchModel' => $searchModel,
 //            'dataProvider' => $dataProvider,
 //        ]);
+        //todo,目前此widget不支持sort，后续可能改进
         $dataProvider = new ActiveDataProvider([
-            'query' => BackendMenu::find(),
+            'query' => BackendMenu::find()->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]),
+//            'sort' => ['defaultOrder' => ['sort' => SORT_ASC, 'id' => SORT_ASC]]
         ]);
         $initial = BackendMenu::findOne($id);
         return $this->render('index', [
@@ -70,17 +71,17 @@ class BackendMenuController extends BaseController
      * @param string $id
      * @return mixed
      */
-    public function actionView($id)
+    /*public function actionView($id)
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
-    }
+    }*/
 
     /**
      * Creates a new BackendMenu model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @param null|integer $pid
+     * @param null | integer $pid
      * @return mixed
      */
     public function actionCreate($pid = null)
@@ -105,6 +106,7 @@ class BackendMenuController extends BaseController
             $tree = new Tree();
             $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];
             $data['treeOptions'] = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
+
             return $this->render('create', $data);
         }
     }
@@ -171,24 +173,24 @@ class BackendMenuController extends BaseController
      * @param $target
      * @param $position
      */
-    function actionMove($id, $target, $position)
-    {
-        $model = BackendMenu::findOne($id);
+    /*  function actionMove($id, $target, $position)
+      {
+          $model = BackendMenu::findOne($id);
 
-        $t = BackendMenu::findOne($target);
+          $t = BackendMenu::findOne($target);
 
-        switch ($position) {
-            case 0:
-                $model->insertBefore($t);
-                break;
+          switch ($position) {
+              case 0:
+                  $model->insertBefore($t);
+                  break;
 
-            case 1:
-                $model->appendTo($t);
-                break;
+              case 1:
+                  $model->appendTo($t);
+                  break;
 
-            case 2:
-                $model->insertAfter($t);
-                break;
-        }
-    }
+              case 2:
+                  $model->insertAfter($t);
+                  break;
+          }
+      }*/
 }
