@@ -6,8 +6,9 @@
  * 经测试第一种方法要快很多，建议使用
  * @author   vishun <nadirvishun@gmail.com>
  */
-
 namespace common\components;
+
+use yii\helpers\ArrayHelper;
 
 /**
  * 获取下拉菜单的使用方法：
@@ -96,7 +97,7 @@ class Tree
                 if (isset($value[$this->childrenName])) {//查询是否有子节点
                     $optionsTmp = $this->formatTree($value[$this->childrenName], $level + 1);
                     if (!empty($optionsTmp)) {
-                        $options = array_merge($options, $optionsTmp);
+                        $options = ArrayHelper::merge($options, $optionsTmp);
                     }
                 }
             }
@@ -207,7 +208,7 @@ class Tree
                     unset($list[$key]);//销毁已查询的，减轻下次递归时查询数量
                     $optionsTmp = $this->getTreeOptions3($list, $value[$this->idName], $level + 1);//递归
                     if (!empty($optionsTmp)) {
-                        $options = array_merge($options, $optionsTmp);
+                        $options = ArrayHelper::merge($options, $optionsTmp);
                     }
                 }
             }

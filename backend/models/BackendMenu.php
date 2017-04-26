@@ -176,7 +176,7 @@ class BackendMenu extends \yii\db\ActiveRecord
             ->select('id,pid,name,url,url_param,icon,status')
             ->where(['like', 'name', $search])
             ->indexBy('id')
-            ->orderBy(['sort' => SORT_DESC, 'pid' => SORT_ASC])
+            ->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC])
             ->asArray()
             ->all();
         $tree = [];

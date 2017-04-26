@@ -47,35 +47,32 @@ class BackendSettingController extends BaseController
      */
     public function actionSystem()
     {
+        if (Yii::$app->request->post()) {
+            $settings = Yii::$app->request->post('Setting');
+            foreach ($settings as $key => $value) {
+                BackendSetting::updateAll(['value' => $value], ['alias' => $key]);
+            }
+            return $this->redirectSuccess(['system'], Yii::t('common', 'Update Success'));
+        }
         //组装成TabWidget所需求的形式，这里是显示全部的，而不是一个链接一个链接的保存
         //获取顶级
         $rootList = BackendSetting::getSettingList();
         $items = [];
         if (!empty($rootList)) {
-            foreach ($rootList as $k=> $list) {
+            foreach ($rootList as $k => $list) {
                 $str = '';
                 $items[$k]['label'] = $list['name'];
                 $children = BackendSetting::getSettingList($list['id']);
                 if (!empty($children)) {
                     foreach ($children as $key => $child) {
-                    $str .= '<div class="form-group field-blogcatalog-parent_id">'
-                        .'<label class="col-lg-2 control-label" for="blogcatalog-parent_id">' . $child['name'] . '</label>'
-                        .'<div class="col-lg-3">';
-                        if ($child['type'] == BackendSetting::TEXT) {//如果是普通文本
-                            $str .= Html::textInput("Setting[{$child['alias']}]", $child['value'], ["class" => "form-control"]);
-                        } elseif ($child['type'] == BackendSetting::PASSWORD) {//如果米密码域
-                            $str .= Html::passwordInput("Setting[{$child['alias']}]", $child['value'], ["class" => "form-control"]);
-                        } elseif ($child['type'] == BackendSetting::SELECT) {//如果是下拉菜单
-                            $options = [];
-                            $arrayOptions = explode(',', $child->store_range);
-                            foreach ($arrayOptions as $option)
-                                $options[$option] = Module::t('setting', $option);
-                            $str .= Html::dropDownList("Setting[{$child['alias']}]", $child['value'], $options, ["class" => "form-control"]);
-                        } elseif ($child['type'] == BackendSetting::RADIO) {//如果是单选
-
-                        } elseif ($children['type'] == BackendSetting::TEXTAREA) {//如果是多行文本
-
+                        $str .= Html::beginTag('div', ['class' => 'form-group  c-md-5']);
+                        $str .= Html::label($child['name'], "Setting[{$child['alias']}]");
+                        $str .= BackendSetting::createInputTag($child['type'], "Setting[{$child['alias']}]", $child['value'], $child['extra']);
+                        //增加提示
+                        if (!empty($child['hint'])) {
+                            $str .= Html::tag('div', $child['hint'], ['class' => 'hint-block']);
                         }
+                        $str .= Html::endTag('div');
                     }
                 }
                 $items[$k]['content'] = $str;

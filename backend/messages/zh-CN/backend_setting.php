@@ -25,6 +25,7 @@ return [
     'textarea' => '文本域类型',
     'file' => '文件/图片类型',
 
+    'System Setting' => '系统设置',
     'Backend Settings' => '配置管理',
     'Create Backend Setting' => '创建配置',
     'Update Backend Setting' => '修改配置',

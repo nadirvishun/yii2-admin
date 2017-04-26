@@ -2,10 +2,13 @@
 
 namespace backend\models;
 
+use kartik\widgets\Select2;
+use kartik\widgets\SwitchInput;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /**
  * This is the model class for table "{{%backend_setting}}".
@@ -101,8 +104,10 @@ class BackendSetting extends \yii\db\ActiveRecord
     public function twoLevel()
     {
         $grandpaInfo = static::findOne($this->pid);
-        if ($grandpaInfo->pid != 0) {
-            $this->addError('pid', Yii::t('backend_setting', 'Only support two levels'));
+        if (!empty($grandpaInfo)) {
+            if ($grandpaInfo->pid != 0) {
+                $this->addError('pid', Yii::t('backend_setting', 'Only support two levels'));
+            }
         }
     }
 
@@ -182,7 +187,8 @@ class BackendSetting extends \yii\db\ActiveRecord
             self::TEXT => Yii::t('backend_setting', 'text'),
             self::PASSWORD => Yii::t('backend_setting', 'password'),
             self::SELECT => Yii::t('backend_setting', 'select'),
-            self::RADIO => Yii::t('backend_setting', 'radio'),
+            //todo,github上的switchIput widget 对此支持不好，暂时注释掉已提交issue： https://github.com/kartik-v/yii2-widget-switchinput/issues/29
+//            self::RADIO => Yii::t('backend_setting', 'radio'),
 //            self::CHECKBOX => Yii::t('backend_setting', 'checkbox'),
             self::TEXTAREA => Yii::t('backend_setting', 'textarea'),
 //            self::FILE => Yii::t('backend_setting', 'file'),
@@ -234,5 +240,87 @@ class BackendSetting extends \yii\db\ActiveRecord
             $cache->set('setting', $setting, 0, $dependency);
         }
         return $setting[$alias];
+    }
+
+    /**
+     * 根据不同的类型创建不同的input表单
+     * 只能封装成通用的样式
+     * @param integer $type
+     * @param string $name 如果是多维的，需提前组装好
+     * @param string $value
+     * @param string $extra
+     * @param array $options
+     * @return string
+     */
+    public static function createInputTag($type, $name, $value, $extra = '', $options = [])
+    {
+
+        if (empty($options)) {
+            $options = ['class' => 'form-control', 'id' => $name];
+        }
+        $tag = '';
+        switch ($type) {
+            case self::TEXT :
+                $tag = Html::textInput($name, $value, $options);
+                break;
+            case self::PASSWORD :
+                $tag = Html::passwordInput($name, $value, $options);
+                break;
+            case self::SELECT :
+                $tag = Select2::widget([
+                    'name' => $name,
+                    'value' => $value,
+                    'data' => static::parseExtra($extra),
+//                    'options' => [
+//                        'prompt' => Yii::t('common', 'Please Select...'),
+//                        'encode' => false,
+//                    ],
+//                    'pluginOptions' => [
+//                        'allowClear' => true
+//                    ],
+                ]);
+                break;
+            case  self::RADIO :
+                $noValue=$value==1?0:1;
+                $tag = SwitchInput::widget([
+                    'name' => $name,
+                    'value' => $value,
+//                    'options' => ['uncheck' => $noValue],
+                    'pluginOptions' => ['size' => 'small']
+                ]);
+//                $tag=Html::checkbox($name,$value,['uncheck' => 0]);
+
+                break;
+            case self::CHECKBOX :
+                break;
+            case self::TEXTAREA :
+                $options['rows'] = 6;
+                $tag = Html::textarea($name, $value, $options);
+                break;
+            case self::FILE :
+                break;
+            default:
+                break;
+        }
+        return $tag;
+    }
+
+    /**
+     * 解析为下拉菜单数组
+     * 支持,;换行符，如果是关联数组则需要:分隔
+     */
+    public static function parseExtra($extra)
+    {
+        $array = preg_split('/[,;\r\n]+/', trim($extra, ",;\r\n"));
+        if (strpos($extra, ':')) {
+            $value = [];
+            foreach ($array as $val) {
+                list($k, $v) = explode(':', $val);
+                $value[$k] = $v;
+            }
+        } else {
+            $value = $array;
+        }
+        return $value;
     }
 }
