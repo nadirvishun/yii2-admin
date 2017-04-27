@@ -1,53 +1,36 @@
 <?php
-
 /* @var $this yii\web\View */
+/* @var $system backend\Controllers\SiteController */
+/* @var $systemAttr backend\Controllers\SiteController */
+/* @var $developer backend\Controllers\SiteController */
+/* @var $developerAttr backend\Controllers\SiteController */
 
-$this->title = 'My Yii Application';
+use yii\widgets\DetailView;
+
+$this->title = Yii::t('site', 'index');
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-index">
+<div class="index-index box box-primary">
 
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+    <div class="box-header with-border">
+        <i class="fa fa-fw fa-flag"></i>
+        <h3 class="box-title"><?= Yii::t('site', 'system') ?></h3>
+    </div>
+    <div class="box-body">
+        <?= DetailView::widget([
+            'model' => $system,
+            'attributes' => $systemAttr
+        ]) ?>
+    </div>
+    <div class="box-header with-border">
+        <i class="fa fa-fw fa-fire"></i>
+        <h3 class="box-title"><?= Yii::t('site', 'developer') ?></h3>
+    </div>
+    <div class="box-body">
+        <?= DetailView::widget([
+            'model' => $developer,
+            'attributes' => $developerAttr,
+        ]) ?>
     </div>
 
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
-        </div>
-
-    </div>
 </div>

@@ -70,7 +70,43 @@ class SiteController extends BaseController
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        //后台首页展示的信息
+        $system = [
+            'yii_version' => Yii::getVersion(),//Yii2框架版本
+            'operating_system' => php_uname('s') . ' ' . php_uname('r'),//操作系统
+            'php_version' => PHP_VERSION,//php版本
+            'web_environment' => $_SERVER["SERVER_SOFTWARE"],//运行环境
+            'php_sapi' => PHP_SAPI,//运行方式
+            'mysql_version' => Yii::$app->db->pdo->getAttribute(\PDO::ATTR_SERVER_VERSION),//mysql版本
+            'upload_max_filesize' => ini_get('upload_max_filesize'),//上传限制
+            'max_execution_time' => ini_get('max_execution_time'),//执行时间
+        ];
+        //转为语言文件
+        $systemAttr = [];
+        foreach (array_keys($system) as $key => $value) {
+            $systemAttr[$key]['attribute'] = $value;
+            $systemAttr[$key]['label'] = Yii::t('site', $value);
+            $systemAttr[$key]['captionOptions']=['class'=>'c-md-3'];
+        }
+        //开发信息
+        $developer = [
+            'team' => '那时花开',
+            'manager' => 'vishun',
+            'qq' => '68618704',
+        ];
+        //转为语言文件
+        $developerAttr = [];
+        foreach (array_keys($developer) as $key => $value) {
+            $developerAttr[$key]['attribute'] = $value;
+            $developerAttr[$key]['label'] = Yii::t('site', $value);
+            $developerAttr[$key]['captionOptions']=['class'=>'c-md-3'];
+        }
+        return $this->render('index', [
+            'system' => $system,
+            'systemAttr' => $systemAttr,
+            'developer' => $developer,
+            'developerAttr' => $developerAttr,
+        ]);
     }
 
     /**
