@@ -75,8 +75,8 @@ $fieldOptions2 = [
                 in using Google+</a>
         </div>-->
         <!-- /.social-auth-links -->
-
-        <a href="#"><?= Yii::t('admin', 'forgot password') ?></a><br>
+        <?= Html::a( Yii::t('admin', 'forgot password'),['site/request-password-reset'])?>
+        <br>
         <!--        <a href="register.html" class="text-center">-->
         <? //=Yii::t('admin','Register a new membership')?><!--</a>-->
 

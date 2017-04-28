@@ -16,6 +16,14 @@ return [
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
             'useFileTransport' => true,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.163.com', //我这里用163邮箱
+                'username' => '邮箱账号',
+                'password' => '邮箱密码',
+                'port' => '25',
+                'encryption' => 'tls',
+            ],
         ],
     ],
 ];

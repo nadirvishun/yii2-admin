@@ -1,5 +1,6 @@
 <?php
 use backend\assets\AppAsset;
+use kartik\dialog\Dialog;
 use yii\helpers\Html;
 
 /* @var $this \yii\web\View */
@@ -18,6 +19,16 @@ dmstr\web\AdminLteAsset::register($this);
     <?php $this->head() ?>
 </head>
 <body class="login-page">
+
+<!--引入弹出框小部件-->
+<?= Dialog::widget([
+    'libName' => 'krajeeDialog',
+    'options' => [
+        'draggable' => true,
+    ]
+]);
+?>
+<?= \common\widgets\Popup::widget() ?>
 
 <?php $this->beginBody() ?>
 
