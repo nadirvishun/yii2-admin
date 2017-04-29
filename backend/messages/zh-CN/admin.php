@@ -31,6 +31,7 @@ return [
     'View Admin' => '查看用户信息',
     'This username can not be change' => '此用户名不能修改',
     'Can not delete self' => '不能删除自身',
+    'Upload avatar failed' => '上传头像失败',
     //login
     'Password' => '密码',
     'Remember Me' => '记住我',

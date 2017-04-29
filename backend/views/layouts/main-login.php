@@ -28,11 +28,15 @@ dmstr\web\AdminLteAsset::register($this);
     ]
 ]);
 ?>
-<?= \common\widgets\Popup::widget() ?>
+<?= \common\widgets\Popup::widget([
+    'title' => isset($this->params['popTitle']) ? $this->params['popTitle'] : null,
+    'size' => isset($this->params['popSize']) ? $this->params['popSize'] : null,
+    'second' => isset($this->params['popSecond']) ? $this->params['popSecond'] : null
+]) ?>
 
 <?php $this->beginBody() ?>
 
-    <?= $content ?>
+<?= $content ?>
 
 <?php $this->endBody() ?>
 </body>

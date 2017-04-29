@@ -9,6 +9,7 @@ use backend\controllers\BaseController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\web\UploadedFile;
 
 /**
  * AdminController implements the CRUD actions for Admin model.
@@ -129,6 +130,18 @@ class AdminController extends BaseController
         $model = $this->findModel($id);
         $model->scenario = 'modify';
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            unset($model->avatar);
+            //如果有上传头像
+            $avatar = UploadedFile::getInstance($model, 'avatar');
+            if ($avatar) {//如果上传文件
+                //文件重命名
+                $newName = time() . rand(1000, 9999);
+                if (!$avatar->saveAs(Yii::getAlias('@backend') . Yii::$app->params['avatarPath'] . $newName . '.' . $avatar->extension)) {
+                    $model->addError('avatar', Yii::t('admin', 'Upload avatar failed'));
+                }
+                $model->avatar = '/backend/'.Yii::$app->params['avatarPath'] . $newName . '.' . $avatar->extension;
+            }
+
             //如果传递过来的密码为空,则不更新密码
             if (empty($model->password_hash)) {
                 unset($model->password_hash);
@@ -136,16 +149,22 @@ class AdminController extends BaseController
                 $model->setPassword($model->password_hash);
             }
             //必须在上面先validate，然后save必须为false，否则由于密码被加密后导致确认密码不一致
-            if ($model->save(false)) {
-                return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
+            if (!$model->hasErrors() && $model->save(false)) {
+                return $this->redirectSuccess(['modify'], Yii::t('common', 'Update Success'));
             }
         }
         //将密码字段清空
         $model->password_hash = '';
+        if ($model->avatar) {
+            $avatarUrl = Yii::$app->request->hostInfo  . $model->avatar;
+        } else {
+            $avatarUrl = null;
+        }
         $act = 'modify';
         return $this->render('update', [
             'model' => $model,
-            'act' => $act
+            'act' => $act,
+            'avatarUrl' => $avatarUrl
         ]);
 
     }

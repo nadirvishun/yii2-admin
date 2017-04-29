@@ -62,6 +62,11 @@ class Popup extends \yii\base\Widget
      * @var [type]
      */
     public $size;
+    /**
+     * 当成功时显示多少s后自动关闭
+     * @var
+     */
+    public $second;
 
     public function init()
     {
@@ -73,6 +78,10 @@ class Popup extends \yii\base\Widget
         //默认样式
         if ($this->size === null || !isset($this->sizeTypes[$this->size])) {
             $this->size = 'small';
+        }
+        //设置默认秒数
+        if ($this->second === null) {
+            $this->second = 2;
         }
         $session = Yii::$app->session;
         $flashes = $session->getAllFlashes();
@@ -98,10 +107,11 @@ class Popup extends \yii\base\Widget
                             ]
                         });
                     ");
-                    // 如果是成功，需要增加3s后自动关闭，其余警告等则不需要
-                    if ($type == 'success') {
+                    // 如果是成功，并且有秒数参数，需要增加2s后自动关闭，其余警告等则不需要
+                    if ($type == 'success' && intval($this->second) > 0) {
+                        $time = intval($this->second) * 1000;
                         $view->registerJs("
-                            setTimeout(function(){ dialogShow.close() }, 2000);
+                            setTimeout(function(){ dialogShow.close() }, $time);
                         ");
                     }
                 }

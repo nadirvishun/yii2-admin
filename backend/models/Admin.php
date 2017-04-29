@@ -80,7 +80,8 @@ class Admin extends ActiveRecord implements IdentityInterface
             ['mobile', 'unique'],
             [['created_at', 'updated_at', 'last_login_time'], 'integer'],
             ['sex', 'in', 'range' => [self::SEX_SECRET, self::SEX_MAN, self::SEX_WOMAN]],
-            [['auth_key', 'last_login_ip', 'password_hash'], 'safe']
+            [['auth_key', 'last_login_ip', 'password_hash'], 'safe'],
+            [['avatar'], 'file', 'extensions' => 'png, jpg'],
         ];
     }
 

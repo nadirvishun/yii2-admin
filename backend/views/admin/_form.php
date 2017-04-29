@@ -1,5 +1,6 @@
 <?php
 
+use kartik\widgets\FileInput;
 use kartik\widgets\Select2;
 use kartik\widgets\SwitchInput;
 use yii\helpers\Html;
@@ -9,13 +10,17 @@ use yii\widgets\ActiveForm;
 /* @var $model backend\models\Admin */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $act backend\controllers\AdminController */
+/* @var $avatarUrl backend\controllers\AdminController */
 ?>
 
 <div class="admin-form">
 
     <?php $form = ActiveForm::begin([
         'id' => 'admin-form',
-        'options' => ['class' => 'box-body']
+        'options' => [
+            'class' => 'box-body',
+            'enctype' => 'multipart/form-data'
+        ]
     ]); ?>
 
     <?= $form->field($model, 'username', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
@@ -43,6 +48,21 @@ use yii\widgets\ActiveForm;
             'allowClear' => true
         ],
     ]) ?>
+    <!--  上传头像，只能在修改自身时上传  -->
+    <?php if ($act == 'modify'): ?>
+        <?= $form->field($model, 'avatar', ['options' => ['class' => 'form-group c-md-5']])->widget(FileInput::classname(), [
+            'options' => ['accept' => 'image/*'],
+            'pluginOptions'=>[
+                'showPreview' => true,
+                'showUpload' => false,
+                'initialPreview'=>[
+                    $avatarUrl
+                ],
+                'initialPreviewAsData'=>true,
+            ]
+        ]); ?>
+    <?php endif; ?>
+
     <?php if ($act == 'create' || $act == 'update'): ?>
         <?= $form->field($model, 'status', ['options' => ['class' => 'form-group c-md-5']])->widget(SwitchInput::classname(), ['pluginOptions' => ['size' => 'small']]) ?>
     <?php endif; ?>
