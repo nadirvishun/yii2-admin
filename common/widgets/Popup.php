@@ -84,16 +84,15 @@ class Popup extends \yii\base\Widget
             $this->second = 2;
         }
         $session = Yii::$app->session;
-        $flashes = $session->getAllFlashes();
         $view = $this->getView();
         $close = Yii::t('popup', 'close');
-        foreach ($flashes as $type => $data) {
-            if (isset($this->popupTypes[$type])) {
+        foreach ($this->popupTypes as $type => $value) {
+            if (($data = $session->getFlash($type, null, true)) !== null) {
                 $data = (array)$data;
                 foreach ($data as $i => $message) {
                     $view->registerJs("
                         var dialogShow=BootstrapDialog.show({
-                            type: {$this->popupTypes[$type]},
+                            type: {$value},
                             title: '{$this->title}',
                             message: '{$message}',
                             size: {$this->sizeTypes[$this->size]},
@@ -115,7 +114,6 @@ class Popup extends \yii\base\Widget
                         ");
                     }
                 }
-                $session->removeFlash($type);
             }
         }
     }

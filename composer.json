@@ -24,7 +24,8 @@
         "crazydb/yii2-ueditor": "*",
         "leandrogehlen/yii2-treegrid": "*",
         "dkhlystov/yii2-treegrid": "*",
-        "kartik-v/yii2-widgets": "*"
+        "kartik-v/yii2-widgets": "*",
+        "yiisoft/yii2-redis": "~2.0.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

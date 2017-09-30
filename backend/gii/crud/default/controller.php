@@ -117,9 +117,13 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $model = new <?= $modelClass ?>();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //return $this->redirect(['view', <?= $urlParams ?>]);
-            return $this->redirectSuccess(['index'], Yii::t('common', 'Create Success'));
+            //获取列表页url，方便跳转
+            $url = $this->getReferrerUrl('<?= $generator->getControllerID() ?>-create');
+            return $this->redirectSuccess($url, Yii::t('common', 'Create Success'));
         } else {
+            //为了更新完成后返回列表检索页数原有状态，所以这里先纪录下来
+            $this->rememberReferrerUrl('<?= $generator->getControllerID() ?>-create');
+
             $model->loadDefaultValues();
             return $this->render('create', [
                 'model' => $model,
@@ -138,9 +142,13 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $model = $this->findModel(<?= $actionParams ?>);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //return $this->redirect(['view', <?= $urlParams ?>]);
-            return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
+            //获取列表页url，方便跳转
+            $url = $this->getReferrerUrl('<?= $generator->getControllerID() ?>-update');
+            return $this->redirectSuccess($url, Yii::t('common', 'Update Success'));
         } else {
+            //为了更新完成后返回列表检索页数原有状态，所以这里先纪录下来
+            $this->rememberReferrerUrl('<?= $generator->getControllerID() ?>-update');
+
             return $this->render('update', [
                 'model' => $model,
             ]);
@@ -157,7 +165,12 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         $this->findModel(<?= $actionParams ?>)->delete();
 
-        return $this->redirectSuccess(['index'], Yii::t('common', 'Delete Success'));
+        $url = Yii::$app->request->referrer;
+        //如果是从view中删除，则返回列表页
+        if (strpos(urldecode($url), '<?= $generator->getControllerID() ?>/view') !== false) {
+            $url = ['index'];
+        }
+        return $this->redirectSuccess($url, Yii::t('common', 'Delete Success'));
     }
 
     /**

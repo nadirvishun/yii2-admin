@@ -8,7 +8,6 @@ use backend\models\ResetPasswordForm;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use backend\models\LoginForm;
@@ -30,7 +29,6 @@ class SiteController extends BaseController
                     [
                         'actions' => ['login', 'error', 'captcha','request-password-reset','reset-password'],
                         'allow' => true,
-                        'roles' => ['?'],
                     ],
                     [
                         'actions' => ['logout', 'index'],

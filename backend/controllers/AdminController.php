@@ -5,7 +5,6 @@ namespace backend\controllers;
 use Yii;
 use backend\models\Admin;
 use backend\models\search\AdminSearch;
-use backend\controllers\BaseController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -57,7 +56,6 @@ class AdminController extends BaseController
     {
         $searchModel = new AdminSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -85,13 +83,19 @@ class AdminController extends BaseController
         $model = new Admin();
         $model->scenario = 'create';
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirectSuccess(['index'], Yii::t('common', 'Create Success'));
+            //获取列表页url，方便跳转
+            $url = $this->getReferrerUrl('admin-create');
+            return $this->redirectSuccess($url, Yii::t('common', 'Create Success'));
         } else {
+            //为了更新完成后返回列表检索页数原有状态，所以这里先纪录下来
+            $this->rememberReferrerUrl('admin-create');
+
             $model->loadDefaultValues();
             $act = 'create';
             return $this->render('create', [
                 'model' => $model,
-                'act' => $act
+                'act' => $act,
+                'avatarUrl' => null
             ]);
         }
     }
@@ -107,14 +111,19 @@ class AdminController extends BaseController
         $model = $this->findModel($id);
         $model->scenario = 'update';
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
+            //获取列表页url，方便跳转
+            $url = $this->getReferrerUrl('admin-update');
+            return $this->redirectSuccess($url, Yii::t('common', 'Update Success'));
         } else {
+            //为了更新完成后返回列表检索页数原有状态，所以这里先纪录下来
+            $this->rememberReferrerUrl('admin-update');
             //将密码字段清空
             $model->password_hash = '';
             $act = 'update';
             return $this->render('update', [
                 'model' => $model,
-                'act' => $act
+                'act' => $act,
+                'avatarUrl' => null
             ]);
         }
     }
@@ -136,10 +145,10 @@ class AdminController extends BaseController
             if ($avatar) {//如果上传文件
                 //文件重命名
                 $newName = time() . rand(1000, 9999);
-                if (!$avatar->saveAs(Yii::getAlias('@backend') . Yii::$app->params['avatarPath'] . $newName . '.' . $avatar->extension)) {
+                if (!$avatar->saveAs(Yii::getAlias('@webroot') . Yii::$app->params['avatarPath'] . $newName . '.' . $avatar->extension)) {
                     $model->addError('avatar', Yii::t('admin', 'Upload avatar failed'));
                 }
-                $model->avatar = '/backend/'.Yii::$app->params['avatarPath'] . $newName . '.' . $avatar->extension;
+                $model->avatar = Yii::$app->params['avatarPath'] . $newName . '.' . $avatar->extension;
             }
 
             //如果传递过来的密码为空,则不更新密码
@@ -156,7 +165,7 @@ class AdminController extends BaseController
         //将密码字段清空
         $model->password_hash = '';
         if ($model->avatar) {
-            $avatarUrl = Yii::$app->request->hostInfo  . $model->avatar;
+            $avatarUrl = Yii::$app->request->hostInfo . $model->avatar;
         } else {
             $avatarUrl = null;
         }
@@ -177,13 +186,18 @@ class AdminController extends BaseController
      */
     public function actionDelete($id)
     {
+        $url = Yii::$app->request->referrer;
         //删除时需要判定不能删除自身
         if ($id == Yii::$app->user->id) {
-            return $this->redirectError(['index'], Yii::t('admin', 'Can not delete self'));
+            return $this->redirectError($url, Yii::t('admin', 'Can not delete self'));
+        }
+        //如果是从view中删除，则返回列表页
+        if (strpos(urldecode($url), 'admin/view') !== false) {
+            $url = ['index'];
         }
         $this->findModel($id)->delete();
 
-        return $this->redirectSuccess(['index'], Yii::t('common', 'Delete Success'));
+        return $this->redirectSuccess($url, Yii::t('common', 'Delete Success'));
     }
 
     /**

@@ -46,6 +46,19 @@ class BaseController extends Controller
     }
 
     /**
+     * 只写入正确的消息而不跳转
+     * @param null $msg
+     */
+    public function setSuccessFlash($msg = null)
+    {
+        if ($msg === null) {
+            $msg = Yii::t('common', 'Create Success');
+        }
+        $session = Yii::$app->session;
+        $session->setFlash('success', $msg);
+    }
+
+    /**
      * 失败跳转
      * 写入flash消息，并跳转
      * @param string|array $url
@@ -62,4 +75,40 @@ class BaseController extends Controller
         return $this->redirect($url);
     }
 
+    /**
+     * 只写入失败的消息而不跳转
+     * @param null $msg
+     */
+    public function setErrorFlash($msg = null)
+    {
+        if ($msg === null) {
+            $msg = Yii::t('common', 'Invalid Parameter');
+        }
+        $session = Yii::$app->session;
+        $session->setFlash('error', $msg);
+    }
+
+    /**
+     * 纪录上一个链接ulr
+     * @param $name
+     */
+    public function rememberReferrerUrl($name)
+    {
+        $session = Yii::$app->session;
+        $session->setFlash($name, Yii::$app->request->referrer);
+    }
+
+    /**
+     * 获取存储的上一个链接
+     * @param $name
+     * @param array $defaultUrl 如果没有获取到则取此默认值
+     * @param bool $delete 默认读取完毕删除
+     * @return mixed
+     */
+    public function getReferrerUrl($name, $defaultUrl = ['index'], $delete = true)
+    {
+        $session = Yii::$app->session;
+        $url = $session->getFlash($name, $defaultUrl, $delete);
+        return $url;
+    }
 }
