@@ -10,7 +10,7 @@ AdminLTE模板的后台,前后台用户分两个表，实现了一些基本功�
 5.  登陆后台，进行相关操作
 
 ##截图
-![image](https://github.com/nadirvishun/abp/backend/web/img/screenshot.jpg)
+![截图](https://github.com/nadirvishun/abp/blob/master/backend/web/img/screenshot.jpg)
 
 ##TODO
 1.  权限管理集成
