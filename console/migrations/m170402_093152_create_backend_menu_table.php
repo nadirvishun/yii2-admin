@@ -37,7 +37,11 @@ class m170402_093152_create_backend_menu_table extends Migration
         $time = time();
         $this->batchInsert(self::TBL_NAME, ['pid', 'name', 'url', 'icon', 'sort', 'created_by', 'created_at', 'updated_by', 'updated_at'], [
             [0, '控制面板', '/', 'dashboard', 0, 1, $time, 1, $time],
-            [1, '后台菜单', 'backend-menu/index', 'tree', 5, 1, $time, 1, $time]
+            [1, '系统设置', 'backend-setting/system', 'cog', 0, 1, $time, 1, $time],
+            [1, '配置管理', 'backend-setting/index', 'cube', 2, 1, $time, 1, $time],
+            [1, '后台菜单', 'backend-menu/index', 'tree', 5, 1, $time, 1, $time],
+            [0, '用户管理', 'admin/index', 'users', 0, 1, $time, 1, $time],
+            [5, '后台管理员', 'admin/index', 'user', 0, 1, $time, 1, $time],
         ]);
     }
 

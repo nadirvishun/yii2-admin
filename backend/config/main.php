@@ -50,7 +50,7 @@ return [
          * "skin-blue","skin-black","skin-red","skin-yellow","skin-purple","skin-green","skin-blue-light",
          *"skin-black-light","skin-red-light","skin-yellow-light","skin-purple-light","skin-green-light"
          */
-        'assetManager' => [
+       /* 'assetManager' => [
 //            'bundles' => [
 //                'dmstr\web\AdminLteAsset' => [
 //                    'skin' => 'skin-purple',
@@ -58,10 +58,11 @@ return [
 //            ],
             //原先引用的的谷歌字体地址https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic
             //先修改为本地的引用，以免谷歌访问很慢或或被墙
-            'assetMap' => [
-                'AdminLTE.min.css' => '@web/css/AdminLTE.min.css',
-            ],
-        ],
+            //目前由于AdminLTE框架更新，已将此字体移除，所以不需要了
+//            'assetMap' => [
+//                'AdminLTE.min.css' => '@web/css/AdminLTE.min.css',
+//            ],
+        ],*/
 
     ],
     'params' => $params,

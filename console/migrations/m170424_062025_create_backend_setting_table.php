@@ -35,6 +35,13 @@ class m170424_062025_create_backend_setting_table extends Migration
             'updated_by' => $this->integer()->unsigned()->notNull()->comment('更新人'),
             'updated_at' => $this->bigInteger()->unsigned()->notNull()->comment('更新时间')
         ], $tableOptions);
+
+        //增加配置基础显示
+        $time = time();
+        $this->batchInsert(self::TBL_NAME, ['pid', 'name', 'alias', 'type', 'value', 'extra', 'hint','sort', 'status','created_by', 'created_at', 'updated_by', 'updated_at'], [
+            [0, '网站设置','website',1,'','','',0,1,1,$time,1,$time],
+            [1, '网站名称','site_name',1,'','','',0,1,1,$time,1,$time],
+        ]);
     }
 
     /**

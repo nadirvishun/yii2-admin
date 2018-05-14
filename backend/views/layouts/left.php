@@ -33,7 +33,7 @@
 
         <?= dmstr\widgets\Menu::widget(
             [
-                'options' => ['class' => 'sidebar-menu'],
+                'options' => ['class' => 'sidebar-menu tree' , 'data-widget'=> 'tree'],
                 'items' => \backend\models\BackendMenu::getMenus($this->context->backMenuSearch)
 //                    [
 //                    ['label' => 'Menu Yii2', 'options' => ['class' => 'header']],
