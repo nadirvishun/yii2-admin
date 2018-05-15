@@ -37,14 +37,14 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        */
+
         /**
          * 后台模板颜色（不需要了，直接用js来修改颜色）
          * "skin-blue","skin-black","skin-red","skin-yellow","skin-purple","skin-green","skin-blue-light",
