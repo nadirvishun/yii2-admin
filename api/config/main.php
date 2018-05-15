@@ -24,6 +24,20 @@ return [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
+        'response' => [
+            'class' => 'yii\web\Response',
+            'on beforeSend' => function ($event) {
+                $response = $event->sender;
+                //当传递的参数中有suppress_response_code（禁用响应码）时，统一返回200，然后在data中定义自己的code
+                if ($response->data !== null && !empty(Yii::$app->request->get('suppress_response_code'))) {
+                    $response->data = [
+                        'success' => $response->isSuccessful,
+                        'data' => $response->data,
+                    ];
+                    $response->statusCode = 200;
+                }
+            },
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableSession' => false,
@@ -44,8 +58,17 @@ return [
             'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/user']],
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['v2/user']],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['v1/user'],
+                    'extraPatterns' => [//新建action
+                        'GET index1' => 'index1'
+                    ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['v2/user']
+                ],
             ],
         ],
 

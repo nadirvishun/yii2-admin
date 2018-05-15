@@ -3,21 +3,63 @@
 namespace api\versions\v1\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\Url;
+use yii\web\Linkable;
+use yii\web\Link;
 
-class User extends ActiveRecord
+class User extends ActiveRecord implements Linkable
 {
     const STATUS_FORBID = 0;//账户禁止
     const STATUS_ACTIVE = 1;//账户正常
     const SEX_SECRET = 0;//性别保密
     const SEX_MAN = 1;//性别男
     const SEX_WOMAN = 2;//性别女
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return '{{%user}}';
+    }
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+        ];
+    }
+
+    /**
+     * 要展示的字段
+     * @return array
+     */
+    public function fields()
+    {
+        return [
+            'id',
+            'username',
+            'email',
+            'mobile',
+        ];
+    }
+
+    /**
+     * 要展示的链接
+     * @return array
+     */
+    public function getLinks()
+    {
+        return [
+            Link::REL_SELF => Url::to(['user/view', 'id' => $this->id], true),
+            'edit' => Url::to(['user/view', 'id' => $this->id], true),
+            'profile' => Url::to(['user/profile/view', 'id' => $this->id], true),
+            'index' => Url::to(['users'], true),
+        ];
     }
 
     /**
@@ -47,6 +89,7 @@ class User extends ActiveRecord
             [['avatar'], 'file', 'extensions' => 'png, jpg'],
         ];
     }
+
     /**
      * @inheritdoc
      */

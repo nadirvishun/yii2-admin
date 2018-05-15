@@ -33,6 +33,7 @@ class m170328_081817_create_user_table extends Migration
             'last_login_ip' => $this->string(20)->notNull()->comment('最近一次登录的IP'),
             'last_login_time' => $this->bigInteger()->unsigned()->notNull()->comment('最近一次登录的时间'),
             'last_login_client' => $this->boolean()->unsigned()->notNull()->comment('最近一次登录的客户端类型'),
+            'access_token'=>$this->string(32)->notNull()->comment('access_token,api登陆验证相关'),
             'status' => $this->boolean()->unsigned()->notNull()->defaultValue(1)->comment('账号状态'),
             'created_at' => $this->bigInteger()->unsigned()->notNull()->comment('创建时间'),
             'updated_at' => $this->bigInteger()->unsigned()->notNull()->comment('更新时间')
