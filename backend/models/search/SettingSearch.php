@@ -5,12 +5,12 @@ namespace backend\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\models\BackendSetting;
+use backend\models\Setting;
 
 /**
  * BackendSettingSearch represents the model behind the search form about `backend\models\BackendSetting`.
  */
-class BackendSettingSearch extends BackendSetting
+class SettingSearch extends Setting
 {
     /**
      * @inheritdoc
@@ -42,7 +42,7 @@ class BackendSettingSearch extends BackendSetting
     public function search($params)
     {
         //todo，排序后续可能修改
-        $query = BackendSetting::find()->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]);
+        $query = Setting::find()->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]);
 
         // add conditions that should always apply here
 

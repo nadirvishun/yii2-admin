@@ -1,13 +1,13 @@
 <?php
 
-use backend\models\BackendSetting;
+use backend\models\Setting;
 use kartik\widgets\Select2;
 use kartik\widgets\SwitchInput;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\BackendSetting */
+/* @var $model backend\models\Setting */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $treeOptions backend\controllers\BackendMenuController */
 ?>
@@ -35,14 +35,14 @@ use yii\widgets\ActiveForm;
 
     <?php $input = $form->field($model, 'alias', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]);
     if (!$model->isNewRecord) {
-        echo $input->hint(Yii::t('backend_setting', 'Unless you know it not use in code,otherwise do not change it'));
+        echo $input->hint(Yii::t('setting', 'Unless you know it not use in code,otherwise do not change it'));
     } else {
         echo $input;
     } ?>
 
     <?=
     $form->field($model, 'type', ['options' => ['class' => 'form-group c-md-5']])->widget(Select2::classname(), [
-        'data' => BackendSetting::getTypeOptions(),
+        'data' => Setting::getTypeOptions(),
         'options' => [
             'prompt' => Yii::t('common', 'Please Select...'),
             'encode' => false,

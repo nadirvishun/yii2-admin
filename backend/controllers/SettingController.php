@@ -4,9 +4,8 @@ namespace backend\controllers;
 
 use common\components\Tree;
 use Yii;
-use backend\models\BackendSetting;
-use backend\models\search\BackendSettingSearch;
-use backend\controllers\BaseController;
+use backend\models\Setting;
+use backend\models\search\SettingSearch;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\NotFoundHttpException;
@@ -16,7 +15,7 @@ use yii\filters\AccessControl;
 /**
  * BackendSettingController implements the CRUD actions for BackendSetting model.
  */
-class BackendSettingController extends BaseController
+class SettingController extends BaseController
 {
     /**
      * @inheritdoc
@@ -50,24 +49,24 @@ class BackendSettingController extends BaseController
         if (Yii::$app->request->post()) {
             $settings = Yii::$app->request->post('Setting');
             foreach ($settings as $key => $value) {
-                BackendSetting::updateAll(['value' => $value], ['alias' => $key]);
+                Setting::updateAll(['value' => $value], ['alias' => $key]);
             }
             return $this->redirectSuccess(['system'], Yii::t('common', 'Update Success'));
         }
         //组装成TabWidget所需求的形式，这里是显示全部的，而不是一个链接一个链接的保存
         //获取顶级
-        $rootList = BackendSetting::getSettingList();
+        $rootList = Setting::getSettingList();
         $items = [];
         if (!empty($rootList)) {
             foreach ($rootList as $k => $list) {
                 $str = '';
                 $items[$k]['label'] = $list['name'];
-                $children = BackendSetting::getSettingList($list['id']);
+                $children = Setting::getSettingList($list['id']);
                 if (!empty($children)) {
                     foreach ($children as $key => $child) {
                         $str .= Html::beginTag('div', ['class' => 'form-group  c-md-5']);
                         $str .= Html::label($child['name'], "Setting[{$child['alias']}]");
-                        $str .= BackendSetting::createInputTag($child['type'], "Setting[{$child['alias']}]", $child['value'], $child['extra']);
+                        $str .= Setting::createInputTag($child['type'], "Setting[{$child['alias']}]", $child['value'], $child['extra']);
                         //增加提示
                         if (!empty($child['hint'])) {
                             $str .= Html::tag('div', $child['hint'], ['class' => 'hint-block']);
@@ -89,7 +88,7 @@ class BackendSettingController extends BaseController
      */
     public function actionIndex()
     {
-        $searchModel = new BackendSettingSearch();
+        $searchModel = new SettingSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -117,7 +116,7 @@ class BackendSettingController extends BaseController
      */
     public function actionCreate($pid = null)
     {
-        $model = new BackendSetting();
+        $model = new Setting();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {//如果是post传递保存
             return $this->redirectSuccess(['index'], Yii::t('common', 'Create Success'));
         } else {//如果是展示页面
@@ -130,12 +129,12 @@ class BackendSettingController extends BaseController
                 $model->pid = $pid;
             }
             $data['model'] = $model;
-            $list = BackendSetting::find()
+            $list = Setting::find()
                 ->asArray()
                 ->all();
             //创建树实例
             $tree = new Tree();
-            $rootOption = ['0' => Yii::t('backend_setting', 'Root Tree')];
+            $rootOption = ['0' => Yii::t('setting', 'Root Tree')];
             $data['treeOptions'] = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
 
             return $this->render('create', $data);
@@ -156,12 +155,12 @@ class BackendSettingController extends BaseController
             return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
         } else {
             //显示树下拉菜单
-            $list = BackendSetting::find()
+            $list = Setting::find()
                 ->asArray()
                 ->all();
             //创建树实例
             $tree = new Tree();
-            $rootOption = ['0' => Yii::t('backend_setting', 'Root Tree')];
+            $rootOption = ['0' => Yii::t('setting', 'Root Tree')];
             $treeOptions = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
             return $this->render('update', [
                 'model' => $model,
@@ -187,12 +186,12 @@ class BackendSettingController extends BaseController
      * Finds the BackendSetting model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return BackendSetting the loaded model
+     * @return Setting the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = BackendSetting::findOne($id)) !== null) {
+        if (($model = Setting::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException(Yii::t('common', 'The requested page does not exist.'));

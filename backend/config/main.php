@@ -37,20 +37,24 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            // uncomment if you want to cache RBAC items hierarchy
+            // 'cache' => 'cache',
+        ],
         /**
          * 后台模板颜色（不需要了，直接用js来修改颜色）
          * "skin-blue","skin-black","skin-red","skin-yellow","skin-purple","skin-green","skin-blue-light",
          *"skin-black-light","skin-red-light","skin-yellow-light","skin-purple-light","skin-green-light"
          */
-       /* 'assetManager' => [
+        'assetManager' => [
+            'appendTimestamp' => true,//加时间戳，以方便css，js等缓存更新
 //            'bundles' => [
 //                'dmstr\web\AdminLteAsset' => [
 //                    'skin' => 'skin-purple',
@@ -62,7 +66,7 @@ return [
 //            'assetMap' => [
 //                'AdminLTE.min.css' => '@web/css/AdminLTE.min.css',
 //            ],
-        ],*/
+        ],
 
     ],
     'params' => $params,

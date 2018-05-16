@@ -3,11 +3,11 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `backend_setting`.
+ * Handles the creation of table `setting`.
  */
-class m170424_062025_create_backend_setting_table extends Migration
+class m170424_062025_create_setting_table extends Migration
 {
-    const TBL_NAME = '{{%backend_setting}}';
+    const TBL_NAME = '{{%setting}}';
 
     /**
      * @inheritdoc
@@ -16,7 +16,7 @@ class m170424_062025_create_backend_setting_table extends Migration
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
-            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB COMMENT="后台配置表"';
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB COMMENT="配置表"';
         }
 
         $this->createTable(self::TBL_NAME, [
@@ -24,7 +24,7 @@ class m170424_062025_create_backend_setting_table extends Migration
             'pid' => $this->integer()->notNull()->comment('父ID'),
             'name' => $this->string(64)->notNull()->comment('配置名称'),
             'alias' => $this->string(64)->notNull()->unique()->comment('配置别名'),
-            'type' => $this->boolean()->notNull()->defaultValue(1)->comment('类别，例如1代表text，2代表radio'),
+            'type' => $this->boolean()->notNull()->defaultValue(1)->comment('类别，例如1代表text，2代表radio等'),
             'value' => $this->text()->notNull()->comment('值'),
             'extra' => $this->string()->notNull()->comment('配置参数'),
             'hint' => $this->string(100)->notNull()->comment('提示说明'),

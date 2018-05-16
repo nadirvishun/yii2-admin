@@ -1,24 +1,24 @@
 <?php
 
-use backend\models\BackendSetting;
+use backend\models\Setting;
 use yii\bootstrap\Tabs;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\models\search\BackendSettingSearch */
+/* @var $searchModel backend\models\search\SettingSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-/* @var $items backend\controllers\BackendSettingController */
+/* @var $items backend\controllers\SettingController */
 
-$this->title = Yii::t('backend_setting', 'System Setting');
+$this->title = Yii::t('setting', 'System Setting');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="backend-setting-system box box-primary">
 
     <div class="box-header with-border">
         <i class="fa fa-fw fa-cog"></i>
-        <h3 class="box-title"><?= Yii::t('backend_setting', 'System Setting') ?></h3>
+        <h3 class="box-title"><?= Yii::t('setting', 'System Setting') ?></h3>
     </div>
 
     <?php $form = ActiveForm::begin([

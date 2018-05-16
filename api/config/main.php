@@ -40,7 +40,7 @@ return [
             },
         ],
         'user' => [
-            'identityClass' => 'api\common\models\User',
+            'identityClass' => 'api\common\models\UserToken',
             'enableSession' => false,
             'loginUrl' => null
         ],

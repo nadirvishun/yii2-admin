@@ -11,6 +11,16 @@ use yii\web\Link;
 
 class User extends \api\common\models\User implements Linkable
 {
+    const CREATE_ACCESS_TOKEN = 'create_access_token';
+
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function init()
+    {
+        parent::init();
+        $this->on(self::CREATE_ACCESS_TOKEN, ['\api\versions\v1\UserToken', 'createAccessToken']);
+    }
     /**
      * 要展示的字段
      * @return array
@@ -65,5 +75,19 @@ class User extends \api\common\models\User implements Linkable
             [['auth_key', 'last_login_ip', 'password_hash'], 'safe'],
             [['avatar'], 'file', 'extensions' => 'png, jpg'],
         ];
+    }
+    /**
+     * 存储前的动作
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        //如果是新增，则自动产生
+        if ($this->isNewRecord) {
+            $this->generateAuthKey();
+            $this->generatePasswordResetToken();
+            $this->setPassword($this->password_hash);
+        }
+        return parent::beforeSave($insert);
     }
 }

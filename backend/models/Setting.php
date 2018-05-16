@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 /**
- * This is the model class for table "{{%backend_setting}}".
+ * This is the model class for table "{{%setting}}".
  *
  * @property integer $id
  * @property integer $pid
@@ -28,7 +28,7 @@ use yii\helpers\Html;
  * @property string $updated_by
  * @property string $updated_at
  */
-class BackendSetting extends \yii\db\ActiveRecord
+class Setting extends \yii\db\ActiveRecord
 {
     //状态
     const STATUS_HIDE = 0;//隐藏
@@ -47,7 +47,7 @@ class BackendSetting extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%backend_setting}}';
+        return '{{%setting}}';
     }
 
     /**
@@ -94,7 +94,7 @@ class BackendSetting extends \yii\db\ActiveRecord
     {
         $childIds = static::getChildIds($this->id);
         if (in_array($this->pid, $childIds)) {
-            $this->addError('pid', Yii::t('backend_setting', 'Parent ID can not be itself or its subordinate node'));
+            $this->addError('pid', Yii::t('setting', 'Parent ID can not be itself or its subordinate node'));
         }
     }
 
@@ -106,7 +106,7 @@ class BackendSetting extends \yii\db\ActiveRecord
         $grandpaInfo = static::findOne($this->pid);
         if (!empty($grandpaInfo)) {
             if ($grandpaInfo->pid != 0) {
-                $this->addError('pid', Yii::t('backend_setting', 'Only support two levels'));
+                $this->addError('pid', Yii::t('setting', 'Only support two levels'));
             }
         }
     }
@@ -117,20 +117,20 @@ class BackendSetting extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('backend_setting', 'ID'),
-            'pid' => Yii::t('backend_setting', 'Pid'),
-            'name' => Yii::t('backend_setting', 'Name'),
-            'alias' => Yii::t('backend_setting', 'Alias'),
-            'type' => Yii::t('backend_setting', 'Type'),
-            'value' => Yii::t('backend_setting', 'Value'),
-            'extra' => Yii::t('backend_setting', 'Extra'),
-            'hint' => Yii::t('backend_setting', 'Hint'),
-            'sort' => Yii::t('backend_setting', 'Sort'),
-            'status' => Yii::t('backend_setting', 'Status'),
-            'created_by' => Yii::t('backend_setting', 'Created By'),
-            'created_at' => Yii::t('backend_setting', 'Created At'),
-            'updated_by' => Yii::t('backend_setting', 'Updated By'),
-            'updated_at' => Yii::t('backend_setting', 'Updated At'),
+            'id' => Yii::t('setting', 'ID'),
+            'pid' => Yii::t('setting', 'Pid'),
+            'name' => Yii::t('setting', 'Name'),
+            'alias' => Yii::t('setting', 'Alias'),
+            'type' => Yii::t('setting', 'Type'),
+            'value' => Yii::t('setting', 'Value'),
+            'extra' => Yii::t('setting', 'Extra'),
+            'hint' => Yii::t('setting', 'Hint'),
+            'sort' => Yii::t('setting', 'Sort'),
+            'status' => Yii::t('setting', 'Status'),
+            'created_by' => Yii::t('setting', 'Created By'),
+            'created_at' => Yii::t('setting', 'Created At'),
+            'updated_by' => Yii::t('setting', 'Updated By'),
+            'updated_at' => Yii::t('setting', 'Updated At'),
         ];
     }
 
@@ -184,14 +184,14 @@ class BackendSetting extends \yii\db\ActiveRecord
     {
         //todo,暂时只支持这几种，后续的需要完善
         $arr = [
-            self::TEXT => Yii::t('backend_setting', 'text'),
-            self::PASSWORD => Yii::t('backend_setting', 'password'),
-            self::SELECT => Yii::t('backend_setting', 'select'),
+            self::TEXT => Yii::t('setting', 'text'),
+            self::PASSWORD => Yii::t('setting', 'password'),
+            self::SELECT => Yii::t('setting', 'select'),
             //todo,github上的switchIput widget 对此支持不好，暂时注释掉已提交issue： https://github.com/kartik-v/yii2-widget-switchinput/issues/29
-//            self::RADIO => Yii::t('backend_setting', 'radio'),
-//            self::CHECKBOX => Yii::t('backend_setting', 'checkbox'),
-            self::TEXTAREA => Yii::t('backend_setting', 'textarea'),
-//            self::FILE => Yii::t('backend_setting', 'file'),
+//            self::RADIO => Yii::t('setting', 'radio'),
+//            self::CHECKBOX => Yii::t('setting', 'checkbox'),
+            self::TEXTAREA => Yii::t('setting', 'textarea'),
+//            self::FILE => Yii::t('setting', 'file'),
         ];
         return $key === false ? $arr : ArrayHelper::getValue($arr, $key, Yii::t('common', 'Unknown'));
     }
@@ -235,7 +235,7 @@ class BackendSetting extends \yii\db\ActiveRecord
                 ->asArray()
                 ->column();
             //添加缓存依赖，当最新的更新时间变更，则说明有数据更新
-            $dependency = new \yii\caching\DbDependency(['sql' => 'SELECT max(updated_at) FROM ' . ' {{%backend_setting}}']);
+            $dependency = new \yii\caching\DbDependency(['sql' => 'SELECT max(updated_at) FROM ' . ' {{%setting}}']);
             //写入缓存
             $cache->set('setting', $setting, 0, $dependency);
         }

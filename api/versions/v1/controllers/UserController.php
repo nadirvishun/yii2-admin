@@ -5,10 +5,10 @@
 
 namespace api\versions\v1\controllers;
 
+use Yii;
 use api\common\controllers\AuthController;
+use api\versions\v1\models\User;
 use yii\data\ActiveDataProvider;
-use yii\filters\auth\CompositeAuth;
-use yii\filters\auth\QueryParamAuth;
 
 class UserController extends AuthController
 {
@@ -41,7 +41,7 @@ class UserController extends AuthController
     {
         $actions = parent::actions();
         //删除不需要的独立action
-        unset($actions['index']);
+        unset($actions['index'], $actions['create']);
         return $actions;
     }
 
@@ -57,6 +57,20 @@ class UserController extends AuthController
 //            'pagination' => false
         ]);
         return $provider;
+    }
+
+    /**
+     * 用户注册
+     */
+    public function actionCreate()
+    {
+        $model = new User();
+        $model->scenario = 'create';
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            //当创建完成后，创建accessToken相关数据
+            $model->trigger(User::CREATE_ACCESS_TOKEN);
+            //todo,是否需要返回access_token
+        }
     }
 
     /**

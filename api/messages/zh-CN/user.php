@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin及后台登录语言文件
+ * User语言文件
  */
 return [
     //admin/model

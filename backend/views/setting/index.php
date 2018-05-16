@@ -1,16 +1,16 @@
 <?php
 
-use backend\models\BackendSetting;
+use backend\models\Setting;
 use yii\helpers\Html;
 use dkhlystov\widgets\TreeGrid;
 //use leandrogehlen\treegrid\TreeGrid;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\models\search\BackendSettingSearch */
+/* @var $searchModel backend\models\search\SettingSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('backend_setting', 'Backend Settings');
+$this->title = Yii::t('setting', 'Settings');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="backend-setting-index grid-view box box-primary">
@@ -45,14 +45,14 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'type',
                 'value' => function ($model, $key, $index, $column) {
-                    return BackendSetting::getTypeOptions($model->type);
+                    return Setting::getTypeOptions($model->type);
                 }
             ],
             'sort',
             [
                 'attribute' => 'status',
                 'value' => function ($model, $key, $index, $column) {
-                    return BackendSetting::getStatusOptions($model->status);
+                    return Setting::getStatusOptions($model->status);
                 }
             ],
             // 'value:ntext',
