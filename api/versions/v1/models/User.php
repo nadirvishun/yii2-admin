@@ -9,31 +9,8 @@ use yii\helpers\Url;
 use yii\web\Linkable;
 use yii\web\Link;
 
-class User extends ActiveRecord implements Linkable
+class User extends \api\common\models\User implements Linkable
 {
-    const STATUS_FORBID = 0;//账户禁止
-    const STATUS_ACTIVE = 1;//账户正常
-    const SEX_SECRET = 0;//性别保密
-    const SEX_MAN = 1;//性别男
-    const SEX_WOMAN = 2;//性别女
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return '{{%user}}';
-    }
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::className(),
-        ];
-    }
-
     /**
      * 要展示的字段
      * @return array
@@ -87,30 +64,6 @@ class User extends ActiveRecord implements Linkable
             ['sex', 'in', 'range' => [self::SEX_SECRET, self::SEX_MAN, self::SEX_WOMAN]],
             [['auth_key', 'last_login_ip', 'password_hash'], 'safe'],
             [['avatar'], 'file', 'extensions' => 'png, jpg'],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => Yii::t('user', 'ID'),
-            'username' => Yii::t('user', 'Username'),
-            'auth_key' => Yii::t('user', 'Auth Key'),
-            'password_hash' => Yii::t('user', 'Password Hash'),
-            'passwordRepeat' => Yii::t('user', 'Password Repeat'),//增加确认密码
-            'password_reset_token' => Yii::t('user', 'Password Reset Token'),
-            'email' => Yii::t('user', 'Email'),
-            'mobile' => Yii::t('user', 'Mobile'),
-            'avatar' => Yii::t('user', 'Avatar'),
-            'sex' => Yii::t('user', 'Sex'),
-            'last_login_ip' => Yii::t('user', 'Last Login Ip'),
-            'last_login_time' => Yii::t('user', 'Last Login Time'),
-            'status' => Yii::t('user', 'Status'),
-            'created_at' => Yii::t('user', 'Created At'),
-            'updated_at' => Yii::t('user', 'Updated At'),
         ];
     }
 }

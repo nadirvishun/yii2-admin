@@ -29,7 +29,8 @@ return [
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
                 //当传递的参数中有suppress_response_code（禁用响应码）时，统一返回200，然后在data中定义自己的code
-                if ($response->data !== null && !empty(Yii::$app->request->get('suppress_response_code'))) {
+                $suppressResponseCode = Yii::$app->request->get('suppress_response_code');
+                if ($response->data !== null && !empty($suppressResponseCode)) {
                     $response->data = [
                         'success' => $response->isSuccessful,
                         'data' => $response->data,
@@ -39,7 +40,7 @@ return [
             },
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'api\common\models\User',
             'enableSession' => false,
             'loginUrl' => null
         ],

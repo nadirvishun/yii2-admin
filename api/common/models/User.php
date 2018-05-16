@@ -1,5 +1,6 @@
 <?php
-namespace common\models;
+
+namespace api\common\models;
 
 use Yii;
 use yii\base\NotSupportedException;
@@ -23,8 +24,11 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-    const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 1;
+    const STATUS_FORBID = 0;//账户禁止
+    const STATUS_ACTIVE = 1;//账户正常
+    const SEX_SECRET = 0;//性别保密
+    const SEX_MAN = 1;//性别男
+    const SEX_WOMAN = 2;//性别女
 
 
     /**
@@ -51,8 +55,30 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('user', 'ID'),
+            'username' => Yii::t('user', 'Username'),
+            'auth_key' => Yii::t('user', 'Auth Key'),
+            'password_hash' => Yii::t('user', 'Password Hash'),
+            'passwordRepeat' => Yii::t('user', 'Password Repeat'),//增加确认密码
+            'password_reset_token' => Yii::t('user', 'Password Reset Token'),
+            'email' => Yii::t('user', 'Email'),
+            'mobile' => Yii::t('user', 'Mobile'),
+            'avatar' => Yii::t('user', 'Avatar'),
+            'sex' => Yii::t('user', 'Sex'),
+            'last_login_ip' => Yii::t('user', 'Last Login Ip'),
+            'last_login_time' => Yii::t('user', 'Last Login Time'),
+            'status' => Yii::t('user', 'Status'),
+            'created_at' => Yii::t('user', 'Created At'),
+            'updated_at' => Yii::t('user', 'Updated At'),
         ];
     }
 
@@ -69,7 +95,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return static::findOne(['access_token' => $token, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
@@ -113,7 +139,7 @@ class User extends ActiveRecord implements IdentityInterface
             return false;
         }
 
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }

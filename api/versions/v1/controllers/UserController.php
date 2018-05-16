@@ -5,12 +5,12 @@
 
 namespace api\versions\v1\controllers;
 
+use api\common\controllers\AuthController;
 use yii\data\ActiveDataProvider;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\QueryParamAuth;
-use yii\rest\ActiveController;
 
-class UserController extends ActiveController
+class UserController extends AuthController
 {
     public $modelClass = 'api\versions\v1\models\User';
     //设置返回格式
@@ -20,22 +20,18 @@ class UserController extends ActiveController
     ];
 
     /**
-     * 开启相关验证
+     *  虽然需要验证登陆，但某个action不需要，所以需要重写此方法
      * @return array|mixed
      */
-   /* public function behaviors()
+    public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $behaviors['authenticator'] = [
-            'class' => CompositeAuth::className(),
-            'authMethods' => [
-//                HttpBasicAuth::className(),
-//                HttpBearerAuth::className(),
-                QueryParamAuth::className(),
-            ],
+        //增加要排除的action
+        $behaviors['authenticator']['except'] = [
+            'index'
         ];
         return $behaviors;
-    }*/
+    }
 
     /**
      * 重写action
