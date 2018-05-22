@@ -11,19 +11,26 @@ use yii\web\IdentityInterface;
 /**
  * User model
  *
- * @property integer $id
- * @property string $username
- * @property string $password_hash
- * @property string $password_reset_token
- * @property string $email
- * @property string $auth_key
- * @property integer $status
+ * @property integer $user_id
+ * @property string $access_token
+ * @property integer $access_expires
+ * @property integer $client_type
+ * @property string $refresh_token
+ * @property integer $refresh_expires
  * @property integer $created_at
  * @property integer $updated_at
- * @property string $password write-only password
  */
 class UserToken extends ActiveRecord implements IdentityInterface
 {
+    /**
+     * access_token过期时间 10天，待定10 * 24 * 3600
+     */
+    CONST ACCESS_EXPIRES = 864000;
+    /**
+     * refresh_token过期时间 180天,待定180 * 24 * 3600
+     */
+    CONST REFRESH_EXPIRES = 15552000;
+
     /**
      * @inheritdoc
      */
@@ -82,13 +89,17 @@ class UserToken extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        //先查找user_token表中是否存在
-        $userId = static::find()->select('user_id')->where(['access_token' => $token])->scalar();
-        if (!$userId) {
+        $userTokenInfo = static::findOne(['access_token' => $token]);
+        //先查找user_token表中是否存在,且是否超时
+        $userId = $userTokenInfo->user_id;
+        if (!$userId && ((time() - $userTokenInfo->updated_at) > $userTokenInfo->access_expires)) {
             return false;
         }
         //如果存在，则继续查找用户是否存在
-        return User::findIdentity($userId);
+        if (!User::findIdentity($userId)) {
+            return false;
+        }
+        return $userTokenInfo;
     }
 
     /**
@@ -96,8 +107,8 @@ class UserToken extends ActiveRecord implements IdentityInterface
      */
     public function getId()
     {
-//        return $this->getPrimaryKey();
-        throw new NotSupportedException('"getId" is not implemented.');
+        return $this->getPrimaryKey();
+//        throw new NotSupportedException('"getId" is not implemented.');
     }
 
     /**
@@ -118,4 +129,21 @@ class UserToken extends ActiveRecord implements IdentityInterface
         throw new NotSupportedException('"validateAuthKey" is not implemented.');
     }
 
+    /**
+     * 生成access_token
+     * @throws \yii\base\Exception
+     */
+    public function generateAccessToken()
+    {
+        $this->access_token = Yii::$app->security->generateRandomString();
+    }
+
+    /**
+     * 生成refresh_token
+     * @throws \yii\base\Exception
+     */
+    public function generateRefreshToken()
+    {
+        $this->refresh_token = Yii::$app->security->generateRandomString();
+    }
 }

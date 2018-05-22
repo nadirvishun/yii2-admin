@@ -1,4 +1,5 @@
 <?php
+
 namespace api\common\models;
 
 use Yii;
@@ -26,6 +27,9 @@ class User extends ActiveRecord
     const SEX_SECRET = 0;//性别保密
     const SEX_MAN = 1;//性别男
     const SEX_WOMAN = 2;//性别女
+    const CLIENT_ANDROID = 1;//安卓客户端类型
+    const CLIENT_IOS = 2;//苹果客户端类型
+    const CLIENT_WAP = 3;//wap网页客户端类型
 
 
     /**
@@ -65,7 +69,7 @@ class User extends ActiveRecord
             'username' => Yii::t('user', 'Username'),
             'auth_key' => Yii::t('user', 'Auth Key'),
             'password_hash' => Yii::t('user', 'Password Hash'),
-            'passwordRepeat' => Yii::t('user', 'Password Repeat'),//增加确认密码
+            'password' => Yii::t('user', 'Password'),
             'password_reset_token' => Yii::t('user', 'Password Reset Token'),
             'email' => Yii::t('user', 'Email'),
             'mobile' => Yii::t('user', 'Mobile'),
@@ -128,7 +132,7 @@ class User extends ActiveRecord
             return false;
         }
 
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }

@@ -25,7 +25,7 @@ class m170328_081817_create_user_table extends Migration
             'auth_key' => $this->string(32)->notNull()->comment('认证key，与cookie登录有关'),
             'password_hash' => $this->string()->notNull()->comment('密码'),
             'password_reset_token' => $this->string()->notNull()->unique()->comment('重置密码时所用key'),
-            'email' => $this->string()->notNull()->unique()->comment('邮箱'),
+            'email' => $this->string()->notNull()->comment('邮箱'),
             'mobile' => $this->string(20)->notNull()->unique()->comment('手机号'),
             'avatar' => $this->string()->notNull()->comment('用户头像'),
             'sex' => $this->boolean()->notNull()->comment('用户性别：0未知，1男，2女'),

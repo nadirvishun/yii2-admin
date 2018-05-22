@@ -2,25 +2,24 @@
 
 namespace api\versions\v1\models;
 
-use Yii;
-use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
+use api\common\models\UserToken;
 use yii\helpers\Url;
 use yii\web\Linkable;
 use yii\web\Link;
 
 class User extends \api\common\models\User implements Linkable
 {
-    const CREATE_ACCESS_TOKEN = 'create_access_token';
+    public $password;
 
     /**
-     * @throws \yii\base\InvalidConfigException
+     * insert时开启事务，方便同时改动user_token表
+     * @return array
      */
-    public function init()
+    public function transactions()
     {
-        parent::init();
-        $this->on(self::CREATE_ACCESS_TOKEN, ['\api\versions\v1\UserToken', 'createAccessToken']);
+        return ['create' => self::OP_INSERT];
     }
+
     /**
      * 要展示的字段
      * @return array
@@ -30,8 +29,8 @@ class User extends \api\common\models\User implements Linkable
         return [
             'id',
             'username',
-            'email',
-            'mobile',
+//            'email',
+//            'mobile',
         ];
     }
 
@@ -42,10 +41,11 @@ class User extends \api\common\models\User implements Linkable
     public function getLinks()
     {
         return [
-            Link::REL_SELF => Url::to(['user/view', 'id' => $this->id], true),
+            Link::REL_SELF => Url::to('', true),
+            'index' => Url::to(['user/index'], true),
+            'create' => Url::to(['user/index'], true),
             'edit' => Url::to(['user/view', 'id' => $this->id], true),
-            'profile' => Url::to(['user/profile/view', 'id' => $this->id], true),
-            'index' => Url::to(['users'], true),
+            'view' => Url::to(['user/view', 'id' => $this->id], true),
         ];
     }
 
@@ -56,16 +56,14 @@ class User extends \api\common\models\User implements Linkable
     public function rules()
     {
         return [
+            ['reg_client_type', 'default', 'value' => self::CLIENT_WAP],
+            ['reg_client_type', 'in', 'range' => [self::CLIENT_ANDROID, self::CLIENT_IOS, self::CLIENT_WAP]],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_FORBID]],
             [['username'], 'match', 'pattern' => '/^[a-zA-Z]\w*$/i'],
             [['username'], 'unique'],
-            //由于下三个都是唯一的所以必须填写，但是由于console中的初始化后台用户时越简单越好，所以设定场景
-            [['username', 'email', 'mobile'], 'required', 'on' => ['create', 'update', 'modify']],
-            //创建时必须填写确认密码
-            [['password_hash', 'passwordRepeat'], 'required', 'on' => 'create'],
-            //在创建和修改自身时需要填写确认密码
-            ['passwordRepeat', 'compare', 'compareAttribute' => 'password_hash', 'on' => ['create', 'modify']],
+            //mobile是否需要加入
+            [['username', 'password'], 'required', 'on' => 'create'],
             ['email', 'email'],
             ['email', 'unique'],
             ['mobile', 'match', 'pattern' => '/^1(3|4|5|7|8)[0-9]\d{8}$/'],
@@ -76,6 +74,7 @@ class User extends \api\common\models\User implements Linkable
             [['avatar'], 'file', 'extensions' => 'png, jpg'],
         ];
     }
+
     /**
      * 存储前的动作
      * @inheritdoc
@@ -86,8 +85,26 @@ class User extends \api\common\models\User implements Linkable
         if ($this->isNewRecord) {
             $this->generateAuthKey();
             $this->generatePasswordResetToken();
-            $this->setPassword($this->password_hash);
+            $this->setPassword($this->password);
         }
         return parent::beforeSave($insert);
+    }
+
+    /**
+     * 存储后的动作
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        //同时增加user_token表中数据
+        if ($insert) {
+            $userToken = new UserToken();
+            $userToken->generateAccessToken();
+            $userToken->generateRefreshToken();
+            $userToken->user_id = $this->id;
+            $userToken->access_expires = UserToken::ACCESS_EXPIRES;
+            $userToken->refresh_expires = UserToken::REFRESH_EXPIRES;
+            $userToken->save();
+        }
     }
 }
