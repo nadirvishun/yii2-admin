@@ -62,7 +62,7 @@ class Generator extends \yii\gii\generators\model\Generator
             if ($this->enableI18N) {//如果勾选
                 //从注释中作为要翻译的语言
                 $params = [
-                    'messages' => $this->generateCommentMessage($tableSchema),
+                    'messages' => $this->generateCommentMessage($tableSchema, $modelClassName),
                 ];
                 //生成的文件路径及名称、跳转模板
                 $files[] = new CodeFile(
@@ -78,9 +78,10 @@ class Generator extends \yii\gii\generators\model\Generator
     /**
      * 对于生成语言文件来说，都优先从注释中获取对应的翻译名称
      * @param $table
+     * @param $modelClassName
      * @return array
      */
-    public function generateCommentMessage($table)
+    public function generateCommentMessage($table, $modelClassName)
     {
         $message = [];
         foreach ($table->columns as $column) {
@@ -100,6 +101,15 @@ class Generator extends \yii\gii\generators\model\Generator
                 $message[$key] = '';
             }
         }
+        $index = Inflector::pluralize(Inflector::camel2words($modelClassName));
+        $create = 'Create ' . Inflector::camel2words($modelClassName);
+        $update = 'Update ' . Inflector::camel2words($modelClassName);
+        $view = 'View ' . Inflector::camel2words($modelClassName);
+        //由于没有方法获取表注释（只有字段注释获取），所以还需要后续再生成的message中自己补全
+        $message[$index] = '';
+        $message[$create] = '创建';
+        $message[$update] = '修改';
+        $message[$view] = '查看';
         return $message;
     }
 }

@@ -24,7 +24,7 @@ class m170424_062025_create_setting_table extends Migration
             'pid' => $this->integer()->notNull()->comment('父ID'),
             'name' => $this->string(64)->notNull()->comment('配置名称'),
             'alias' => $this->string(64)->notNull()->unique()->comment('配置别名'),
-            'type' => $this->boolean()->notNull()->defaultValue(1)->comment('类别，例如1代表text，2代表radio等'),
+            'type' => $this->tinyInteger()->notNull()->defaultValue(1)->comment('类别，例如1代表text，2代表radio等'),
             'value' => $this->text()->notNull()->comment('值'),
             'extra' => $this->string()->notNull()->comment('配置参数'),
             'hint' => $this->string(100)->notNull()->comment('提示说明'),

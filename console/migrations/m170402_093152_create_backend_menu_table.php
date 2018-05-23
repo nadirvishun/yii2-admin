@@ -20,7 +20,7 @@ class m170402_093152_create_backend_menu_table extends Migration
         }
         $this->createTable(self::TBL_NAME, [
             'id' => $this->primaryKey()->unsigned()->comment('菜单ID'),
-//            'pid' => $this->integer()->unsigned()->notNull()->comment('父ID'),//与tree-grid冲突，赞为查明原因
+//            'pid' => $this->integer()->unsigned()->notNull()->comment('父ID'),//与tree-grid冲突，暂未查明原因
             'pid' => $this->integer()->notNull()->comment('父ID'),
             'name' => $this->string(64)->notNull()->comment('菜单名称'),
             'url' => $this->string(64)->notNull()->comment('菜单链接'),
@@ -40,7 +40,7 @@ class m170402_093152_create_backend_menu_table extends Migration
             [1, '系统设置', 'setting/system', 'cog', 0, 1, $time, 1, $time],
             [1, '配置管理', 'setting/index', 'cube', 2, 1, $time, 1, $time],
             [1, '后台菜单', 'backend-menu/index', 'tree', 5, 1, $time, 1, $time],
-            [0, '用户管理', 'admin/index', 'users', 0, 1, $time, 1, $time],
+            [0, '用户管理', '/', 'users', 0, 1, $time, 1, $time],
             [5, '后台管理员', 'admin/index', 'user', 0, 1, $time, 1, $time],
         ]);
     }

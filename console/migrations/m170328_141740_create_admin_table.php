@@ -28,7 +28,7 @@ class m170328_141740_create_admin_table extends Migration
             'email' => $this->string()->notNull()->comment('邮箱'),
             'mobile' => $this->string(20)->notNull()->comment('手机号'),
             'avatar' => $this->string()->notNull()->comment('用户头像'),
-            'sex' => $this->boolean()->notNull()->comment('用户性别：0未知，1男，2女'),
+            'sex' => $this->tinyInteger()->notNull()->comment('用户性别：0未知，1男，2女'),
             'last_login_ip' => $this->string(20)->notNull()->comment('最近一次登录的IP'),
             'last_login_time' => $this->bigInteger()->unsigned()->notNull()->comment('最近一次登录的时间'),
             'status' => $this->boolean()->unsigned()->notNull()->defaultValue(1)->comment('账号状态'),

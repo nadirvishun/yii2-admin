@@ -11,7 +11,7 @@ return [
     'view' => '查看',
     'delete' => '删除',
     'submit' => '提交',
-    'reset' => '重置',
+    'reset' => '刷新',
     'search' => '搜索',
     'forbidden' => '禁止',
     'batch' => '批量',

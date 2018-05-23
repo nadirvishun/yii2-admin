@@ -66,6 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => '\yii\grid\ActionColumn',
                 'header' => Yii::t('common', 'Actions'),
+                'headerOptions'=>['style' => 'width:200px'],
                 'template' => '{create} {update} {delete}',
                 'buttons' => [
                     'create' => function ($url, $model, $key) {
@@ -75,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-pjax' => '0',
                             'class' => 'btn btn-xs btn-success'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-plus"></i>', ['create', 'pid' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-plus"></i> '.Yii::t('common', 'create_sub'), ['create', 'pid' => $model->id], $options);
                     },
                     'update' => function ($url, $model, $key) {
                         $options = [
@@ -84,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-pjax' => '0',
                             'class' => 'btn btn-xs btn-warning'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-pencil"></i>', ['update', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-pencil"></i> '.Yii::t('common', 'update'), ['update', 'id' => $model->id], $options);
                     },
                     'delete' => function ($url, $model, $key) {
                         $options = [
@@ -95,7 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-method' => 'post',
                             'class' => 'btn btn-xs btn-danger'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-trash"></i>', ['delete', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-trash"></i> '.Yii::t('common', 'delete'), ['delete', 'id' => $model->id], $options);
                     }
                 ]
             ],

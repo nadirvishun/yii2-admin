@@ -1,24 +1,21 @@
 <?php
 
-use backend\models\Admin;
-use kartik\widgets\Select2;
 use yii\helpers\Html;
 use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\models\search\AdminSearch */
+/* @var $searchModel backend\models\search\BackendRoleSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('admin', 'Admins');
+$this->title = Yii::t('backend_role', 'Backend Roles');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="admin-index grid-view box box-primary">
+<div class="backend-role-index grid-view box box-primary">
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'pjax' => true,
         'hover' => true,
         'filterModel' => $searchModel,
         'columns' => [
@@ -27,32 +24,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'rowSelectedClass' => GridView::TYPE_INFO
             ],
 
-            'id',
-            'username',
-//            'auth_key',
-//            'password_hash',
-//            'password_reset_token',
-            'email:email',
-            'mobile',
-            // 'avatar',
-            // 'sex',
-            // 'last_login_ip',
-            // 'last_login_time',
-            [
-                'class' => '\kartik\grid\DataColumn',
-                'attribute' => 'status',
-                'filterType' => GridView::FILTER_SELECT2,
-                'filterWidgetOptions' => [
-                    'data' => Admin::getStatusOptions(),
-                    'options' => [
-                        'prompt' => Yii::t('common', 'Please Select...'),
-                    ],
-                ],
-                'value' => function ($model, $key, $index, $column) {
-                    return Admin::getStatusOptions($model->status);
-                }
-            ],
-
+            'name',
+//            'type',
+            'description:ntext',
+//            'rule_name',
+//            'data:ntext',
             // 'created_at',
             // 'updated_at',
 
@@ -60,16 +36,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => '\kartik\grid\ActionColumn',
                 'header' => Yii::t('common', 'Actions'),
                 'vAlign' => 'middle',
-                'template' => '{view} {update} {delete}',
+                'template' => '{auth} {update} {delete}',
                 'buttons' => [
-                    'view' => function ($url, $model, $key) {
+                    'auth' => function ($url, $model, $key) {
                         $options = [
-                            'title' => Yii::t('common', 'view'),
-                            'aria-label' => Yii::t('common', 'view'),
+                            'title' => Yii::t('backend_role', 'auth'),
+                            'aria-label' => Yii::t('backend_role', 'auth'),
                             'data-pjax' => '0',
                             'class' => 'btn btn-xs btn-info'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-eye"></i> '.Yii::t('common', 'view'), ['view', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-key"></i> '.Yii::t('backend_role', 'auth'), ['auth', 'name' => $model->name], $options);
                     },
                     'update' => function ($url, $model, $key) {
                         $options = [
@@ -78,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-pjax' => '0',
                             'class' => 'btn btn-xs btn-warning'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-pencil"></i> '.Yii::t('common', 'update'), ['update', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-pencil"></i> '.Yii::t('common', 'update'), ['update', 'name' => $model->name], $options);
                     },
                     'delete' => function ($url, $model, $key) {
                         $options = [
@@ -89,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-method' => 'post',
                             'class' => 'btn btn-xs btn-danger'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-trash"></i> '.Yii::t('common', 'delete'), ['delete', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-trash"></i> '.Yii::t('common', 'delete'), ['delete', 'name' => $model->name], $options);
                     }
                 ],
             ]

@@ -86,7 +86,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                             'data-pjax' => '0',
                             'class' => 'btn btn-xs btn-info'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-eye"></i>', ['view', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-eye"></i> ' . Yii::t('common', 'view'), ['view', 'id' => $model->id], $options);
                     },
                     'update' => function ($url, $model, $key) {
                         $options = [
@@ -95,7 +95,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                             'data-pjax' => '0',
                             'class' => 'btn btn-xs btn-warning'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-pencil"></i>', ['update', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-pencil"></i> ' . Yii::t('common', 'update'), ['update', 'id' => $model->id], $options);
                     },
                     'delete' => function ($url, $model, $key) {
                         $options = [
@@ -106,7 +106,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                             'data-method' => 'post',
                             'class' => 'btn btn-xs btn-danger'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-trash"></i>', ['delete', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-trash"></i> ' . Yii::t('common', 'delete'), ['delete', 'id' => $model->id], $options);
                     }
                 ],
             ]
@@ -127,8 +127,8 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         'toolbar' => [
             [
                 'content' =>
-                    Html::a('<i class="fa fa-plus"></i>', ['create'], ['data-pjax' => 0, 'class' => 'btn btn-success', 'title' => Yii::t('common', 'create')]) . ' ' .
-                    Html::a('<i class="fa fa-repeat"></i>', ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('common', 'reset')])
+                    Html::a('<i class="fa fa-plus"></i> ' . Yii::t('common', 'create'), ['create'], ['data-pjax' => 0, 'class' => 'btn btn-success', 'title' => Yii::t('common', 'create')]) . ' ' .
+                    Html::a('<i class="fa fa-repeat"></i> ' . Yii::t('common', 'reset'), ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('common', 'reset')])
             ],
             '{toggleData}',
             '{export}'
@@ -190,6 +190,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
             [
                 'class' => '\yii\grid\ActionColumn',
                 'header' => Yii::t('common', 'Actions'),
+                'headerOptions' => ['style' => 'width:200px'],
                 'template' => '{create} {update} {delete}',
                 'buttons' => [
                     'create' => function ($url, $model, $key) {
@@ -199,7 +200,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                             'data-pjax' => '0',
                             'class' => 'btn btn-xs btn-success'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-plus"></i>', ['create', 'pid' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-plus"></i> ' . Yii::t('common', 'create_sub'), ['create', 'pid' => $model->id], $options);
                     },
                     'update' => function ($url, $model, $key) {
                         $options = [
@@ -208,7 +209,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                             'data-pjax' => '0',
                             'class' => 'btn btn-xs btn-warning'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-pencil"></i>', ['update', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-pencil"></i> ' . Yii::t('common', 'update'), ['update', 'id' => $model->id], $options);
                     },
                     'delete' => function ($url, $model, $key) {
                         $options = [
@@ -219,7 +220,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                             'data-method' => 'post',
                             'class' => 'btn btn-xs btn-danger'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-trash"></i>', ['delete', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-trash"></i> ' . Yii::t('common', 'delete'), ['delete', 'id' => $model->id], $options);
                     }
                 ]
             ],

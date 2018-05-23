@@ -45,6 +45,10 @@ return [
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
+            'itemTable' => '{{%backend_auth_item}}',//数据库名称不同
+            'itemChildTable' => '{{%backend_auth_item_child}}',
+            'assignmentTable' => '{{%backend_auth_assignment}}',
+            'ruleTable' => '{{%backend_auth_rule}}',
             // uncomment if you want to cache RBAC items hierarchy
             // 'cache' => 'cache',
         ],

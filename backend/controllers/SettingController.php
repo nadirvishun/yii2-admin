@@ -129,7 +129,8 @@ class SettingController extends BaseController
                 $model->pid = $pid;
             }
             $data['model'] = $model;
-            $list = Setting::find()
+            $list = Setting::find()->select('id,pid,name')
+                ->where(['status' => Setting::STATUS_VISIBLE])//不显示隐藏的
                 ->asArray()
                 ->all();
             //创建树实例
@@ -155,7 +156,8 @@ class SettingController extends BaseController
             return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
         } else {
             //显示树下拉菜单
-            $list = Setting::find()
+            $list = Setting::find()->select('id,pid,name')
+                ->where(['status' => Setting::STATUS_VISIBLE])//不显示隐藏的
                 ->asArray()
                 ->all();
             //创建树实例
