@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `backend_auth_rule`.
  */
-class m180522_064025_create_backend_auth_rule_table extends Migration
+class m180516_064025_create_backend_auth_rule_table extends Migration
 {
     const TBL_NAME = '{{%backend_auth_rule}}';
 

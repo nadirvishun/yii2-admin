@@ -59,6 +59,7 @@ class BackendMenu extends \yii\db\ActiveRecord
             ['sort', 'default', 'value' => 0],
             [['pid', 'sort', 'status'], 'integer'],
             [['name', 'url', 'icon'], 'string', 'max' => 64],
+            [['url'], 'unique'],//url不能相同，因为和权限挂钩了
             //父ID有效性,当为0时不验证
             ['pid', 'exist', 'targetAttribute' => 'id', 'isEmpty' => function ($value) {
                 return empty($value);
@@ -162,12 +163,20 @@ class BackendMenu extends \yii\db\ActiveRecord
      * 左侧菜单显示
      * 按照dmstr\widgets\Menu所要求格式组装
      * 由于需要实时检索，所以无法加入缓存
-     * todo,加入rbac权限
      * @param string $search
      * @return array
      */
     public static function getMenus($search = '')
     {
+        //获取当前角色的权限
+        $userId = Yii::$app->user->id;
+        //非超级管理员，需要按照权限来显示菜单
+        $permissions = [];
+        if ($userId != Yii::$app->params['super_admin_id']) {
+            $auth = Yii::$app->authManager;
+            $permissionsArr = $auth->getPermissionsByUser(Yii::$app->user->id);
+            $permissions = array_keys($permissionsArr);
+        }
         //优先从缓存中取数据
 //        $cache = Yii::$app->cache;
 //        $tree = $cache->get('menus');
@@ -189,8 +198,8 @@ class BackendMenu extends \yii\db\ActiveRecord
                 //组装url
                 $list[$k]['url'] = static::mergeUrl($info['url'], $info['url_param']);
                 unset($list[$k]['url_param']);//url参数注销掉
-                //如果数据库中字段为隐藏，则增加visible参数，且设置为false
-                if (!$info['status']) {
+                //如果数据库中字段为隐藏，则增加visible参数，且设置为false，再有就是无权限的隐藏掉
+                if (!$info['status'] || ($userId != Yii::$app->params['super_admin_id'] && !in_array($info['url'], $permissions))) {
                     $list[$k]['visible'] = false;
                 }
                 unset($list[$k]['status']);//注销掉状态

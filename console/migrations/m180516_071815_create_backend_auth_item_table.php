@@ -9,6 +9,7 @@ class m180516_071815_create_backend_auth_item_table extends Migration
 {
     const TBL_NAME = '{{%backend_auth_item}}';
 
+
     /**
      * @inheritdoc
      */
@@ -31,6 +32,8 @@ class m180516_071815_create_backend_auth_item_table extends Migration
         //添加主键及索引
         $this->addPrimaryKey('name', self::TBL_NAME, 'name');
         $this->createIndex('type', self::TBL_NAME, 'type');
+        //设置外键，如果要用内置的rbac方法，则必须设置，相关修改是自动改的
+        $this->addForeignKey('foreign_rule_name', self::TBL_NAME, 'rule_name', '{{backend_auth_rule}}', 'name', 'SET NULL', 'CASCADE');
     }
 
     /**

@@ -36,6 +36,7 @@ class Admin extends ActiveRecord implements IdentityInterface
     const SEX_WOMAN = 2;//性别女
 
     public $passwordRepeat;//确认密码
+    public $role;//所属角色
 
     /**
      * @inheritdoc
@@ -125,6 +126,7 @@ class Admin extends ActiveRecord implements IdentityInterface
             'status' => Yii::t('admin', 'Status'),
             'created_at' => Yii::t('admin', 'Created At'),
             'updated_at' => Yii::t('admin', 'Updated At'),
+            'role'=>Yii::t('admin', 'Role'),
         ];
     }
 

@@ -76,7 +76,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'header' => Yii::t('common', 'Actions'),
-                'vAlign' => 'middle',
+                'vAlign' => GridView::ALIGN_MIDDLE,
                 'template' => '{view} {update} {delete}',
                 'buttons' => [
                     'view' => function ($url, $model, $key) {

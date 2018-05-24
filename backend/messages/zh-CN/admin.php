@@ -29,9 +29,20 @@ return [
     'Create Admin' => '创建新用户',
     'Update Admin' => '修改用户信息',
     'View Admin' => '查看用户信息',
+    'Role Admin' => '设置角色',
     'This username can not be change' => '此用户名不能修改',
     'Can not delete self' => '不能删除自身',
     'Upload avatar failed' => '上传头像失败',
+    'No Role' => '未分配',
+    'Role' => '角色',
+    'role' => '角色',
+    'message_role' => '选择角色',
+    'Super admin do not need set!' => '超级管理员无需设置角色',
+    'Suggest select only one role!' => '为了方便管理，建议每个管理员只选择对应一个角色',
+    'This role must select!' => '角色必须勾选',
+    'Super admin can not delete!' => '超级管理员无法删除',
+    'Set Role Success' => '设置成功',
+
     //login
     'Password' => '密码',
     'Remember Me' => '记住我',
@@ -42,6 +53,5 @@ return [
     //header
     'Profile' => '编辑资料',
     'Sign out' => '登出'
-
 
 ];

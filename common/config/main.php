@@ -4,6 +4,7 @@ return [
     //设置i18n语言，前后台通用
     'sourceLanguage' => 'en-US',
     'language' => 'zh-CN',
+    'timeZone' => 'Asia/Shanghai',
     //配置kartik-v/yii2-grade
     'modules' => [
         'gridview' => [

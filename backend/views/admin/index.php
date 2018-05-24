@@ -1,6 +1,7 @@
 <?php
 
 use backend\models\Admin;
+use backend\models\BackendRole;
 use kartik\widgets\Select2;
 use yii\helpers\Html;
 use kartik\grid\GridView;
@@ -52,24 +53,37 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Admin::getStatusOptions($model->status);
                 }
             ],
-
+            [
+                'class' => '\kartik\grid\DataColumn',
+                'attribute' => 'role',
+                'mergeHeader' => true,
+                'hAlign' => GridView::ALIGN_CENTER,
+                'value' => function ($model, $key, $index, $column) {
+                    if ($model->id == Yii::$app->params['super_admin_id']) {
+                        return Yii::t('common', 'Super Admin');
+                    }
+                    $auth = Yii::$app->authManager;
+                    $roles = $auth->getRolesByUser($model->id);
+                    return empty($roles) ? Yii::t('admin', 'No Role') : implode(',', array_keys($roles));
+                }
+            ],
             // 'created_at',
             // 'updated_at',
 
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'header' => Yii::t('common', 'Actions'),
-                'vAlign' => 'middle',
-                'template' => '{view} {update} {delete}',
+                'vAlign' => GridView::ALIGN_MIDDLE,
+                'template' => '{role} {update} {delete}',
                 'buttons' => [
-                    'view' => function ($url, $model, $key) {
+                    'role' => function ($url, $model, $key) {
                         $options = [
-                            'title' => Yii::t('common', 'view'),
-                            'aria-label' => Yii::t('common', 'view'),
+                            'title' => Yii::t('admin', 'role'),
+                            'aria-label' => Yii::t('admin', 'role'),
                             'data-pjax' => '0',
                             'class' => 'btn btn-xs btn-info'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-eye"></i> '.Yii::t('common', 'view'), ['view', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-key"></i> ' . Yii::t('admin', 'role'), ['role', 'id' => $model->id], $options);
                     },
                     'update' => function ($url, $model, $key) {
                         $options = [
@@ -78,7 +92,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-pjax' => '0',
                             'class' => 'btn btn-xs btn-warning'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-pencil"></i> '.Yii::t('common', 'update'), ['update', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-pencil"></i> ' . Yii::t('common', 'update'), ['update', 'id' => $model->id], $options);
                     },
                     'delete' => function ($url, $model, $key) {
                         $options = [
@@ -89,7 +103,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-method' => 'post',
                             'class' => 'btn btn-xs btn-danger'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-trash"></i> '.Yii::t('common', 'delete'), ['delete', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-trash"></i> ' . Yii::t('common', 'delete'), ['delete', 'id' => $model->id], $options);
                     }
                 ],
             ]
@@ -110,8 +124,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'toolbar' => [
             [
                 'content' =>
-                    Html::a('<i class="fa fa-plus"></i> '.Yii::t('common', 'create'), ['create'], ['data-pjax' => 0, 'class' => 'btn btn-success', 'title' => Yii::t('common', 'create')]) . ' ' .
-                    Html::a('<i class="fa fa-repeat"></i> '.Yii::t('common', 'reset'), ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('common', 'reset')])
+                    Html::a('<i class="fa fa-plus"></i> ' . Yii::t('common', 'create'), ['create'], ['data-pjax' => 0, 'class' => 'btn btn-success', 'title' => Yii::t('common', 'create')]) . ' ' .
+                    Html::a('<i class="fa fa-repeat"></i> ' . Yii::t('common', 'reset'), ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('common', 'reset')])
             ],
             '{toggleData}',
             '{export}'

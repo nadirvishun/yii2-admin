@@ -21,11 +21,13 @@ class m180522_063551_create_backend_auth_assignment_table extends Migration
 
         $this->createTable(self::TBL_NAME, [
             'item_name' => $this->string(64)->notNull()->comment('权限角色名称'),
-            'user_id' => $this->integer()->unsigned()->comment('用户ID'),
+            'user_id' => $this->string(64)->notNull()->comment('用户ID'),
             'created_at' => $this->bigInteger()->unsigned()->notNull()->comment('创建时间'),
         ], $tableOptions);
         //联合主键
         $this->addPrimaryKey('item_user', self::TBL_NAME, ['item_name', 'user_id']);
+        //设置外键，如果要用内置的rbac方法，则必须设置，相关修改是自动改的
+        $this->addForeignKey('foreign_item_name', self::TBL_NAME, 'item_name', '{{backend_auth_item}}', 'name', 'CASCADE', 'CASCADE');
     }
 
     /**

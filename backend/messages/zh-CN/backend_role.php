@@ -16,5 +16,9 @@ return [
     'Update Backend Role' => '修改后台角色',
     'Auth Backend Role' => '角色授权',
     'auth' => '授权',
-    'message_auth' => '角色授权'
+    'message_auth' => '角色授权',
+    'This role not exist!' => '未获取到本角色详情',
+    'This permission must select!'=>'权限必须选择',
+    'Auth Success!'=>'授权成功',
+    'Auth Failed!'=>'授权失败'
 ];

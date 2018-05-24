@@ -8,6 +8,7 @@ use Yii;
 use backend\models\BackendRole;
 use backend\models\search\BackendRoleSearch;
 use backend\controllers\BaseController;
+use yii\helpers\Url;
 use yii\helpers\VarDumper;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -66,9 +67,49 @@ class BackendRoleController extends BaseController
     public function actionAuth($name)
     {
         $auth = Yii::$app->authManager;
-        if (Yii::$app->request->isPost) {
-
+        $request = Yii::$app->request;
+        if ($request->isPost) {
+            //判定角色是否存在
+            $role = $auth->getRole($name);
+            if (empty($role)) {
+                return $this->redirectError(Url::to(), Yii::t('backend_role', 'This role not exist!'));
+            }
+            //判定权限是否勾选
+            $permissions = $request->post('permissions');
+            if (empty($permissions)) {
+                return $this->redirectError(Url::to(), Yii::t('backend_role', 'This permission must select!'));
+            }
+            //开始处理数据
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                //将原有此角色下属权限删除
+                $auth->removeChildren($role);
+                //组装权限
+                foreach ($permissions as $permission) {
+                    list($permissionName, $permissionDes) = explode('|', $permission);
+                    //判定权限是否存在，如果不存在，则写入
+                    $exist = $auth->getPermission($permissionName);
+                    if (!$exist) {
+                        $permissionClass = $auth->createPermission($permissionName);
+                        $permissionClass->description = $permissionDes;
+                        $auth->add($permissionClass);
+                    } else {
+                        $permissionClass = $auth->getPermission($permissionName);
+                    }
+                    //写入上下级关系
+                    $auth->addChild($role, $permissionClass);
+                }
+                $transaction->commit();
+                $url = $this->getReferrerUrl('backend-role-auth');
+                return $this->redirectSuccess($url, Yii::t('backend_role', 'Auth Success!'));
+            } catch (\Exception $e) {
+                $transaction->rollBack();
+            } catch (\Throwable $e) {
+                $transaction->rollBack();
+            }
+            return $this->redirectError(Url::to(), Yii::t('backend_role', 'Auth Failed!'));
         } else {
+            $this->rememberReferrerUrl('backend-role-auth');
             //获取backend_menu中的数据
             $list = BackendMenu::find()
                 ->select('id,name,pid,url')
@@ -76,7 +117,7 @@ class BackendRoleController extends BaseController
                 ->all();
             $tree = new Tree();
             $menuList = $tree->getTree($list);
-            //获取backend_item_child中的数据
+            //获取本角色下属的权限
             $permissionsList = $auth->getPermissionsByRole($name);
             $permissionsOptions = array_keys($permissionsList);//只取名称
             return $this->render('auth', [

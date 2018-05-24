@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\BackendRole;
+use yii\rbac\Item;
 
 /**
  * BackendRoleSearch represents the model behind the search form about `backend\models\BackendRole`.
@@ -41,16 +42,16 @@ class BackendRoleSearch extends BackendRole
      */
     public function search($params)
     {
-        $query = BackendRole::find();
+        $query = BackendRole::find()->where(['type'=>Item::TYPE_ROLE]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            //'pagination' => [
-                //'pageSize' => 20,
-            //],
-            //'sort' => ['defaultOrder' => ['id' => SORT_DESC]]
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+            'sort' => ['defaultOrder' => ['created_at' => SORT_DESC]]
         ]);
 
         $this->load($params);
@@ -63,7 +64,7 @@ class BackendRoleSearch extends BackendRole
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'type' => $this->type,
+//            'type' => $this->type,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);

@@ -121,24 +121,44 @@ class BackendMenuController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $model->scenario = 'update';
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
-        } else {
-            //显示树下拉菜单
-            $list = $model::find()->select('id,pid,name')
-                ->where(['status' => BackendMenu::STATUS_VISIBLE])//不显示隐藏的
-                ->asArray()
-                ->all();
-            //创建树实例
-            $tree = new Tree();
-            $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];
-            $treeOptions = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
-            return $this->render('update', [
-                'model' => $model,
-                'treeOptions' => $treeOptions
-            ]);
+        //如果是提交数据
+        if (Yii::$app->request->isPost) {
+            $model->scenario = 'update';
+            //载入数据
+            $model->load(Yii::$app->request->post());
+            //判定是否已写入权限表(url为权限名称，name为权限描述)
+            $hasChange = false;//标记是否需要变动
+            $auth = Yii::$app->authManager;
+            $oldUrl = $model->getOldAttribute('url');//旧的名称
+            $permission = $auth->getPermission($oldUrl);
+            if ($permission) {
+                //已写入，则判定判定url和name是否有变动，如果有变动，需要更新权限表里的名称
+                if ($model->isAttributeChanged('name') || $model->isAttributeChanged('url')) {
+                    $hasChange = true;
+                }
+            }
+            if ($model->save()) {
+                if ($hasChange) {
+                    $permission->name = $model->url;
+                    $permission->description = $model->name;
+                    $auth->update($oldUrl, $permission);
+                }
+                return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
+            }
         }
+        //显示树下拉菜单
+        $list = $model::find()->select('id,pid,name')
+            ->where(['status' => BackendMenu::STATUS_VISIBLE])//不显示隐藏的
+            ->asArray()
+            ->all();
+        //创建树实例
+        $tree = new Tree();
+        $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];
+        $treeOptions = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
+        return $this->render('update', [
+            'model' => $model,
+            'treeOptions' => $treeOptions
+        ]);
     }
 
     /**
@@ -149,8 +169,25 @@ class BackendMenuController extends BaseController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-        return $this->redirectSuccess(['index'], Yii::t('common', 'Delete Success'));
+        $model = $this->findModel($id);
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $model->delete();
+            //判定是否已作为权限
+            $auth = Yii::$app->authManager;
+            $permission = $auth->getPermission($model->url);
+            if ($permission) {
+                //移除此权限
+                $auth->remove($permission);
+            }
+            $transaction->commit();
+            return $this->redirectSuccess(['index'], Yii::t('common', 'Delete Success'));
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+        }
+        return $this->redirectError(['index'], Yii::t('common', 'Delete Failed'));
     }
 
     /**

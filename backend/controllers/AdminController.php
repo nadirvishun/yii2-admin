@@ -2,9 +2,12 @@
 
 namespace backend\controllers;
 
+use backend\models\BackendRole;
 use Yii;
 use backend\models\Admin;
 use backend\models\search\AdminSearch;
+use yii\helpers\Url;
+use yii\rbac\Item;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -72,6 +75,50 @@ class AdminController extends BaseController
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+
+    /**
+     * 设置角色
+     * @param $id
+     */
+    public function actionRole($id)
+    {
+        $model = $this->findModel($id);
+        //如果是超级管理员则不用设置角色
+        if ($id == Yii::$app->params['super_admin_id']) {
+            return $this->redirectError(Url::to('index'), Yii::t('admin', 'Super admin do not need set!'));
+        }
+        $auth = Yii::$app->authManager;
+        if (Yii::$app->request->isPost) {
+            //判定角色是否勾选
+            $roles = Yii::$app->request->post('roles');
+            if (empty($roles)) {
+                return $this->redirectError(Url::to(), Yii::t('admin', 'This role must select!'));
+            }
+            //删除此用户原有的角色
+            $auth->revokeAll($id);
+            //增加角色赋值
+            foreach ($roles as $role) {
+                $roleClass = $auth->getRole($role);
+                $auth->assign($roleClass, $id);
+            }
+
+            $url = $this->getReferrerUrl('admin-role');
+            return $this->redirectSuccess($url, Yii::t('admin', 'Set Role Success'));
+        } else {
+            //获取所有角色
+            $rolesArr = $auth->getRoles();
+            $roles = array_keys($rolesArr);
+            //获取当前用户的角色
+            $assignmentsArr = $auth->getAssignments($id);
+            $assignments = array_keys($assignmentsArr);
+            $this->rememberReferrerUrl('admin-role');
+            return $this->render('role', [
+                'model' => $model,
+                'roles' => $roles,
+                'assignments' => $assignments
+            ]);
+        }
     }
 
     /**
@@ -187,6 +234,10 @@ class AdminController extends BaseController
     public function actionDelete($id)
     {
         $url = Yii::$app->request->referrer;
+        //超级管理员不能删除
+        if (Yii::$app->params['super_admin_id'] == $id) {
+            return $this->redirectError($url, Yii::t('admin', 'Super admin can not delete!'));
+        }
         //删除时需要判定不能删除自身
         if ($id == Yii::$app->user->id) {
             return $this->redirectError($url, Yii::t('admin', 'Can not delete self'));
@@ -195,9 +246,24 @@ class AdminController extends BaseController
         if (strpos(urldecode($url), 'admin/view') !== false) {
             $url = ['index'];
         }
-        $this->findModel($id)->delete();
-
-        return $this->redirectSuccess($url, Yii::t('common', 'Delete Success'));
+        $model = $this->findModel($id);
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $model->delete();
+            //删除用户时，判定是否有角色，如果有则一起删除
+            $auth = Yii::$app->authManager;
+            $roles = $auth->getAssignments($id);
+            if (!empty($roles)) {
+                $auth->revokeAll($id);
+            }
+            $transaction->commit();
+            return $this->redirectSuccess($url, Yii::t('common', 'Delete Success'));
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+        }
+        return $this->redirectError($url, Yii::t('common', 'Delete Failed'));
     }
 
     /**

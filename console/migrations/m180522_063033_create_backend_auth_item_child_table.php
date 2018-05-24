@@ -25,6 +25,9 @@ class m180522_063033_create_backend_auth_item_child_table extends Migration
         ], $tableOptions);
         //联合主键
         $this->addPrimaryKey('parent_child', self::TBL_NAME, ['parent', 'child']);
+        //设置外键，如果要用内置的rbac方法，则必须设置，相关修改是自动改的
+        $this->addForeignKey('foreign_parent', self::TBL_NAME, 'parent', '{{backend_auth_item}}', 'name', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('foreign_child', self::TBL_NAME, 'child', '{{backend_auth_item}}', 'name', 'CASCADE', 'CASCADE');
     }
 
     /**

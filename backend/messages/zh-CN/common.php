@@ -11,7 +11,7 @@ return [
     'view' => '查看',
     'delete' => '删除',
     'submit' => '提交',
-    'reset' => '刷新',
+    'reset' => '重置',
     'search' => '搜索',
     'forbidden' => '禁止',
     'batch' => '批量',
@@ -27,6 +27,7 @@ return [
     'Create Success' => '创建成功',
     'Update Success' => '修改成功',
     'Delete Success' => '删除成功',
+    'Delete Failed' => '删除失败',
     //错误页面
     'homePage' => '首页',
     'previousPage' => '上一页',
@@ -41,4 +42,6 @@ return [
     'Online' => '在线',
     'Hide' => '隐藏',
     'Visible' => '显示',
+
+    'Super Admin' => '超级管理员'
 ];

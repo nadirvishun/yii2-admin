@@ -18,6 +18,6 @@ class IcheckAsset extends AssetBundle
         'iCheck/icheck.js',
     ];
     public $depends = [
-        'backend\assets\AppAsset',
+        'dmstr\web\AdminLteAsset'
     ];
 }
