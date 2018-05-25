@@ -18,35 +18,12 @@ use yii\filters\AccessControl;
 class BackendMenuController extends BaseController
 {
     /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-        ];
-    }
-
-    /**
      * Lists all BackendMenu models.
      * @return mixed
      */
     public function actionIndex($id = null)
     {
+        //另一个插件，也不错，但是没有ajax加载，和拖动移动（虽然没用到）
 //        $searchModel = new BackendMenuSearch();
 //        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 //
@@ -54,15 +31,15 @@ class BackendMenuController extends BaseController
 //            'searchModel' => $searchModel,
 //            'dataProvider' => $dataProvider,
 //        ]);
-        //todo,目前此widget不支持sort，后续可能改进
+        //todo,目前此widget不支持sort，后续可能改进，如果后期菜单太多，可改为懒加载
         $dataProvider = new ActiveDataProvider([
             'query' => BackendMenu::find()->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]),
 //            'sort' => ['defaultOrder' => ['sort' => SORT_ASC, 'id' => SORT_ASC]]
         ]);
-        $initial = BackendMenu::findOne($id);
+//        $initial = BackendMenu::findOne($id);
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'initial' => $initial,
+//            'initial' => $initial,
         ]);
     }
 

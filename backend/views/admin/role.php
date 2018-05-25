@@ -21,8 +21,10 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= Html::checkbox('roles[]', $Check, [
                 'label' => $role,
                 'value' => $role,
-                'class' => 'flat top-checkbox'
+                'class' => 'flat',
+                'labelOptions' => ['style' => 'margin-top:8px']
             ]) ?>
+        <br>
         <?php endforeach; ?>
         <hr>
         <div class="form-group">

@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= TreeGrid::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+//        'filterModel' => $searchModel,
         'options' => ['class' => 'table table-bordered  table-hover table-striped', 'id' => 'tree'],
         'keyColumnName' => 'id',
         'parentColumnName' => 'pid',

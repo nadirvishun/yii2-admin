@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 /**
@@ -25,7 +26,87 @@ class BaseController extends Controller
     public function init()
     {
         parent::init();
+        //左侧菜单检索
         $this->backMenuSearch = Yii::$app->request->post('backend-menu-search', '');
+    }
+
+    /**
+     * 登录和权限判定
+     * @param $action
+     * @return bool|\yii\web\Response
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function beforeAction($action)
+    {
+        parent::beforeAction($action);
+
+        //判定是否登录
+        $permission = $action->getUniqueId();
+        if (!in_array($permission, $this->noLoginActions())) {
+            if (Yii::$app->user->isGuest) {
+                $this->redirect(Yii::$app->user->loginUrl);
+                return false;
+            }
+        }
+
+        //判定是否有权限
+        //如果是超级管理员，则拥有全部权限
+        if (Yii::$app->user->id == Yii::$app->params['super_admin_id']) {
+            return true;
+        }
+        //如果是其它管理员，则需要判定
+        if (!in_array($permission, $this->noAuthActions())) {
+            if (!Yii::$app->user->can($permission)) {
+                $url = isset(Yii::$app->request->referrer) ? Yii::$app->request->referrer : Yii::$app->homeUrl;
+                $this->redirectError($url, Yii::t('common', 'No permissions to operate this!'));
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ]
+        ];
+    }
+
+    /**
+     * 不需要登陆判定的action，后续可在此种增加，或者继承此方法修改，但最好还是写在此处一目了然
+     */
+    protected function noLoginActions()
+    {
+        $actions = [
+            'site/login',//登陆
+            'site/captcha',//验证码
+            'site/request-password-reset',//密码重置请求
+            'site/reset-password',//密码重置
+        ];
+        return $actions;
+    }
+
+    /**
+     * 不需要权限判定的action，后续可在此种增加，或者继承此方法修改，但最好还是写在此处一目了然
+     */
+    protected function noAuthActions()
+    {
+        //无需登录判定的一般也不需要相关的权限
+        $noLoginActions = $this->noLoginActions();
+        $actions = [
+            'site/index',//首页
+            'site/logout',//退出登录
+            'admin/modify',//管理员修改自身信息
+        ];
+        return array_merge($noLoginActions, $actions);
     }
 
     /**

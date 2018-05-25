@@ -43,5 +43,6 @@ return [
     'Hide' => '隐藏',
     'Visible' => '显示',
 
-    'Super Admin' => '超级管理员'
+    'Super Admin' => '超级管理员',
+    'No permissions to operate this!'=>'您没有执行此操作的权限'
 ];

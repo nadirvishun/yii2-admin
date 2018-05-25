@@ -64,7 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                     $auth = Yii::$app->authManager;
                     $roles = $auth->getRolesByUser($model->id);
-                    return empty($roles) ? Yii::t('admin', 'No Role') : implode(',', array_keys($roles));
+                    return empty($roles) ? Yii::t('admin', 'No Role') : implode('，', array_keys($roles));
                 }
             ],
             // 'created_at',

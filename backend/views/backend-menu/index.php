@@ -25,8 +25,8 @@ $this->params['breadcrumbs'][] = $this->title;
             <h3 class="box-title"><?= Yii::t('common', 'message_manage') ?></h3>
         </div>
         <div class="btn-group pull-right">
-            <?= Html::a('<i class="fa fa-plus"></i>', ['create'], ['data-pjax' => 0, 'class' => 'btn btn-success', 'title' => Yii::t('common', 'create')]) . ' ' .
-            Html::a('<i class="fa fa-repeat"></i>', ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('common', 'reset')]) ?>
+            <?= Html::a('<i class="fa fa-plus"></i> ' . Yii::t('common', 'create'), ['create'], ['data-pjax' => 0, 'class' => 'btn btn-success', 'title' => Yii::t('common', 'create')]) . ' ' .
+            Html::a('<i class="fa fa-repeat"></i> ' . Yii::t('common', 'reset'), ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('common', 'reset')]) ?>
         </div>
     </div>
     <?=
@@ -38,8 +38,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'showRoots' => true,
         'lazyLoad' => false,
         'emptyTextOptions' => ['class' => 'empty p-10'],
-        'initialNode' => $initial,
-        'moveAction' => ['move'],
+        'pluginOptions'=>[
+
+        ],
+//        'initialNode' => $initial,
+//        'moveAction' => ['move'],
         'columns' => [
             'name',
             'id',
@@ -65,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return BackendMenu::getStatusOptions($model->status);
                 }
             ],
-            'sort',
+//            'sort',
             // 'created_by',
             // 'created_at',
             // 'updated_by',
@@ -111,3 +114,10 @@ $this->params['breadcrumbs'][] = $this->title;
         ]
     ]); ?>
 </div>
+<?php
+    //设置js控制默认的三级菜单为折叠的
+    $js=<<<EOF
+$("tr[class*='treegrid-parent-']").treegrid('collapse');
+EOF;
+    $this->registerJs($js);
+?>

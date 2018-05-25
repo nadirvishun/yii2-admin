@@ -41,6 +41,7 @@ return [
     'Suggest select only one role!' => '为了方便管理，建议每个管理员只选择对应一个角色',
     'This role must select!' => '角色必须勾选',
     'Super admin can not delete!' => '超级管理员无法删除',
+    'Super admin can only update by self!' => '无权限修改超级管理员信息',
     'Set Role Success' => '设置成功',
 
     //login

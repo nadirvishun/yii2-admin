@@ -59,7 +59,10 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 <?php
-//icheck相关的js、控制显示颜色和全选与取消全选、设置如果二三级有选择，则上级自动勾选
+//icheck相关的js、控制显示颜色
+//顶级的全选与取消全选
+//二级的如果选中，则顶级必须选中，二级如果取消，则三级也没必要点选，也取消
+//三级如果选中，则二级和顶级都要选中
 $js = <<<EOF
 $('input[type="checkbox"].flat, input[type="radio"].flat').iCheck({
       checkboxClass: 'icheckbox_flat-blue',
@@ -76,12 +79,17 @@ $('input[type="checkbox"].flat, input[type="radio"].flat').iCheck({
             }
         }
     });
-    $('.second-checkbox').on('ifChecked',function(){
-        var top=$(this).parent().parent().parent().parent().find('.top-checkbox');
-        if(!top.prop('checked')){
-            openAllSelect=false;
-            top.iCheck('check');
-            openAllSelect=true;
+    $('.second-checkbox').on('ifChanged',function(){
+        if($(this).prop('checked')){
+            var top=$(this).parent().parent().parent().parent().find('.top-checkbox');
+            if(!top.prop('checked')){
+                openAllSelect=false;
+                top.iCheck('check');
+                openAllSelect=true;
+            }
+        }else{
+            var second_menu=$(this).parent().parent().parent();
+            second_menu.find('input[type="checkbox"]').iCheck('uncheck');
         }
     });
     $('.third-checkbox').on('ifChecked',function(){

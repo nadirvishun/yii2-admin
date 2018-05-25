@@ -23,20 +23,6 @@ class SiteController extends BaseController
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error', 'captcha','request-password-reset','reset-password'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -89,7 +75,7 @@ class SiteController extends BaseController
         foreach (array_keys($system) as $key => $value) {
             $systemAttr[$key]['attribute'] = $value;
             $systemAttr[$key]['label'] = Yii::t('site', $value);
-            $systemAttr[$key]['captionOptions']=['class'=>'c-md-3'];
+            $systemAttr[$key]['captionOptions'] = ['class' => 'c-md-3'];
         }
         //开发信息
         $developer = [
@@ -102,7 +88,7 @@ class SiteController extends BaseController
         foreach (array_keys($developer) as $key => $value) {
             $developerAttr[$key]['attribute'] = $value;
             $developerAttr[$key]['label'] = Yii::t('site', $value);
-            $developerAttr[$key]['captionOptions']=['class'=>'c-md-3'];
+            $developerAttr[$key]['captionOptions'] = ['class' => 'c-md-3'];
         }
         return $this->render('index', [
             'system' => $system,
@@ -151,6 +137,7 @@ class SiteController extends BaseController
 
         return $this->goHome();
     }
+
     /**
      * Requests password reset.
      *
@@ -162,9 +149,9 @@ class SiteController extends BaseController
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
-                return $this->redirectSuccess(Yii::$app->getHomeUrl(),Yii::t('site','Check your email for further instructions.'));
+                return $this->redirectSuccess(Yii::$app->getHomeUrl(), Yii::t('site', 'Check your email for further instructions.'));
             } else {
-                $model->addError('email',Yii::t('site','Sorry, we are unable to reset password for the provided email address.'));
+                $model->addError('email', Yii::t('site', 'Sorry, we are unable to reset password for the provided email address.'));
             }
         }
         return $this->render('requestPasswordResetToken', [
@@ -189,7 +176,7 @@ class SiteController extends BaseController
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            return $this->redirectSuccess(Yii::$app->getHomeUrl(),Yii::t('site','New password saved.'));
+            return $this->redirectSuccess(Yii::$app->getHomeUrl(), Yii::t('site', 'New password saved.'));
         }
 
         return $this->render('resetPassword', [

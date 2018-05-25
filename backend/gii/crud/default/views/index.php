@@ -150,8 +150,8 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
             <h3 class="box-title"><?= "<?= " ?>Yii::t('common', 'message_manage') ?></h3>
         </div>
         <div class="btn-group pull-right">
-            <?= "<?=" ?> Html::a('<i class="fa fa-plus"></i>', ['create'], ['data-pjax' => 0, 'class' => 'btn btn-success', 'title' => Yii::t('common', 'create')]) . ' ' .
-            Html::a('<i class="fa fa-repeat"></i>', ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('common', 'reset')])?>
+            <?= "<?=" ?> Html::a('<i class="fa fa-plus"></i> ' . Yii::t('common', 'create'), ['create'], ['data-pjax' => 0, 'class' => 'btn btn-success', 'title' => Yii::t('common', 'create')]) . ' ' .
+            Html::a('<i class="fa fa-repeat"></i> ' . Yii::t('common', 'reset'), ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('common', 'reset')])?>
         </div>
     </div>
     <?= "<?= " ?>TreeGrid::widget([

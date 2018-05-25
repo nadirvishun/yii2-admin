@@ -19,39 +19,6 @@ use yii\web\UploadedFile;
 class AdminController extends BaseController
 {
     /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    //目前没有rbac，暂时设定只有admin账号才能修改或删除所有后台管理员的信息
-                    [
-                        'actions' => ['update', 'delete'],
-                        'allow' => false,
-                        'matchCallback' => function ($rule, $action) {
-                            return Yii::$app->user->identity->username != 'admin';
-                        }
-                    ],
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-
-                ],
-            ],
-        ];
-    }
-
-    /**
      * Lists all Admin models.
      * @return mixed
      */
@@ -156,6 +123,13 @@ class AdminController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        //超级管理员只有自己才能修改
+        if (Yii::$app->params['super_admin_id'] == $id) {
+            if (Yii::$app->user->id != $id) {
+                $url = Yii::$app->request->referrer;
+                return $this->redirectError($url, Yii::t('admin', 'Super admin can only update by self!'));
+            }
+        }
         $model->scenario = 'update';
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //获取列表页url，方便跳转
