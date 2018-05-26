@@ -6,6 +6,7 @@ use common\components\Tree;
 use Yii;
 use backend\models\BackendMenu;
 use backend\models\search\BackendMenuSearch;
+use yii\caching\TagDependency;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -65,6 +66,12 @@ class BackendMenuController extends BaseController
     {
         $model = new BackendMenu();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {//如果是post传递保存
+            //将左侧菜单缓存设置为失效，取所有角色，因为没有通过权限获取角色的方法，自己也懒得写了
+            $auth = Yii::$app->auth;
+            $rolesArr = $auth->getRoles();
+            $roles = array_merge(['super_admin'], array_keys($rolesArr));
+            TagDependency::invalidate(Yii::$app->cache, $roles);
+
             return $this->redirectSuccess(['index'], Yii::t('common', 'Create Success'));
         } else {//如果是展示页面
             //获取默认状态
@@ -120,6 +127,11 @@ class BackendMenuController extends BaseController
                     $permission->description = $model->name;
                     $auth->update($oldUrl, $permission);
                 }
+                //将左侧菜单缓存设置为失效，取所有角色，因为没有通过权限获取角色的方法，自己也懒得写了
+                $rolesArr = $auth->getRoles();
+                $roles = array_merge(['super_admin'], array_keys($rolesArr));
+                TagDependency::invalidate(Yii::$app->cache, $roles);
+
                 return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
             }
         }
@@ -157,6 +169,12 @@ class BackendMenuController extends BaseController
                 //移除此权限
                 $auth->remove($permission);
             }
+
+            //将左侧菜单缓存设置为失效，取所有角色，因为没有通过权限获取角色的方法，自己也懒得写了
+            $rolesArr = $auth->getRoles();
+            $roles = array_merge(['super_admin'], array_keys($rolesArr));
+            TagDependency::invalidate(Yii::$app->cache, $roles);
+
             $transaction->commit();
             return $this->redirectSuccess(['index'], Yii::t('common', 'Delete Success'));
         } catch (\Exception $e) {

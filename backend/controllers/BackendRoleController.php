@@ -8,6 +8,7 @@ use Yii;
 use backend\models\BackendRole;
 use backend\models\search\BackendRoleSearch;
 use backend\controllers\BaseController;
+use yii\caching\TagDependency;
 use yii\helpers\Url;
 use yii\helpers\VarDumper;
 use yii\web\NotFoundHttpException;
@@ -75,6 +76,8 @@ class BackendRoleController extends BaseController
                     //写入上下级关系
                     $auth->addChild($role, $permissionClass);
                 }
+                //将左侧菜单缓存设置为失效
+                TagDependency::invalidate(Yii::$app->cache, $name);
                 $transaction->commit();
                 $url = $this->getReferrerUrl('backend-role-auth');
                 return $this->redirectSuccess($url, Yii::t('backend_role', 'Auth Success!'));
@@ -149,6 +152,8 @@ class BackendRoleController extends BaseController
             $role->name = $model->name;
             $role->description = $model->description;
             $auth->update($name, $role);
+            //将左侧菜单缓存设置为失效
+            TagDependency::invalidate(Yii::$app->cache, $name);
             //获取列表页url，方便跳转
             $url = $this->getReferrerUrl('backend-role-update');
             return $this->redirectSuccess($url, Yii::t('common', 'Update Success'));
@@ -174,6 +179,8 @@ class BackendRoleController extends BaseController
         $auth = Yii::$app->authManager;
         $role = $auth->getRole($name);
         $auth->remove($role);
+        //将左侧菜单缓存设置为失效
+        TagDependency::invalidate(Yii::$app->cache, $name);
         $url = Yii::$app->request->referrer;
         //如果是从view中删除，则返回列表页
         if (strpos(urldecode($url), 'backend-role/view') !== false) {

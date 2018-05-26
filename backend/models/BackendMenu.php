@@ -5,6 +5,7 @@ namespace backend\models;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\caching\TagDependency;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -170,54 +171,68 @@ class BackendMenu extends \yii\db\ActiveRecord
     {
         //获取当前角色的权限
         $userId = Yii::$app->user->id;
-        //非超级管理员，需要按照权限来显示菜单
-        $permissions = [];
+        //开启缓存来提升加载速度
+        $cache = Yii::$app->cache;
+        //获取缓存的名称
+        $auth = Yii::$app->authManager;
         if ($userId != Yii::$app->params['super_admin_id']) {
-            $auth = Yii::$app->authManager;
-            $permissionsArr = $auth->getPermissionsByUser(Yii::$app->user->id);
-            $permissions = array_keys($permissionsArr);
+            //获取此管理员对应角色
+            $rolesArr = $auth->getRolesByUser($userId);
+            $roles = array_keys($rolesArr);
+        } else {
+            //超级管理员缓存tag
+            $roles = ['super_admin'];
         }
-        //优先从缓存中取数据
-//        $cache = Yii::$app->cache;
-//        $tree = $cache->get('menus');
-//        if ($tree == false) {
-        $list = static::find()
-            ->select('id,pid,name,url,url_param,icon,status')
-            ->where(['like', 'name', $search])
-            ->indexBy('id')
-            ->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC])
-            ->asArray()
-            ->all();
-        $tree = [];
-        if (!empty($list)) {
-            //先重新组装label，url等数据
-            foreach ($list as $k => $info) {
-                //赋值为label,并注销掉name
-                $list[$k]['label'] = $info['name'];
-                unset($list[$k]['name']);
-                //组装url
-                $list[$k]['url'] = static::mergeUrl($info['url'], $info['url_param']);
-                unset($list[$k]['url_param']);//url参数注销掉
-                //如果数据库中字段为隐藏，则增加visible参数，且设置为false，再有就是无权限的隐藏掉
-                if (!$info['status'] || ($userId != Yii::$app->params['super_admin_id'] && !in_array($info['url'], $permissions))) {
-                    $list[$k]['visible'] = false;
+        //按照用户具有的角色来命名
+        $tree = $cache->get('menus_role_' . implode('_', $roles));
+        //如果没有缓存或者是在搜索
+        if ($tree == false || !empty($search)) {
+            $list = static::find()
+                ->select('id,pid,name,url,url_param,icon,status')
+                ->where(['like', 'name', $search])
+                ->indexBy('id')
+                ->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC])
+                ->asArray()
+                ->all();
+            $tree = [];
+            if (!empty($list)) {
+                //获取相关的权限
+                $permissionsArr = $auth->getPermissionsByUser($userId);
+                $permissions = array_keys($permissionsArr);
+                //先重新组装label，url等数据
+                foreach ($list as $k => $info) {
+                    //赋值为label,并注销掉name
+                    $list[$k]['label'] = $info['name'];
+                    unset($list[$k]['name']);
+                    //组装url
+                    $list[$k]['url'] = static::mergeUrl($info['url'], $info['url_param']);
+                    unset($list[$k]['url_param']);//url参数注销掉
+                    //如果数据库中字段为隐藏，则增加visible参数，且设置为false，再有就是无权限的隐藏掉
+                    if (!$info['status'] || ($userId != Yii::$app->params['super_admin_id'] && !in_array($info['url'], $permissions))) {
+                        $list[$k]['visible'] = false;
+                    }
+                    unset($list[$k]['status']);//注销掉状态
                 }
-                unset($list[$k]['status']);//注销掉状态
+                //组装成要求的树结构
+                foreach ($list as $value) {
+                    if (isset($list[$value['pid']])) {
+                        $list[$value['pid']]['items'][] = &$list[$value['id']];
+                    } else {
+                        $tree[] = &$list[$value['id']];
+                    }
+                }
             }
-            //组装成要求的树结构
-            foreach ($list as $value) {
-                if (isset($list[$value['pid']])) {
-                    $list[$value['pid']]['items'][] = &$list[$value['id']];
-                } else {
-                    $tree[] = &$list[$value['id']];
-                }
+            //如果是搜索，则不加入缓存
+            if (empty($search)) {
+                //按照角色名标签作为依赖，这样以来，以下情况的变动需要调用TagDependency::invalidate清除缓存:
+                //1.角色修改、删除、授权（BackendRoleController中，设置目的是为了清除旧的缓存，以免后期新建的角色是曾经用过后又修改的，但缓存还在导致出错[也可以在新建角色时调用清除一下]，后一个授权变更会引起菜单的显隐）
+                //2.菜单修改、删除、新建（BackendMenuController中，菜单变化，直接清除全部的菜单缓存）
+                //3.用户赋予角色（AdminController中，这个不做设置也可以，设置目的是为了清除旧的缓存，以免积累，但也可能导致正常缓存的重新缓存，有利有弊，这里就不设置了）
+                $dependency = new TagDependency(['tags' => $roles]);
+                //写入缓存
+                $cache->set('menus_role_' . implode('_', $roles), $tree, 0, $dependency);
             }
         }
-        //添加缓存依赖，当最新的更新时间变更，则说明有数据更新
-//            $dependency = new \yii\caching\DbDependency(['sql' => 'SELECT max(updated_at) FROM ' . ' {{%backend_menu}}']);
-//            //写入缓存
-//            $cache->set('menus', $tree, 0, $dependency);
-//        }
         return $tree;
     }
 
