@@ -7,13 +7,9 @@ use common\components\Tree;
 use Yii;
 use backend\models\BackendRole;
 use backend\models\search\BackendRoleSearch;
-use backend\controllers\BaseController;
 use yii\caching\TagDependency;
 use yii\helpers\Url;
-use yii\helpers\VarDumper;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 
 /**
  * BackendRoleController implements the CRUD actions for BackendRole model.
@@ -90,12 +86,7 @@ class BackendRoleController extends BaseController
         } else {
             $this->rememberReferrerUrl('backend-role-auth');
             //获取backend_menu中的数据
-            $list = BackendMenu::find()
-                ->select('id,name,pid,url')
-                ->asArray()
-                ->all();
-            $tree = new Tree();
-            $menuList = $tree->getTree($list);
+            $menuList = BackendMenu::getAllPermissions();
             //获取本角色下属的权限
             $permissionsList = $auth->getPermissionsByRole($name);
             $permissionsOptions = array_keys($permissionsList);//只取名称

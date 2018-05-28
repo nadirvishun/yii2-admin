@@ -2,9 +2,11 @@
 
 namespace backend\models;
 
+use common\components\Tree;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\caching\DbDependency;
 use yii\caching\TagDependency;
 use yii\helpers\ArrayHelper;
 
@@ -163,7 +165,6 @@ class BackendMenu extends \yii\db\ActiveRecord
     /**
      * 左侧菜单显示
      * 按照dmstr\widgets\Menu所要求格式组装
-     * 由于需要实时检索，所以无法加入缓存
      * @param string $search
      * @return array
      */
@@ -234,6 +235,53 @@ class BackendMenu extends \yii\db\ActiveRecord
             }
         }
         return $tree;
+    }
+
+    /**
+     * 获取分类下拉菜单选项
+     */
+    public static function getMenuTreeOptions()
+    {
+        $cache = Yii::$app->cache;
+        //增加缓存获取
+        $data = $cache->get('menu_tree_options');
+        if ($data == false) {
+            $list = static::find()->select('id,pid,name')
+                ->where(['status' => self::STATUS_VISIBLE])//不显示隐藏的
+                ->asArray()
+                ->all();
+            //创建树实例
+            $tree = new Tree();
+            $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];//顶级显示
+            $data = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
+            //写入缓存
+            $dependency = new DbDependency(['sql' => 'SELECT max(updated_at) FROM ' . static::tableName()]);
+            $cache->set('menu_tree_options', $data, 0, $dependency);
+        }
+        return $data;
+    }
+
+    /**
+     * 获取所有的权限
+     * 权限与菜单是挂钩的
+     */
+    public static function getAllPermissions()
+    {
+        $cache = Yii::$app->cache;
+        //增加缓存获取
+        $data = $cache->get('menu_permissions');
+        if ($data == false) {
+            $list = static::find()->select('id,name,pid,url')
+                ->asArray()
+                ->all();
+            //创建树实例
+            $tree = new Tree();
+            $data = $tree->getTree($list);
+            //写入缓存
+            $dependency = new DbDependency(['sql' => 'SELECT max(updated_at) FROM ' . static::tableName()]);
+            $cache->set('menu_permissions', $data, 0, $dependency);
+        }
+        return $data;
     }
 
     /**

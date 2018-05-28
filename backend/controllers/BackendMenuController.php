@@ -2,16 +2,12 @@
 
 namespace backend\controllers;
 
-use common\components\Tree;
 use Yii;
 use backend\models\BackendMenu;
-use backend\models\search\BackendMenuSearch;
 use yii\caching\TagDependency;
 use yii\data\ActiveDataProvider;
-use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
+
 
 /**
  * BackendMenuController implements the CRUD actions for BackendMenu model.
@@ -83,14 +79,8 @@ class BackendMenuController extends BaseController
                 $model->pid = $pid;
             }
             $data['model'] = $model;
-            $list = $model::find()->select('id,pid,name')
-                ->where(['status' => BackendMenu::STATUS_VISIBLE])//不显示隐藏的
-                ->asArray()
-                ->all();
-            //创建树实例
-            $tree = new Tree();
-            $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];
-            $data['treeOptions'] = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
+            //获取树形下拉选项
+            $data['treeOptions'] = BackendMenu::getMenuTreeOptions();
 
             return $this->render('create', $data);
         }
@@ -136,14 +126,7 @@ class BackendMenuController extends BaseController
             }
         }
         //显示树下拉菜单
-        $list = $model::find()->select('id,pid,name')
-            ->where(['status' => BackendMenu::STATUS_VISIBLE])//不显示隐藏的
-            ->asArray()
-            ->all();
-        //创建树实例
-        $tree = new Tree();
-        $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];
-        $treeOptions = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
+        $treeOptions = BackendMenu::getMenuTreeOptions();
         return $this->render('update', [
             'model' => $model,
             'treeOptions' => $treeOptions

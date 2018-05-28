@@ -9,8 +9,6 @@ use backend\models\search\SettingSearch;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 
 /**
  * BackendSettingController implements the CRUD actions for BackendSetting model.
