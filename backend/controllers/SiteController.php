@@ -182,4 +182,30 @@ class SiteController extends BaseController
             'model' => $model,
         ]);
     }
+
+    /**
+     * 后台左侧菜单检索
+     * 其实最好的方法是前台用js来实现检索，自己js不好，不费劲了。
+     * @return \yii\web\Response
+     */
+    public function actionSearch()
+    {
+        $backMenuSearch = Yii::$app->request->post('backend-menu-search', '');
+        $referrer = Yii::$app->request->referrer;//请求前的url
+        $path = parse_url($referrer, PHP_URL_PATH);//路径，类似admin/index
+        parse_str(parse_url($referrer, PHP_URL_QUERY), $queryArr);//将参数转为数组
+        if (empty($backMenuSearch)) {
+            //如果这次没有传值，则判定url中是否有检索，有则去掉
+            if (isset($queryArr['backend-menu-search'])) {
+                unset($queryArr['backend-menu-search']);
+            }
+        } else {
+            //如果有传值，直接让后面的覆盖掉前面的
+            $queryArr = array_merge($queryArr, ['backend-menu-search' => $backMenuSearch]);
+        }
+        //组装成redirect需要的参数
+        $url = array_merge([$path], $queryArr);
+        //跳转刷新
+        return $this->redirect($url);
+    }
 }

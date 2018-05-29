@@ -53,6 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php endforeach; ?>
         <div class="form-group">
             <?= Html::submitButton(Yii::t('backend_role', 'auth'), ['class' => 'btn btn-success']) ?>
+            <!-- icheck目前对reset支持不好，还要写js什么的，所以直接重新加载 -->
             <?= Html::a(Yii::t('common', 'reset'), ['auth', 'name' => $roleName], ['class' => 'btn btn-warning', 'style' => 'margin-left:10px']) ?>
         </div>
         <?= Html::endForm() ?>

@@ -26,8 +26,8 @@ class BaseController extends Controller
     public function init()
     {
         parent::init();
-        //左侧菜单检索
-        $this->backMenuSearch = Yii::$app->request->post('backend-menu-search', '');
+        //左侧菜单检索赋值，方便显示检索的内容
+        $this->backMenuSearch = Yii::$app->request->get('backend-menu-search', '');
     }
 
     /**
@@ -104,6 +104,7 @@ class BaseController extends Controller
         $actions = [
             'site/index',//首页
             'site/logout',//退出登录
+            'site/search',//左侧菜单检索
             'admin/modify',//管理员修改自身信息
         ];
         return array_merge($noLoginActions, $actions);
