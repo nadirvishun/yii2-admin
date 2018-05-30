@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\AdminLog;
 use Yii;
 use backend\models\Admin;
 use backend\models\search\AdminSearch;
@@ -65,6 +66,14 @@ class AdminController extends BaseController
                 $roleClass = $auth->getRole($role);
                 $auth->assign($roleClass, $id);
             }
+
+            //写入操作日志
+            $title = Yii::t('admin', 'update admin roles');
+            $description = [
+                'admin_id' => $id,
+                'roles' => $roles
+            ];
+            AdminLog::saveAdminLog(Admin::className(), AdminLog::TYPE_UPDATE, json_encode($description), $title);
 
             $url = $this->getReferrerUrl('admin-role');
             return $this->redirectSuccess($url, Yii::t('admin', 'Set Role Success'));

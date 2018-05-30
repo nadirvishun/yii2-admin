@@ -29,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="box-body">
         <?= "<?= " ?>DetailView::widget([
             'model' => $model,
+            'options' => ['class' => 'table table-striped table-bordered detail-view', 'style' => 'word-break:break-all; word-wrap:break-all'],
             'attributes' => [
 <?php
 if (($tableSchema = $generator->getTableSchema()) === false) {

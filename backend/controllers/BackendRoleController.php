@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\AdminLog;
 use backend\models\BackendMenu;
 use common\components\Tree;
 use Yii;
@@ -72,8 +73,18 @@ class BackendRoleController extends BaseController
                     //写入上下级关系
                     $auth->addChild($role, $permissionClass);
                 }
+
                 //将左侧菜单缓存设置为失效
                 TagDependency::invalidate(Yii::$app->cache, $name);
+
+                //写入操作日志
+                $title = Yii::t('backend_role', 'update role permissions');
+                $description = [
+                    'role' => $name,
+                    'permissions' => $permissions
+                ];
+                AdminLog::saveAdminLog(BackendRole::className(), AdminLog::TYPE_UPDATE, json_encode($description), $title);
+
                 $transaction->commit();
                 $url = $this->getReferrerUrl('backend-role-auth');
                 return $this->redirectSuccess($url, Yii::t('backend_role', 'Auth Success!'));

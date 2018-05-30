@@ -43,6 +43,7 @@ return [
     'Super admin can not delete!' => '超级管理员无法删除',
     'Super admin can only update by self!' => '无权限修改超级管理员信息',
     'Set Role Success' => '设置成功',
+    'update admin roles' => '修改用户角色',
 
     //login
     'Password' => '密码',

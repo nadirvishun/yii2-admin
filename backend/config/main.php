@@ -71,7 +71,12 @@ return [
 //                'AdminLTE.min.css' => '@web/css/AdminLTE.min.css',
 //            ],
         ],
-
     ],
+    //在请求前绑定类事件来自动写入管理员操作日志，一些没有用ActiveRecord的操作还是需要自己写入，例如权限授权、批量写入等
+    'on beforeRequest' => function ($event) {
+        \yii\base\Event::on(\yii\db\BaseActiveRecord::className(), \yii\db\BaseActiveRecord::EVENT_AFTER_UPDATE, ['\backend\models\AdminLog', 'eventUpdate']);
+        \yii\base\Event::on(\yii\db\BaseActiveRecord::className(), \yii\db\BaseActiveRecord::EVENT_AFTER_DELETE, ['\backend\models\AdminLog', 'eventDelete']);
+        \yii\base\Event::on(\yii\db\BaseActiveRecord::className(), \yii\db\BaseActiveRecord::EVENT_AFTER_INSERT, ['\backend\models\AdminLog', 'eventInsert']);
+    },
     'params' => $params,
 ];

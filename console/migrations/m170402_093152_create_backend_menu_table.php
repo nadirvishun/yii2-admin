@@ -55,6 +55,8 @@ class m170402_093152_create_backend_menu_table extends Migration
             [16, '新增角色', 'backend-role/create', '', 1, 1, $time, 1, $time, 0],//17
             [16, '修改角色', 'backend-role/update', '', 2, 1, $time, 1, $time, 0],//18
             [16, '删除角色', 'backend-role/delete', '', 3, 1, $time, 1, $time, 0],//19
+            [11, '后台日志', 'admin-log/index', 'umbrella', 0, 1, $time, 1, $time, 1],//20
+            [20, '删除日志', 'admin-log/delete', '', 0, 1, $time, 1, $time, 0],//21
         ]);
     }
 

@@ -20,5 +20,7 @@ return [
     'This role not exist!' => '未获取到本角色详情',
     'This permission must select!'=>'权限必须选择',
     'Auth Success!'=>'授权成功',
-    'Auth Failed!'=>'授权失败'
+    'Auth Failed!'=>'授权失败',
+
+    'update role permissions'=>'修改角色权限',
 ];

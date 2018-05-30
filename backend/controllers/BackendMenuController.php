@@ -63,7 +63,7 @@ class BackendMenuController extends BaseController
         $model = new BackendMenu();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {//如果是post传递保存
             //将左侧菜单缓存设置为失效，取所有角色，因为没有通过权限获取角色的方法，自己也懒得写了
-            $auth = Yii::$app->auth;
+            $auth = Yii::$app->authManager;
             $rolesArr = $auth->getRoles();
             $roles = array_merge(['super_admin'], array_keys($rolesArr));
             TagDependency::invalidate(Yii::$app->cache, $roles);

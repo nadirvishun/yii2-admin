@@ -126,7 +126,7 @@ class Admin extends ActiveRecord implements IdentityInterface
             'status' => Yii::t('admin', 'Status'),
             'created_at' => Yii::t('admin', 'Created At'),
             'updated_at' => Yii::t('admin', 'Updated At'),
-            'role'=>Yii::t('admin', 'Role'),
+            'role' => Yii::t('admin', 'Role'),
         ];
     }
 
@@ -291,12 +291,16 @@ class Admin extends ActiveRecord implements IdentityInterface
     /**
      * 根据ID获取名称
      * @param $id
-     * @return string
+     * @return array|string
      */
-    public static function getUsernameById($id)
+    public static function getUsernameOptions($id = false)
     {
-        $info = static::findOne($id);
-        return empty($info['username']) ? Yii::t('common', 'Unknown') : $info['username'];
+        $arr = static::find()->select('username')->indexBy('id')->asArray()->column();
+        if ($id === false) {
+            return $arr;
+        } else {
+            return isset($arr[$id]) ? $arr[$id] : Yii::t('common', 'Unknown');
+        }
     }
 
     /**
