@@ -16,7 +16,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="admin-log-index grid-view box box-primary">
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'pjax' => true,
@@ -39,6 +38,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'options' => [
                         'prompt' => Yii::t('common', 'Please Select...'),
                     ],
+                    'hideSearch' => true,
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
                 ],
                 'value' => function ($model, $key, $index, $column) {
                     return Admin::getUsernameOptions($model->admin_id);
@@ -52,6 +55,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'data' => AdminLog::getTypeOptions(),
                     'options' => [
                         'prompt' => Yii::t('common', 'Please Select...'),
+                    ],
+                    'hideSearch' => true,
+                    'pluginOptions' => [
+                        'allowClear' => true
                     ],
                 ],
                 'value' => function ($model, $key, $index, $column) {
@@ -67,10 +74,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'created_at',
                 'filterType' => GridView::FILTER_DATE_RANGE,
                 'filterWidgetOptions' => [
-                    'attribute'=>'datetime_range',
+                    'attribute'=>'created_at',
                     'convertFormat'=>true,
                     'startAttribute'=>'datetime_min',
                     'endAttribute'=>'datetime_max',
+                    'pluginOptions'=>[
+                        'opens'=>'left',
+                    ],
                 ],
                 'value' => function ($model, $key, $index, $column) {
                     return Yii::$app->formatter->asDate($model->created_at, 'php:Y-m-d H:i:s');
@@ -141,10 +151,18 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <?php
     //选择不同时间段，修改提交的数据
+    //pjax提交时，select2会无法初始化，所以重新初始化
     $js=<<<EOF
 $('#delete_type').on('change',function(){
     var selectId=$(this).val();
     $('#delete_button').attr('href','/admin-log/delete?type='+selectId);
+})
+$(document).on('pjax:complete', function() {
+    var el=$('#delete_type');
+    id = el.attr('id');
+    var settings = el.attr('data-krajee-select2');
+    settings = window[settings];
+    $.when(el.select2(settings)).done(initS2Loading(id));
 })
 EOF;
     $this->registerJs($js);

@@ -6,25 +6,40 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\AdminLog;
+use kartik\daterange\DateRangeBehavior;
 
 /**
  * AdminLogSearch represents the model behind the search form about `backend\models\AdminLog`.
  */
 class AdminLogSearch extends AdminLog
 {
-    public $datetime_range;
     public $datetime_min;
     public $datetime_max;
 
+    /**
+     * 引入日期范围行为，主要是实现了分割最大最小
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => DateRangeBehavior::className(),
+                'attribute' => 'created_at',
+                'dateStartAttribute' => 'datetime_min',
+                'dateEndAttribute' => 'datetime_max',
+            ]
+        ];
+    }
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'admin_id', 'type', 'created_at'], 'integer'],
-            [['datetime_range'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
-            [['title', 'model', 'controller', 'action', 'url_param', 'description', 'ip'], 'safe'],
+            [['id', 'admin_id', 'type'], 'integer'],
+            [['created_at'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
+            [['title', 'model', 'controller', 'action', 'url_param', 'description', 'ip','datetime_max','datetime_min'], 'safe'],
         ];
     }
 
@@ -71,7 +86,7 @@ class AdminLogSearch extends AdminLog
             'id' => $this->id,
             'admin_id' => $this->admin_id,
             'type' => $this->type,
-            'created_at' => $this->created_at,
+//            'created_at' => $this->created_at,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])

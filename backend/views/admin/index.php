@@ -48,6 +48,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'options' => [
                         'prompt' => Yii::t('common', 'Please Select...'),
                     ],
+                    'hideSearch' => true,
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
                 ],
                 'value' => function ($model, $key, $index, $column) {
                     return Admin::getStatusOptions($model->status);
