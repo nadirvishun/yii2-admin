@@ -162,7 +162,7 @@ class AdminLog extends \yii\db\ActiveRecord
         //如果不传递title，也可以从语言文件中获取
         if (empty($title)) {
             // title需要保证gii自动生成相关语言文件不要改动，会自动寻找语言文件，转为中文
-            $title = Yii::t('common', 'delete') . Yii::t(Inflector::camel2id($modelBaseName, '_'), Inflector::pluralize(Inflector::camel2words($modelBaseName)));
+            $title =static::getTypeOptions($type). Yii::t(Inflector::camel2id($modelBaseName, '_'), Inflector::pluralize(Inflector::camel2words($modelBaseName)));
         }
         // 保存
         $data = [

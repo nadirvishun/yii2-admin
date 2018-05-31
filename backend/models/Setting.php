@@ -187,8 +187,7 @@ class Setting extends \yii\db\ActiveRecord
             self::TEXT => Yii::t('setting', 'text'),
             self::PASSWORD => Yii::t('setting', 'password'),
             self::SELECT => Yii::t('setting', 'select'),
-            //todo,github上的switchIput widget 对此支持不好，暂时注释掉已提交issue： https://github.com/kartik-v/yii2-widget-switchinput/issues/29
-//            self::RADIO => Yii::t('setting', 'radio'),
+            self::RADIO => Yii::t('setting', 'radio'),
 //            self::CHECKBOX => Yii::t('setting', 'checkbox'),
             self::TEXTAREA => Yii::t('setting', 'textarea'),
 //            self::FILE => Yii::t('setting', 'file'),
@@ -212,7 +211,7 @@ class Setting extends \yii\db\ActiveRecord
             }
             $query->andWhere(['not in', 'alias', $exceptAlias]);
         }
-        $list = $query->asArray()->all();
+        $list = $query->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC])->asArray()->all();
         return $list;
     }
 
@@ -281,15 +280,12 @@ class Setting extends \yii\db\ActiveRecord
                 ]);
                 break;
             case  self::RADIO :
-                $noValue=$value==1?0:1;
                 $tag = SwitchInput::widget([
                     'name' => $name,
                     'value' => $value,
-//                    'options' => ['uncheck' => $noValue],
+                    'options' => ['uncheck' => 0, 'value' => 1],
                     'pluginOptions' => ['size' => 'small']
                 ]);
-//                $tag=Html::checkbox($name,$value,['uncheck' => 0]);
-
                 break;
             case self::CHECKBOX :
                 break;
