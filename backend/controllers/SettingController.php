@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\AdminLog;
 use common\components\Tree;
 use Yii;
 use backend\models\Setting;
@@ -16,6 +17,20 @@ use yii\web\NotFoundHttpException;
 class SettingController extends BaseController
 {
     /**
+     * ueditor上传
+     * @return array
+     */
+    public function actions()
+    {
+        return [
+            'upload' => [
+                'class' => 'kucha\ueditor\UEditorAction',
+                'config' => Yii::$app->params['ueditorConfig']
+            ]
+        ];
+    }
+
+    /**
      * 系统菜单设置
      */
     public function actionSystem()
@@ -23,8 +38,16 @@ class SettingController extends BaseController
         if (Yii::$app->request->post()) {
             $settings = Yii::$app->request->post('Setting');
             foreach ($settings as $key => $value) {
+                //如果是checkboxlist类似的数组形式，则用json存储
+                if (is_array($value)) {
+                    $value = json_encode($value);
+                }
                 Setting::updateAll(['value' => $value], ['alias' => $key]);
             }
+            //写入操作日志
+            $title = Yii::t('setting', 'change setting');
+            AdminLog::saveAdminLog(Setting::className(), AdminLog::TYPE_UPDATE, $title, $title);
+
             return $this->redirectSuccess(['system'], Yii::t('common', 'Update Success'));
         }
         //组装成TabWidget所需求的形式，这里是显示全部的，而不是一个链接一个链接的保存
@@ -111,6 +134,8 @@ class SettingController extends BaseController
             $tree = new Tree();
             $rootOption = ['0' => Yii::t('setting', 'Root Tree')];
             $data['treeOptions'] = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
+            //获取提示信息
+            $data['placeholder'] = Setting::getPlaceholderByType();
 
             return $this->render('create', $data);
         }
@@ -138,9 +163,12 @@ class SettingController extends BaseController
             $tree = new Tree();
             $rootOption = ['0' => Yii::t('setting', 'Root Tree')];
             $treeOptions = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
+            //获取提示信息
+            $placeholder = Setting::getPlaceholderByType($model->type);
             return $this->render('update', [
                 'model' => $model,
-                'treeOptions' => $treeOptions
+                'treeOptions' => $treeOptions,
+                'placeholder' => $placeholder
             ]);
         }
     }

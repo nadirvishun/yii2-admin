@@ -49,7 +49,7 @@ class AdminController extends BaseController
     {
         $model = $this->findModel($id);
         //如果是超级管理员则不用设置角色
-        if ($id == Yii::$app->params['super_admin_id']) {
+        if ($id == Yii::$app->params['superAdminId']) {
             return $this->redirectError(Url::to('index'), Yii::t('admin', 'Super admin do not need set!'));
         }
         $auth = Yii::$app->authManager;
@@ -129,7 +129,7 @@ class AdminController extends BaseController
     {
         $model = $this->findModel($id);
         //超级管理员只有自己才能修改
-        if (Yii::$app->params['super_admin_id'] == $id) {
+        if (Yii::$app->params['superAdminId'] == $id) {
             if (Yii::$app->user->id != $id) {
                 $url = Yii::$app->request->referrer;
                 return $this->redirectError($url, Yii::t('admin', 'Super admin can only update by self!'));
@@ -169,9 +169,10 @@ class AdminController extends BaseController
             //如果有上传头像
             $avatar = UploadedFile::getInstance($model, 'avatar');
             if ($avatar) {//如果上传文件
+                $path = Yii::$app->params['avatarPath'] ?: Yii::$app->params['defaultPath'];
                 //文件重命名
                 $newName = time() . rand(1000, 9999);
-                if (!$avatar->saveAs(Yii::getAlias('@webroot') . Yii::$app->params['avatarPath'] . $newName . '.' . $avatar->extension)) {
+                if (!$avatar->saveAs(Yii::getAlias('@webroot') . $path . $newName . '.' . $avatar->extension)) {
                     $model->addError('avatar', Yii::t('admin', 'Upload avatar failed'));
                 }
                 $model->avatar = Yii::$app->params['avatarPath'] . $newName . '.' . $avatar->extension;
@@ -214,7 +215,7 @@ class AdminController extends BaseController
     {
         $url = Yii::$app->request->referrer;
         //超级管理员不能删除
-        if (Yii::$app->params['super_admin_id'] == $id) {
+        if (Yii::$app->params['superAdminId'] == $id) {
             return $this->redirectError($url, Yii::t('admin', 'Super admin can not delete!'));
         }
         //删除时需要判定不能删除自身

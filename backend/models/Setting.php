@@ -2,13 +2,17 @@
 
 namespace backend\models;
 
+use kartik\datetime\DateTimePicker;
+use kartik\file\FileInput;
 use kartik\widgets\Select2;
 use kartik\widgets\SwitchInput;
+use kucha\ueditor\UEditor;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "{{%setting}}".
@@ -40,7 +44,10 @@ class Setting extends \yii\db\ActiveRecord
     const RADIO = 4;//单选类型
     const CHECKBOX = 5;//多选类型
     const TEXTAREA = 6;//文本域类型
-    const FILE = 7;//文件上传类型
+    const RADIO_SWITCH = 7;//开关类型
+    const RICKTEXT = 8;//富文本
+    const DATE = 9;//日期选择
+    const FILE = 10;//文件上传类型
 
     /**
      * @inheritdoc
@@ -188,9 +195,12 @@ class Setting extends \yii\db\ActiveRecord
             self::PASSWORD => Yii::t('setting', 'password'),
             self::SELECT => Yii::t('setting', 'select'),
             self::RADIO => Yii::t('setting', 'radio'),
-//            self::CHECKBOX => Yii::t('setting', 'checkbox'),
+            self::RADIO_SWITCH => Yii::t('setting', 'switch'),
+            self::CHECKBOX => Yii::t('setting', 'checkbox'),
             self::TEXTAREA => Yii::t('setting', 'textarea'),
-//            self::FILE => Yii::t('setting', 'file'),
+            self::RICKTEXT => Yii::t('setting', 'richtext'),
+            self::DATE => Yii::t('setting', 'date'),
+            self::FILE => Yii::t('setting', 'file'),
         ];
         return $key === false ? $arr : ArrayHelper::getValue($arr, $key, Yii::t('common', 'Unknown'));
     }
@@ -257,15 +267,14 @@ class Setting extends \yii\db\ActiveRecord
         if (empty($options)) {
             $options = ['class' => 'form-control', 'id' => $name];
         }
-        $tag = '';
         switch ($type) {
-            case self::TEXT :
+            case self::TEXT ://普通输入框
                 $tag = Html::textInput($name, $value, $options);
                 break;
-            case self::PASSWORD :
+            case self::PASSWORD ://密码输入框
                 $tag = Html::passwordInput($name, $value, $options);
                 break;
-            case self::SELECT :
+            case self::SELECT ://下拉菜单
                 $tag = Select2::widget([
                     'name' => $name,
                     'value' => $value,
@@ -279,7 +288,35 @@ class Setting extends \yii\db\ActiveRecord
 //                    ],
                 ]);
                 break;
-            case  self::RADIO :
+            case  self::RADIO ://单选按钮
+                $selection = $value;
+                $items = static::parseExtra($extra);
+                $tag = Html::radioList($name, $selection, $items, [
+                    'separator' => '<br>',//换行
+                    'item' => function ($index, $label, $name, $checked, $value) {
+                        return Html::radio($name, $checked, [
+                            'value' => $value,
+                            'label' => Html::encode($label),
+                            'labelOptions' => ['style' => 'margin-left:5px;font-weight:normal']
+                        ]);
+                    }
+                ]);
+                break;
+            case self::CHECKBOX ://多选按钮
+                $selection = json_decode($value, true);
+                $items = static::parseExtra($extra);
+                $tag = Html::checkboxList($name, $selection, $items, [
+                    'separator' => '<br>',//换行
+                    'item' => function ($index, $label, $name, $checked, $value) {
+                        return Html::checkbox($name, $checked, [
+                            'value' => $value,
+                            'label' => Html::encode($label),
+                            'labelOptions' => ['style' => 'margin-left:5px;font-weight:normal']
+                        ]);
+                    }
+                ]);
+                break;
+            case  self::RADIO_SWITCH ://开关
                 $tag = SwitchInput::widget([
                     'name' => $name,
                     'value' => $value,
@@ -287,15 +324,78 @@ class Setting extends \yii\db\ActiveRecord
                     'pluginOptions' => ['size' => 'small']
                 ]);
                 break;
-            case self::CHECKBOX :
-                break;
-            case self::TEXTAREA :
+            case self::TEXTAREA ://多行文本
                 $options['rows'] = 6;
                 $tag = Html::textarea($name, $value, $options);
                 break;
+            case self::RICKTEXT ://富文本
+                $tag = UEditor::widget([
+                    'id' => $name,
+                    'name'=>$name,
+                    'value' => $value,
+                    'clientOptions' => [
+                        //编辑区域大小
+                        'initialFrameHeight' => '200',
+                        //定制菜单
+                        'toolbars' => [
+                            [
+                                'fullscreen', 'source', 'undo', 'redo', '|',
+                                'fontsize',
+                                'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat',
+                                'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|',
+                                'forecolor', 'backcolor', '|',
+                                'lineheight', '|',
+                                'indent', '|'
+                            ],
+                            ['preview','simpleupload','insertimage','link','emotion','map','insertvideo','insertcode',]
+                        ]
+                    ]
+                ]);
+                break;
+            case self::DATE ://日期时间
+                $format = 'php:Y-m-d';
+                $minView = 'month';
+                //如果参数是datetime，则精确到分钟
+                if ($extra == 'datetime') {
+                    $format = 'php:Y-m-d H:i:s';
+                    $minView = 'hour';
+                }
+                $tag = DateTimePicker::widget([
+                    'name' => $name,
+                    'value' => $value,
+//                    'options' => ['placeholder' => Yii::t('common', 'Please Select...')],
+                    'convertFormat' => true,
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'format' => $format,
+                        'todayHighlight' => true,
+                        'minView' => $minView
+                    ]
+                ]);
+                break;
             case self::FILE :
+                $tag=FileInput::widget([
+                    'name' => $name,
+//                    'options' => ['multiple' => true],
+                    'pluginOptions'=>[
+                        'uploadUrl'=>Url::to(['/site/upload']),
+                        'uploadExtraData' => [
+                            'path' => 'settingPath',//路径
+                            'name' => $name,
+                        ],
+                        'showPreview' => true,
+                        'showUpload' => false,
+                        'initialPreview'=>[
+//                            $value
+                        ],
+                        'initialPreviewAsData'=>true,
+                    ]
+
+                ]);
+
                 break;
             default:
+                $tag = '';
                 break;
         }
         return $tag;
@@ -318,5 +418,37 @@ class Setting extends \yii\db\ActiveRecord
             $value = $array;
         }
         return $value;
+    }
+
+    /**
+     * 在创建时，显示提示，方便用户选择
+     * @param int $type
+     * @return string
+     */
+    public static function getPlaceholderByType($type = self::TEXT)
+    {
+        switch ($type) {
+            case self::SELECT :
+                $placeholder = Yii::t('setting', "Example: \n\t value1:showName1 \n\t value2:showName2 \n\t ...");
+                break;
+            case  self::RADIO :
+                $placeholder = Yii::t('setting', "Example: \n\t value1:label1 \n\t value2:label2 \n\t ...");
+                break;
+            case self::CHECKBOX :
+                $placeholder = Yii::t('setting', "Example: \n\t value1:label1 \n\t value2:label2 \n\t ...");
+                break;
+            case self::DATE :
+                $placeholder = Yii::t('setting', "If you want show minutes ,please input:datetime");
+                break;
+            case self::TEXT :
+            case self::PASSWORD :
+            case self::TEXTAREA :
+            case self::RICKTEXT :
+            case self::FILE :
+            default:
+                $placeholder = Yii::t('setting', 'No necessary input!');
+                break;
+        }
+        return $placeholder;
     }
 }

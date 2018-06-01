@@ -176,7 +176,7 @@ class BackendMenu extends \yii\db\ActiveRecord
         $cache = Yii::$app->cache;
         //获取缓存的名称
         $auth = Yii::$app->authManager;
-        if ($userId != Yii::$app->params['super_admin_id']) {
+        if ($userId != Yii::$app->params['superAdminId']) {
             //获取此管理员对应角色
             $rolesArr = $auth->getRolesByUser($userId);
             $roles = array_keys($rolesArr);
@@ -209,7 +209,7 @@ class BackendMenu extends \yii\db\ActiveRecord
                     $list[$k]['url'] = static::mergeUrl($info['url'], $info['url_param']);
                     unset($list[$k]['url_param']);//url参数注销掉
                     //如果数据库中字段为隐藏，则增加visible参数，且设置为false，再有就是无权限的隐藏掉
-                    if (!$info['status'] || ($userId != Yii::$app->params['super_admin_id'] && !in_array($info['url'], $permissions))) {
+                    if (!$info['status'] || ($userId != Yii::$app->params['superAdminId'] && !in_array($info['url'], $permissions))) {
                         $list[$k]['visible'] = false;
                     }
                     unset($list[$k]['status']);//注销掉状态

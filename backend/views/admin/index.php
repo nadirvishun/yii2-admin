@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'mergeHeader' => true,
                 'hAlign' => GridView::ALIGN_CENTER,
                 'value' => function ($model, $key, $index, $column) {
-                    if ($model->id == Yii::$app->params['super_admin_id']) {
+                    if ($model->id == Yii::$app->params['superAdminId']) {
                         return Yii::t('common', 'Super Admin');
                     }
                     $auth = Yii::$app->authManager;

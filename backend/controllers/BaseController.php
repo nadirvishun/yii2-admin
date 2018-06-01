@@ -51,7 +51,7 @@ class BaseController extends Controller
 
         //判定是否有权限
         //如果是超级管理员，则拥有全部权限
-        if (Yii::$app->user->id == Yii::$app->params['super_admin_id']) {
+        if (Yii::$app->user->id == Yii::$app->params['superAdminId']) {
             return true;
         }
         //如果是其它管理员，则需要判定
@@ -105,6 +105,7 @@ class BaseController extends Controller
             'site/index',//首页
             'site/logout',//退出登录
             'site/search',//左侧菜单检索
+            'site/upload',//上传文件
             'admin/modify',//管理员修改自身信息
         ];
         return array_merge($noLoginActions, $actions);

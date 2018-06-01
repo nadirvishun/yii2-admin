@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php $form = ActiveForm::begin([
         'id' => 'backend-setting-form',
-        'options' => ['class' => 'box-body']
+        'options' => ['class' => 'box-body','enctype'=>'multipart/form-data']
     ]); ?>
     <?= Tabs::widget([
         'items' => $items,

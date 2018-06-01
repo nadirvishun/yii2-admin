@@ -9,7 +9,8 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Setting */
 /* @var $form yii\widgets\ActiveForm */
-/* @var $treeOptions backend\controllers\BackendMenuController */
+/* @var $treeOptions backend\controllers\SettingController */
+/* @var $placeholder backend\controllers\SettingController */
 ?>
 
 <div class="backend-setting-form">
@@ -52,7 +53,7 @@ use yii\widgets\ActiveForm;
         ],
     ]) ?>
 
-    <?= $form->field($model, 'extra', ['options' => ['class' => 'form-group c-md-6']])->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'extra', ['options' => ['class' => 'form-group c-md-6']])->textarea(['rows' => 6, 'placeholder' => $placeholder]) ?>
 
     <?= $form->field($model, 'hint', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
 
@@ -62,9 +63,9 @@ use yii\widgets\ActiveForm;
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('common', 'create') : Yii::t('common', 'update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-warning']) ?>
-
     </div>
 
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php //todo,ajax获取选择不同按钮时不同的提示信息?>

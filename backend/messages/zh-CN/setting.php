@@ -21,8 +21,11 @@ return [
     'password' => '密码类型',
     'select' => '下拉菜单类型',
     'radio' => '单选类型',
+    'switch'=>'开关类型',
     'checkbox' => '多选类型',
-    'textarea' => '文本域类型',
+    'textarea' => '多行文本类型',
+    'richtext' => '富文本类型',
+    'date' => '日期类型',
     'file' => '文件/图片类型',
 
     'System Setting' => '系统设置',
@@ -34,4 +37,10 @@ return [
     'Unless you know it not use in code,otherwise do not change it' => '除非你确认程序中没有用到此参数，否则请不要轻易修改',
     'Parent ID can not be itself or its subordinate node' => '父ID不能是自身或其下级节点',
     'Only support two levels' => '只支持两级的层级关系',
+
+    'change setting'=>'修改系统设置',
+    'No necessary input!'=>'无需填写',
+    "Example: \n\t value1:showName1 \n\t value2:showName2 \n\t ..."=>"例如: \n\t 1:张三 \n\t 2:李四 \n\t ...",
+    "Example: \n\t value1:label1 \n\t value2:label2 \n\t ..."=>"例如: \n\t 1:张三 \n\t 2:李四 \n\t ...",
+    'If you want show minutes ,please input:datetime'=>"不填写则只能选择日期\n如果想精确到分钟，请填写：datetime"
 ];
