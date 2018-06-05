@@ -189,7 +189,6 @@ class Setting extends \yii\db\ActiveRecord
      */
     public static function getTypeOptions($key = false)
     {
-        //todo,暂时只支持这几种，后续的需要完善
         $arr = [
             self::TEXT => Yii::t('setting', 'text'),
             self::PASSWORD => Yii::t('setting', 'password'),
@@ -331,9 +330,10 @@ class Setting extends \yii\db\ActiveRecord
             case self::RICKTEXT ://富文本
                 $tag = UEditor::widget([
                     'id' => $name,
-                    'name'=>$name,
+                    'name' => $name,
                     'value' => $value,
                     'clientOptions' => [
+                        'serverUrl' => Url::to(['ueditorUpload']),
                         //编辑区域大小
                         'initialFrameHeight' => '200',
                         //定制菜单
@@ -347,7 +347,7 @@ class Setting extends \yii\db\ActiveRecord
                                 'lineheight', '|',
                                 'indent', '|'
                             ],
-                            ['preview','simpleupload','insertimage','link','emotion','map','insertvideo','insertcode',]
+                            ['preview', 'simpleupload', 'insertimage', 'link', 'emotion', 'map', 'insertvideo', 'insertcode',]
                         ]
                     ]
                 ]);
@@ -374,21 +374,36 @@ class Setting extends \yii\db\ActiveRecord
                 ]);
                 break;
             case self::FILE :
-                $tag=FileInput::widget([
+                $tag = Html::hiddenInput($name, $value);//隐藏字段，用于ajax提交后将保存图片路径传递过来提交
+                $tag .= FileInput::widget([
                     'name' => $name,
-//                    'options' => ['multiple' => true],
-                    'pluginOptions'=>[
-                        'uploadUrl'=>Url::to(['/site/upload']),
+                    'value' => $value,
+                    'options' => ['multiple' => true],
+                    'pluginOptions' => [
+                        'uploadUrl' => Url::to(['upload', 'action' => 'upload']),//ajax上传路径
                         'uploadExtraData' => [
-                            'path' => 'settingPath',//路径
-                            'name' => $name,
+                            'name' => $name,//表单名称,也可以在独立action中指定
                         ],
                         'showPreview' => true,
-                        'showUpload' => false,
-                        'initialPreview'=>[
-//                            $value
+                        'showClose' => false,
+                        'initialPreview' => empty($value) ? [] : [$value],
+                        'initialPreviewConfig' => [
+                            [
+                                'url' => Url::to(['upload', 'action' => 'delete']),//ajax删除路径
+                                'key' => $value
+                            ]
                         ],
-                        'initialPreviewAsData'=>true,
+                        'initialPreviewAsData' => true,
+                    ],
+                    'pluginEvents' => [
+                        //上传完毕后给隐藏表单赋值
+                        'fileuploaded' => "function (event,data){
+                        $('input[type=\'hidden\'][name=\'" . $name . "\']').val(data.response.initialPreview[0]);
+                       }",
+                        //删除时清空隐藏表单
+                        'filedeleted ' => "function (event,data){
+                        $('input[type=\'hidden\'][name=\'" . $name . "\']').val('');
+                       }",
                     ]
 
                 ]);
@@ -421,34 +436,27 @@ class Setting extends \yii\db\ActiveRecord
     }
 
     /**
-     * 在创建时，显示提示，方便用户选择
-     * @param int $type
-     * @return string
+     * 获取所有提示信息
+     * @param bool $type
+     * @return array|mixed|string
      */
-    public static function getPlaceholderByType($type = self::TEXT)
+    public static function getPlaceholderOptions($type = false)
     {
-        switch ($type) {
-            case self::SELECT :
-                $placeholder = Yii::t('setting', "Example: \n\t value1:showName1 \n\t value2:showName2 \n\t ...");
-                break;
-            case  self::RADIO :
-                $placeholder = Yii::t('setting', "Example: \n\t value1:label1 \n\t value2:label2 \n\t ...");
-                break;
-            case self::CHECKBOX :
-                $placeholder = Yii::t('setting', "Example: \n\t value1:label1 \n\t value2:label2 \n\t ...");
-                break;
-            case self::DATE :
-                $placeholder = Yii::t('setting', "If you want show minutes ,please input:datetime");
-                break;
-            case self::TEXT :
-            case self::PASSWORD :
-            case self::TEXTAREA :
-            case self::RICKTEXT :
-            case self::FILE :
-            default:
-                $placeholder = Yii::t('setting', 'No necessary input!');
-                break;
+        $arr = [
+            self::SELECT => Yii::t('setting', "Example: \n\t value1:showName1 \n\t value2:showName2 \n\t ..."),
+            self::RADIO => Yii::t('setting', "Example: \n\t value1:label1 \n\t value2:label2 \n\t ..."),
+            self::CHECKBOX => Yii::t('setting', "Example: \n\t value1:label1 \n\t value2:label2 \n\t ..."),
+            self::DATE => Yii::t('setting', "If you want show minutes ,please input:datetime"),
+            self::RADIO_SWITCH => Yii::t('setting', 'No necessary input!'),
+            self::TEXT => Yii::t('setting', 'No necessary input!'),
+            self::PASSWORD => Yii::t('setting', 'No necessary input!'),
+            self::TEXTAREA => Yii::t('setting', 'No necessary input!'),
+            self::RICKTEXT => Yii::t('setting', 'No necessary input!'),
+            self::FILE => Yii::t('setting', 'No necessary input!'),
+        ];
+        if ($type === false) {
+            return $arr;
         }
-        return $placeholder;
+        return isset($arr[$type]) ? $arr[$type] : Yii::t('setting', 'No necessary input!');
     }
 }

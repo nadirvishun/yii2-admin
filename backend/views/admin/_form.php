@@ -52,13 +52,12 @@ use yii\widgets\ActiveForm;
     <?php if ($act == 'modify'): ?>
         <?= $form->field($model, 'avatar', ['options' => ['class' => 'form-group c-md-5']])->widget(FileInput::classname(), [
             'options' => ['accept' => 'image/*'],
-            'pluginOptions'=>[
+            'pluginOptions' => [
                 'showPreview' => true,
+                'showClose' => false,
                 'showUpload' => false,
-                'initialPreview'=>[
-                    $avatarUrl
-                ],
-                'initialPreviewAsData'=>true,
+                'initialPreview' => empty($avatarUrl) ? [] : [$avatarUrl],
+                'initialPreviewAsData' => true,
             ]
         ]); ?>
     <?php endif; ?>

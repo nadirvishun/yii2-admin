@@ -28,6 +28,7 @@ return [
     'Update Success' => '修改成功',
     'Delete Success' => '删除成功',
     'Delete Failed' => '删除失败',
+    'Upload failed!' => '上传失败',
     //错误页面
     'homePage' => '首页',
     'previousPage' => '上一页',
@@ -44,5 +45,5 @@ return [
     'Visible' => '显示',
 
     'Super Admin' => '超级管理员',
-    'No permissions to operate this!'=>'您没有执行此操作的权限'
+    'No permissions to operate this!' => '您没有执行此操作的权限'
 ];

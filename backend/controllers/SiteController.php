@@ -210,24 +210,4 @@ class SiteController extends BaseController
         return $this->redirect($url);
     }
 
-    /**
-     * ajax上传图片，TODO，做成单独控制器要好一点，可以配置验证什么的？
-     */
-    public function actionUpload()
-    {
-        $pathParam = Yii::$app->request->post('path');
-        $name = Yii::$app->request->post('name');
-        $file = UploadedFile::getInstanceByName($name);
-        if ($file) {//如果上传文件
-            //todo,验证
-            $path = Yii::$app->params[$pathParam] ?: Yii::$app->params['defaultPath'];
-            //文件重命名
-            $newName = time() . rand(1000, 9999);
-            if (!$file->saveAs(Yii::getAlias('@webroot') . $path . $newName . '.' . $file->extension)) {
-                //todo,返回错误信息
-            }
-            //todo,返回正确信息
-        }
-    }
-
 }

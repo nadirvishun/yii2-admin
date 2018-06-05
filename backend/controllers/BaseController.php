@@ -38,8 +38,9 @@ class BaseController extends Controller
      */
     public function beforeAction($action)
     {
-        parent::beforeAction($action);
-
+        if (!parent::beforeAction($action)) {
+            return false;
+        }
         //判定是否登录
         $permission = $action->getUniqueId();
         if (!in_array($permission, $this->noLoginActions())) {
@@ -54,6 +55,8 @@ class BaseController extends Controller
         if (Yii::$app->user->id == Yii::$app->params['superAdminId']) {
             return true;
         }
+        //借用权限，类似一些ajax请求权限其实和增删查改的权限应该是一样的，没有必要再在menu中单独添加，直接判定相同的权限即可
+        $permission = $this->getSamePermission($permission);
         //如果是其它管理员，则需要判定
         if (!in_array($permission, $this->noAuthActions())) {
             if (!Yii::$app->user->can($permission)) {
@@ -87,9 +90,10 @@ class BaseController extends Controller
     {
         $actions = [
             'site/login',//登陆
-            'site/captcha',//验证码
+            'site/captcha',//验证码，这个是独立action
             'site/request-password-reset',//密码重置请求
             'site/reset-password',//密码重置
+            'site/error',//错误处理
         ];
         return $actions;
     }
@@ -105,7 +109,6 @@ class BaseController extends Controller
             'site/index',//首页
             'site/logout',//退出登录
             'site/search',//左侧菜单检索
-            'site/upload',//上传文件
             'admin/modify',//管理员修改自身信息
         ];
         return array_merge($noLoginActions, $actions);
@@ -193,5 +196,26 @@ class BaseController extends Controller
         $session = Yii::$app->session;
         $url = $session->getFlash($name, $defaultUrl, $delete);
         return $url;
+    }
+
+    /**
+     * 借用相关权限，使用时需重写此方法：
+     *
+     * ```php
+     * $arr = [
+     *      'setting/ueditorUpload' => 'setting/system'
+     * ];
+     * return isset($arr[$permission]) ? $arr[$permission] : $permission;
+     * ```
+     * 上方setting/system是在menu中已设置好的权限
+     * 即便setting/editorUpload没有设置权限，但可以通过判定setting/system的权限来决定是否有权限操作
+     * 也就是setting/editorUpload其实借用的是setting/system的权限
+     *
+     * @param $permission
+     * @return mixed
+     */
+    public function getSamePermission($permission)
+    {
+        return $permission;
     }
 }

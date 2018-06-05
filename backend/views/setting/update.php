@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\Setting */
-/* @var $treeOptions backend\controllers\SettingController*/
+/* @var $treeOptions backend\controllers\SettingController */
 /* @var $placeholder backend\controllers\SettingController */
 
 $this->title = Yii::t('setting', 'Update Setting');
@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <?= $this->render('_form', [
         'model' => $model,
-        'treeOptions'=>$treeOptions,
-        'placeholder'=>$placeholder
+        'treeOptions' => $treeOptions,
+        'placeholderOptions' => $placeholderOptions
     ]) ?>
 </div>

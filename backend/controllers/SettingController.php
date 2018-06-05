@@ -23,9 +23,16 @@ class SettingController extends BaseController
     public function actions()
     {
         return [
-            'upload' => [
+            //ueditor上传
+            'ueditorUpload' => [
                 'class' => 'kucha\ueditor\UEditorAction',
                 'config' => Yii::$app->params['ueditorConfig']
+            ],
+            //fileInput上传
+            'upload' => [
+                'class' => 'common\components\UploadAction',
+                'path' => Yii::$app->params['settingPath'],//上传路径
+                'rule' => ['skipOnEmpty' => false]
             ]
         ];
     }
@@ -134,8 +141,8 @@ class SettingController extends BaseController
             $tree = new Tree();
             $rootOption = ['0' => Yii::t('setting', 'Root Tree')];
             $data['treeOptions'] = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
-            //获取提示信息
-            $data['placeholder'] = Setting::getPlaceholderByType();
+            //用于给js赋值，切换不同的提示信息
+            $data['placeholderOptions'] = json_encode(Setting::getPlaceholderOptions());
 
             return $this->render('create', $data);
         }
@@ -164,11 +171,13 @@ class SettingController extends BaseController
             $rootOption = ['0' => Yii::t('setting', 'Root Tree')];
             $treeOptions = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
             //获取提示信息
-            $placeholder = Setting::getPlaceholderByType($model->type);
+            $placeholder = Setting::getPlaceholderOptions($model->type);
+            //用于给js赋值，切换不同的提示信息
+            $placeholderOptions = json_encode(Setting::getPlaceholderOptions());
             return $this->render('update', [
                 'model' => $model,
                 'treeOptions' => $treeOptions,
-                'placeholder' => $placeholder
+                'placeholderOptions' => $placeholderOptions
             ]);
         }
     }
@@ -200,5 +209,20 @@ class SettingController extends BaseController
         } else {
             throw new NotFoundHttpException(Yii::t('common', 'The requested page does not exist.'));
         }
+    }
+
+    /**
+     * ueditor上传图片的权限与显示system的权限是一样的
+     * fileInput上传图片的权限与显示system的权限是一样的
+     * @param $permission
+     * @return mixed
+     */
+    public function getSamePermission($permission)
+    {
+        $arr = [
+            'setting/ueditorUpload' => 'setting/system',
+            'setting/upload' => 'setting/system',
+        ];
+        return isset($arr[$permission]) ? $arr[$permission] : $permission;
     }
 }

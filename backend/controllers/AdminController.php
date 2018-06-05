@@ -6,6 +6,7 @@ use backend\models\AdminLog;
 use Yii;
 use backend\models\Admin;
 use backend\models\search\AdminSearch;
+use yii\helpers\FileHelper;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
@@ -165,11 +166,14 @@ class AdminController extends BaseController
         $model = $this->findModel($id);
         $model->scenario = 'modify';
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            //这是通过隐藏表单传递过来的
             unset($model->avatar);
-            //如果有上传头像
+            //如果有上传头像，目前增加了UploadAction独立动作，可以通过ajax上传，这里就暂时不修改了。
             $avatar = UploadedFile::getInstance($model, 'avatar');
             if ($avatar) {//如果上传文件
                 $path = Yii::$app->params['avatarPath'] ?: Yii::$app->params['defaultPath'];
+                //如果没有目录，则创建目录
+                FileHelper::createDirectory(Yii::getAlias('@webroot') . $path);
                 //文件重命名
                 $newName = time() . rand(1000, 9999);
                 if (!$avatar->saveAs(Yii::getAlias('@webroot') . $path . $newName . '.' . $avatar->extension)) {

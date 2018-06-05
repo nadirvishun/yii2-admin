@@ -53,7 +53,7 @@ use yii\widgets\ActiveForm;
         ],
     ]) ?>
 
-    <?= $form->field($model, 'extra', ['options' => ['class' => 'form-group c-md-6']])->textarea(['rows' => 6, 'placeholder' => $placeholder]) ?>
+    <?= $form->field($model, 'extra', ['options' => ['class' => 'form-group c-md-6']])->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'hint', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
 
@@ -68,4 +68,23 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
-<?php //todo,ajax获取选择不同按钮时不同的提示信息?>
+<?php
+    //选择不同按钮时不同的提示信息
+    $js=<<<EOF
+var phpJson='$placeholderOptions';
+//将单斜线转为双斜线，否则js解析不了
+var jsJson=phpJson.replace(/\\n/g,"\\\\n");
+jsJson=jsJson.replace(/\\t/g,"\\\\t")
+var placeholderOptions= JSON.parse(jsJson);
+//初始显示
+var typeValue=$('#setting-type').val();
+$('#setting-extra').attr('placeholder',placeholderOptions[typeValue])
+//当更改时
+$('#setting-type').on('change',function(){
+    var typeValue=$(this).val();
+    $('#setting-extra').attr('placeholder',placeholderOptions[typeValue])
+})
+EOF;
+
+    $this->registerJs($js)
+?>
