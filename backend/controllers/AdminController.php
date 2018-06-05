@@ -158,6 +158,7 @@ class AdminController extends BaseController
     /**
      * 修改自身
      * @return string|\yii\web\Response
+     * @throws \yii\base\Exception
      */
     public function actionModify()
     {

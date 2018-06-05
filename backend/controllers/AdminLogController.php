@@ -42,55 +42,6 @@ class AdminLogController extends BaseController
     }
 
     /**
-     * Creates a new AdminLog model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    /*public function actionCreate()
-    {
-        $model = new AdminLog();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //获取列表页url，方便跳转
-            $url = $this->getReferrerUrl('admin-log-create');
-            return $this->redirectSuccess($url, Yii::t('common', 'Create Success'));
-        } else {
-            //为了更新完成后返回列表检索页数原有状态，所以这里先纪录下来
-            $this->rememberReferrerUrl('admin-log-create');
-
-            $model->loadDefaultValues();
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }*/
-
-    /**
-     * Updates an existing AdminLog model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException
-     */
-    /*public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //获取列表页url，方便跳转
-            $url = $this->getReferrerUrl('admin-log-update');
-            return $this->redirectSuccess($url, Yii::t('common', 'Update Success'));
-        } else {
-            //为了更新完成后返回列表检索页数原有状态，所以这里先纪录下来
-            $this->rememberReferrerUrl('admin-log-update');
-
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }*/
-
-    /**
      * 按不同类型删除日志
      * @param $type
      * @return \yii\web\Response

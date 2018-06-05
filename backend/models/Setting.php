@@ -259,6 +259,7 @@ class Setting extends \yii\db\ActiveRecord
      * @param string $extra
      * @param array $options
      * @return string
+     * @throws \Exception
      */
     public static function createInputTag($type, $name, $value, $extra = '', $options = [])
     {
@@ -333,6 +334,7 @@ class Setting extends \yii\db\ActiveRecord
                     'name' => $name,
                     'value' => $value,
                     'clientOptions' => [
+                        //上传地址，需修改为上方action一致，默认是upload，但和文件上传同一名字，所以修改为此
                         'serverUrl' => Url::to(['ueditorUpload']),
                         //编辑区域大小
                         'initialFrameHeight' => '200',
@@ -405,9 +407,7 @@ class Setting extends \yii\db\ActiveRecord
                         $('input[type=\'hidden\'][name=\'" . $name . "\']').val('');
                        }",
                     ]
-
                 ]);
-
                 break;
             default:
                 $tag = '';

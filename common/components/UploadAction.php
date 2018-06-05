@@ -52,15 +52,17 @@ class UploadAction extends Action
 
     /**
      * 运行
+     * @throws \yii\base\Exception
      */
     public function run()
     {
         if (Yii::$app->request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if (Yii::$app->request->get('action') == 'upload') {
+            $action = Yii::$app->request->get('action');
+            if ($action == 'upload') {
                 //如果是上传
                 return $this->upload();
-            } elseif (Yii::$app->request->get('action') == 'delete') {
+            } elseif ($action == 'delete') {
                 //如果是删除
                 return $this->delete();
             } else {
@@ -73,6 +75,7 @@ class UploadAction extends Action
     /**
      * 上传文件
      * 由于用的是kartik的yii2-widget-fileinput组件，所以需要返回组件需要的格式
+     * @throws \yii\base\Exception
      */
     public function upload()
     {
@@ -109,9 +112,8 @@ class UploadAction extends Action
                     //todo,后续如果用数据库存储，则需要返回对应的id，方便删除
                     'key' => $saveFile
                 ]
-            ],
+            ]
         ];
-
     }
 
     /**
