@@ -19,11 +19,11 @@ return [
     'deleteSource' => false,
     // The list of asset bundles to compress:
     'bundles' => [
-        'backend\assets\AppAsset',
         'dmstr\web\AdminLteAsset',
         'kartik\dialog\DialogBootstrapAsset',
         'kartik\dialog\DialogAsset',
-        'kartik\dialog\DialogYiiAsset'
+        'kartik\dialog\DialogYiiAsset',
+        'backend\assets\AppAsset',
     ],
     // Asset bundle for compression output:
     'targets' => [
