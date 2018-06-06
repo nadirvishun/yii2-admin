@@ -59,6 +59,9 @@ return [
          */
         'assetManager' => [
             'appendTimestamp' => true,//加时间戳，以方便css，js等缓存更新
+            //压缩合并
+            'bundles' => require __DIR__ . '/' . (YII_ENV_PROD ? 'assets-prod.php' : 'assets-dev.php'),
+
 //            'bundles' => [
 //                'dmstr\web\AdminLteAsset' => [
 //                    'skin' => 'skin-purple',
