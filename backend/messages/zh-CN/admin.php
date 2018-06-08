@@ -36,7 +36,7 @@ return [
     'No Role' => '未分配',
     'Role' => '角色',
     'role' => '角色',
-    'message_role' => '选择角色',
+    'message_role' => '角色授权',
     'Super admin do not need set!' => '超级管理员无需设置角色',
     'Suggest select only one role!' => '为了方便管理，建议每个管理员只选择对应一个角色',
     'This role must select!' => '角色必须勾选',
