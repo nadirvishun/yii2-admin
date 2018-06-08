@@ -22,4 +22,7 @@ AdminLTE模板的后台样式，可作为基础的后台管理
 5.  登陆后台，进行相关操作
 
 ## 截图
-![截图](https://github.com/nadirvishun/abp/blob/master/backend/web/img/screenshot.jpg)
+![菜单](https://github.com/nadirvishun/yii2-admin/blob/master/backend/web/img/menu.jpg)
+![权限](https://github.com/nadirvishun/yii2-admin/blob/master/backend/web/img/role.jpg)
+![日志](https://github.com/nadirvishun/yii2-admin/blob/master/backend/web/img/log.jpg)
+![配置](https://github.com/nadirvishun/yii2-admin/blob/master/backend/web/img/setting.jpg)
