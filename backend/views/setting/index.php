@@ -1,6 +1,8 @@
 <?php
 
 use backend\models\Setting;
+use kartik\editable\Editable;
+use kartik\popover\PopoverX;
 use yii\helpers\Html;
 use dkhlystov\widgets\TreeGrid;
 //use leandrogehlen\treegrid\TreeGrid;
@@ -48,11 +50,38 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Setting::getTypeOptions($model->type);
                 }
             ],
-            'sort',
+            [
+                'attribute' => 'sort',
+                'format' => 'raw',
+                'value' => function ($model, $key, $index, $column) {
+                    return \kartik\editable\Editable::widget([
+                        'name' => 'sort',
+                        'value' => $model->sort,
+                        'header' => $model->getAttributeLabel('sort'),
+                        'size' => 'md',
+                        'placement' => PopoverX::ALIGN_LEFT,//左侧弹出
+                        'beforeInput' => Html::hiddenInput('editableKey', $model->id) . Html::hiddenInput('editableAttribute', 'sort')//传递ID和字段
+                    ]);
+                }
+            ],
             [
                 'attribute' => 'status',
+                'format' => 'raw',
                 'value' => function ($model, $key, $index, $column) {
-                    return Setting::getStatusOptions($model->status);
+                    return Editable::widget([
+                        'name' => 'status',
+                        'value' => $model->status,//原始值
+                        'displayValueConfig' => Setting::getStatusOptions(),//要显示的文字
+                        'header' => $model->getAttributeLabel('status'),
+                        'size' => 'md',
+                        'placement' => PopoverX::ALIGN_LEFT,//左侧弹出
+                        'inputType' => Editable::INPUT_SWITCH,
+                        'options' => [
+                            'options' => ['uncheck' => 0, 'value' => 1],//switch插件的参数
+                            'pluginOptions' => ['size' => 'small'],
+                        ],
+                        'beforeInput' => Html::hiddenInput('editableKey', $model->id) . Html::hiddenInput('editableAttribute', 'status')//传递ID和字段
+                    ]);
                 }
             ],
             // 'value:ntext',
@@ -66,7 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => '\yii\grid\ActionColumn',
                 'header' => Yii::t('common', 'Actions'),
-                'headerOptions'=>['style' => 'width:200px'],
+                'headerOptions' => ['style' => 'width:200px'],
                 'template' => '{create} {update} {delete}',
                 'buttons' => [
                     'create' => function ($url, $model, $key) {
@@ -76,7 +105,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-pjax' => '0',
                             'class' => 'btn btn-xs btn-success'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-plus"></i> '.Yii::t('common', 'create_sub'), ['create', 'pid' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-plus"></i> ' . Yii::t('common', 'create_sub'), ['create', 'pid' => $model->id], $options);
                     },
                     'update' => function ($url, $model, $key) {
                         $options = [
@@ -85,7 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-pjax' => '0',
                             'class' => 'btn btn-xs btn-warning'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-pencil"></i> '.Yii::t('common', 'update'), ['update', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-pencil"></i> ' . Yii::t('common', 'update'), ['update', 'id' => $model->id], $options);
                     },
                     'delete' => function ($url, $model, $key) {
                         $options = [
@@ -96,7 +125,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-method' => 'post',
                             'class' => 'btn btn-xs btn-danger'
                         ];
-                        return Html::a('<i class="fa fa-fw fa-trash"></i> '.Yii::t('common', 'delete'), ['delete', 'id' => $model->id], $options);
+                        return Html::a('<i class="fa fa-fw fa-trash"></i> ' . Yii::t('common', 'delete'), ['delete', 'id' => $model->id], $options);
                     }
                 ]
             ],

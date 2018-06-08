@@ -41,7 +41,7 @@ use yii\widgets\ActiveForm;
         ->textInput(['maxlength' => true])
         ->hint(Yii::t('backend_menu','support font awesome icon'));
     ?>
-    <?= $form->field($model, 'sort', ['options' => ['class' => 'form-group c-md-5']])->textInput() ?>
+    <?= $form->field($model, 'sort', ['options' => ['class' => 'form-group c-md-5']])->textInput()->hint(Yii::t('common','The bigger number is ranked previous')) ?>
     <?= $form->field($model, 'status', ['options' => ['class' => 'form-group c-md-5']])->widget(SwitchInput::classname(), ['pluginOptions' => ['size' => 'small']]) ?>
 
     <div class="form-group">

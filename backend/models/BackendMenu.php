@@ -127,6 +127,7 @@ class BackendMenu extends \yii\db\ActiveRecord
             $ids = static::find()
                 ->select('id')
                 ->where(['in', 'pid', $ids])
+                ->orderBy(['sort' => SORT_DESC, 'id' => SORT_ASC])
                 ->asArray()
                 ->column();
             $childIds = array_merge($childIds, $ids);
@@ -151,6 +152,7 @@ class BackendMenu extends \yii\db\ActiveRecord
         $childIds = static::find()
             ->select('id')
             ->where(['in', 'pid', $ids])
+            ->orderBy(['sort' => SORT_DESC, 'id' => SORT_ASC])
             ->asArray()
             ->column();
         if (!empty($childIds)) {
@@ -192,7 +194,7 @@ class BackendMenu extends \yii\db\ActiveRecord
                 ->select('id,pid,name,url,url_param,icon,status')
                 ->where(['like', 'name', $search])
                 ->indexBy('id')
-                ->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC])
+                ->orderBy(['sort' => SORT_DESC, 'id' => SORT_ASC])
                 ->asArray()
                 ->all();
             $tree = [];
@@ -248,6 +250,7 @@ class BackendMenu extends \yii\db\ActiveRecord
         if ($data == false) {
             $list = static::find()->select('id,pid,name')
                 ->where(['status' => self::STATUS_VISIBLE])//不显示隐藏的
+                ->orderBy(['sort' => SORT_DESC, 'id' => SORT_ASC])
                 ->asArray()
                 ->all();
             //创建树实例
@@ -272,6 +275,7 @@ class BackendMenu extends \yii\db\ActiveRecord
         $data = $cache->get('menu_permissions');
         if ($data == false) {
             $list = static::find()->select('id,name,pid,url')
+                ->orderBy(['sort' => SORT_DESC, 'id' => SORT_ASC])
                 ->asArray()
                 ->all();
             //创建树实例

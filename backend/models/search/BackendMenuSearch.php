@@ -41,7 +41,7 @@ class BackendMenuSearch extends BackendMenu
      */
     public function search($params)
     {
-        $query = BackendMenu::find();
+        $query = BackendMenu::find()->orderBy(['sort' => SORT_DESC, 'id' => SORT_ASC]);
 
         // add conditions that should always apply here
 

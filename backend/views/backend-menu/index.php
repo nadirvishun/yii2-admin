@@ -2,6 +2,8 @@
 
 use backend\models\BackendMenu;
 use dmstr\widgets\Menu;
+use kartik\editable\Editable;
+use kartik\popover\PopoverX;
 use yii\helpers\Html;
 use dkhlystov\widgets\TreeGrid;
 
@@ -63,12 +65,39 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format'=>'raw'
             ],
             [
-                'attribute' => 'status',
+                'attribute' => 'sort',
+                'format'=>'raw',
                 'value' => function ($model, $key, $index, $column) {
-                    return BackendMenu::getStatusOptions($model->status);
+                    return Editable::widget([
+                        'name'=>'sort',
+                        'value' => $model->sort,
+                        'header' => $model->getAttributeLabel('sort'),
+                        'size'=>'md',
+                        'placement'=>PopoverX::ALIGN_LEFT,//左侧弹出
+                        'beforeInput' => Html::hiddenInput('editableKey',$model->id).Html::hiddenInput('editableAttribute','sort')//传递ID和字段
+                    ]);
                 }
             ],
-//            'sort',
+            [
+                'attribute' => 'status',
+                'format' => 'raw',
+                'value' => function ($model, $key, $index, $column) {
+                    return Editable::widget([
+                        'name' => 'status',
+                        'value' => $model->status,//原始值
+                        'displayValueConfig' => BackendMenu::getStatusOptions(),//要显示的文字
+                        'header' => $model->getAttributeLabel('status'),
+                        'size' => 'md',
+                        'placement' => PopoverX::ALIGN_LEFT,//左侧弹出
+                        'inputType' => Editable::INPUT_SWITCH,
+                        'options' => [
+                            'options' => ['uncheck' => 0, 'value' => 1],//switch插件的参数
+                            'pluginOptions' => ['size' => 'small'],
+                        ],
+                        'beforeInput' => Html::hiddenInput('editableKey', $model->id) . Html::hiddenInput('editableAttribute', 'status')//传递ID和字段
+                    ]);
+                }
+            ],
             // 'created_by',
             // 'created_at',
             // 'updated_by',

@@ -21,6 +21,7 @@
         "dmstr/yii2-adminlte-asset": "2.*",
         "kartik-v/yii2-grid": "@dev",
         "kartik-v/yii2-date-range": "*",
+        "kartik-v/yii2-editable": "*",
         "kucha/ueditor": "*",
         "leandrogehlen/yii2-treegrid": "*",
         "dkhlystov/yii2-treegrid": "*",

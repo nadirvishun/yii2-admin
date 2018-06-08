@@ -45,5 +45,7 @@ return [
     'Visible' => '显示',
 
     'Super Admin' => '超级管理员',
-    'No permissions to operate this!' => '您没有执行此操作的权限'
+    'No permissions to operate this!' => '您没有执行此操作的权限',
+
+    'The bigger number is ranked previous'=>'数字越大排序越靠前'
 ];

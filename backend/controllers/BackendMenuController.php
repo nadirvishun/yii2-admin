@@ -7,6 +7,7 @@ use backend\models\BackendMenu;
 use yii\caching\TagDependency;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 
 /**
@@ -16,6 +17,7 @@ class BackendMenuController extends BaseController
 {
     /**
      * Lists all BackendMenu models.
+     * @param null $id
      * @return mixed
      */
     public function actionIndex($id = null)
@@ -28,16 +30,38 @@ class BackendMenuController extends BaseController
 //            'searchModel' => $searchModel,
 //            'dataProvider' => $dataProvider,
 //        ]);
-        //todo,目前此widget不支持sort，后续可能改进，如果后期菜单太多，可改为懒加载
-        $dataProvider = new ActiveDataProvider([
-            'query' => BackendMenu::find()->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]),
+
+        if (Yii::$app->request->post('hasEditable')) {
+            $id = Yii::$app->request->post('editableKey');//获取ID
+            $model = BackendMenu::findOne($id);
+            $attribute = Yii::$app->request->post('editableAttribute');//获取名称
+            $output = '';
+            $message = '';
+            if ($model->load(Yii::$app->request->post(), '') && $model->save()) {
+                $output = $model->$attribute;
+                //将左侧菜单缓存设置为失效，取所有角色，因为没有通过权限获取角色的方法，自己也懒得写了
+                $auth = Yii::$app->authManager;
+                $rolesArr = $auth->getRoles();
+                $roles = array_merge(['super_admin'], array_keys($rolesArr));
+                TagDependency::invalidate(Yii::$app->cache, $roles);
+            } else {
+                //由于本插件不会自动捕捉model的error，所以需要放在$message中展示出来
+                $message = $model->getFirstError($attribute);
+            }
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['output' => $output, 'message' => $message];
+        } else {
+            //todo,目前此widget不支持sort，后续可能改进，如果后期菜单太多，可改为懒加载
+            $dataProvider = new ActiveDataProvider([
+                'query' => BackendMenu::find()->orderBy(['sort' => SORT_DESC, 'id' => SORT_ASC]),
 //            'sort' => ['defaultOrder' => ['sort' => SORT_ASC, 'id' => SORT_ASC]]
-        ]);
+            ]);
 //        $initial = BackendMenu::findOne($id);
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
 //            'initial' => $initial,
-        ]);
+            ]);
+        }
     }
 
     /**

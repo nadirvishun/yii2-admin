@@ -57,7 +57,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'hint', ['options' => ['class' => 'form-group c-md-5']])->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'sort', ['options' => ['class' => 'form-group c-md-5']])->textInput() ?>
+    <?= $form->field($model, 'sort', ['options' => ['class' => 'form-group c-md-5']])->textInput()->hint(Yii::t('common','The bigger number is ranked previous')) ?>
 
     <?= $form->field($model, 'status', ['options' => ['class' => 'form-group c-md-5']])->widget(SwitchInput::classname(), ['pluginOptions' => ['size' => 'small']]) ?>
 

@@ -10,6 +10,7 @@ use backend\models\search\SettingSearch;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * BackendSettingController implements the CRUD actions for BackendSetting model.
@@ -94,11 +95,26 @@ class SettingController extends BaseController
     {
         $searchModel = new SettingSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        if (Yii::$app->request->post('hasEditable')) {
+            $id = Yii::$app->request->post('editableKey');//获取ID
+            $model = Setting::findOne($id);
+            $attribute = Yii::$app->request->post('editableAttribute');//获取名称
+            $output = '';
+            $message = '';
+            if ($model->load(Yii::$app->request->post(), '') && $model->save()) {
+                $output = $model->$attribute;
+            } else {
+                //由于本插件不会自动捕捉model的error，所以需要放在$message中展示出来
+                $message = $model->getFirstError($attribute);
+            }
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['output' => $output, 'message' => $message];
+        } else {
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
     }
 
     /**

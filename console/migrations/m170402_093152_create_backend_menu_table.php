@@ -38,11 +38,11 @@ class m170402_093152_create_backend_menu_table extends Migration
         $this->batchInsert(self::TBL_NAME, ['pid', 'name', 'url', 'icon', 'sort', 'created_by', 'created_at', 'updated_by', 'updated_at', 'status'], [
             [0, '控制面板', 'dashboard', 'dashboard', 0, 1, $time, 1, $time, 1],//1
             [1, '系统设置', 'setting/system', 'cog', 0, 1, $time, 1, $time, 1],//2
-            [1, '配置管理', 'setting/index', 'cube', 2, 1, $time, 1, $time, 1],//3
+            [1, '配置管理', 'setting/index', 'cube', 0, 1, $time, 1, $time, 1],//3
             [3, '新增配置', 'setting/create', '', 1, 1, $time, 1, $time, 0],//4
             [3, '修改配置', 'setting/update', '', 2, 1, $time, 1, $time, 0],//5
             [3, '删除配置', 'setting/delete', '', 3, 1, $time, 1, $time, 0],//6
-            [1, '后台菜单', 'backend-menu/index', 'tree', 5, 1, $time, 1, $time, 1],//7
+            [1, '后台菜单', 'backend-menu/index', 'tree', 0, 1, $time, 1, $time, 1],//7
             [7, '新增菜单', 'backend-menu/create', '', 1, 1, $time, 1, $time, 0],//8
             [7, '修改菜单', 'backend-menu/update', '', 2, 1, $time, 1, $time, 0],//9
             [7, '删除菜单', 'backend-menu/delete', '', 3, 1, $time, 1, $time, 0],//10

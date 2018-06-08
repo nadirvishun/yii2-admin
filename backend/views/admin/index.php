@@ -2,6 +2,8 @@
 
 use backend\models\Admin;
 use backend\models\BackendRole;
+use kartik\editable\Editable;
+use kartik\popover\PopoverX;
 use kartik\widgets\Select2;
 use yii\helpers\Html;
 use kartik\grid\GridView;
@@ -40,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'last_login_ip',
             // 'last_login_time',
             [
-                'class' => '\kartik\grid\DataColumn',
+                'class' => '\kartik\grid\EditableColumn',
                 'attribute' => 'status',
                 'filterType' => GridView::FILTER_SELECT2,
                 'filterWidgetOptions' => [
@@ -53,6 +55,20 @@ $this->params['breadcrumbs'][] = $this->title;
                         'allowClear' => true
                     ],
                 ],
+                'editableOptions'=>function($model,$key,$index){
+                    return [
+                        'value' => $model->status,//原始值
+                        'displayValueConfig' => Admin::getStatusOptions(),//要显示的文字
+                        'header' => $model->getAttributeLabel('status'),
+                        'size' => 'md',
+                        'placement' => PopoverX::ALIGN_LEFT,//左侧弹出
+                        'inputType' => Editable::INPUT_SWITCH,
+                        'options' => [
+                            'options' => ['uncheck' => 0, 'value' => 1],//switch插件的参数
+                            'pluginOptions' => ['size' => 'small'],
+                        ],
+                    ];
+                },
                 'value' => function ($model, $key, $index, $column) {
                     return Admin::getStatusOptions($model->status);
                 }

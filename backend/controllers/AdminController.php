@@ -9,6 +9,7 @@ use backend\models\search\AdminSearch;
 use yii\helpers\FileHelper;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
@@ -22,18 +23,43 @@ class AdminController extends BaseController
      */
     public function actionIndex()
     {
-        $searchModel = new AdminSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        if (Yii::$app->request->post('hasEditable')) {
+            $id = Yii::$app->request->post('editableKey');//获取ID
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $model = Admin::findOne($id);
+            $output = '';
+            $message = '';
+            //判定是否为超级管理员，如果是超级管理员，不能修改
+            if ($id == Yii::$app->params['superAdminId']) {
+                $message = Yii::t('admin', 'Super admin can not forbid');
+                return ['output' => $output, 'message' => $message];
+            }
+            //由于传递的数据是二维数组，将其转为一维
+            $attribute = Yii::$app->request->post('editableAttribute');//获取名称
+            $posted = current(Yii::$app->request->post('Admin'));
+            $post = ['Admin' => $posted];
+            if ($model->load($post) && $model->save()) {
+                $output = $model->$attribute;
+            } else {
+                //由于本插件不会自动捕捉model的error，所以需要放在$message中展示出来
+                $message = $model->getFirstError($attribute);
+            }
+            return ['output' => $output, 'message' => $message];
+        } else {
+            $searchModel = new AdminSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
     }
 
     /**
      * Displays a single Admin model.
      * @param string $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionView($id)
     {
@@ -45,6 +71,9 @@ class AdminController extends BaseController
     /**
      * 设置角色
      * @param $id
+     * @return string|Response
+     * @throws NotFoundHttpException
+     * @throws \Exception
      */
     public function actionRole($id)
     {
@@ -125,6 +154,7 @@ class AdminController extends BaseController
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionUpdate($id)
     {
@@ -137,22 +167,29 @@ class AdminController extends BaseController
             }
         }
         $model->scenario = 'update';
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //获取列表页url，方便跳转
-            $url = $this->getReferrerUrl('admin-update');
-            return $this->redirectSuccess($url, Yii::t('common', 'Update Success'));
-        } else {
-            //为了更新完成后返回列表检索页数原有状态，所以这里先纪录下来
-            $this->rememberReferrerUrl('admin-update');
-            //将密码字段清空
-            $model->password_hash = '';
-            $act = 'update';
-            return $this->render('update', [
-                'model' => $model,
-                'act' => $act,
-                'avatarUrl' => null
-            ]);
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if (Yii::$app->params['superAdminId'] == $id && $model->status == Admin::STATUS_FORBID) {
+                //不能讲超级管理员设置为禁止
+                $model->addError('status', Yii::t('admin', 'Super admin can not forbid'));
+            } else {
+                if ($model->save(false)) {
+                    //获取列表页url，方便跳转
+                    $url = $this->getReferrerUrl('admin-update');
+                    return $this->redirectSuccess($url, Yii::t('common', 'Update Success'));
+                }
+            }
         }
+        //为了更新完成后返回列表检索页数原有状态，所以这里先纪录下来
+        $this->rememberReferrerUrl('admin-update');
+        //将密码字段清空
+        $model->password_hash = '';
+        $act = 'update';
+        return $this->render('update', [
+            'model' => $model,
+            'act' => $act,
+            'avatarUrl' => null
+        ]);
+
     }
 
     /**

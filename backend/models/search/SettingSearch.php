@@ -42,7 +42,7 @@ class SettingSearch extends Setting
     public function search($params)
     {
         //todo，排序后续可能修改
-        $query = Setting::find()->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]);
+        $query = Setting::find()->orderBy(['sort' => SORT_DESC, 'id' => SORT_ASC]);
 
         // add conditions that should always apply here
 

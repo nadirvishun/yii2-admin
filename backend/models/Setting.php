@@ -220,7 +220,7 @@ class Setting extends \yii\db\ActiveRecord
             }
             $query->andWhere(['not in', 'alias', $exceptAlias]);
         }
-        $list = $query->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC])->asArray()->all();
+        $list = $query->orderBy(['sort' => SORT_DESC, 'id' => SORT_ASC])->asArray()->all();
         return $list;
     }
 
