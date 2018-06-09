@@ -376,11 +376,25 @@ class Setting extends \yii\db\ActiveRecord
                 ]);
                 break;
             case self::FILE :
+                //如果参数是multiple，则可以上传多图
+                $multiple = false;
+                if ($extra == 'multiple') {
+                    $multiple = true;
+                }
+                //设置初始参数
+                $valueArr = explode(',', $value);
+                $initialPreviewConfig = [];
+                foreach ($valueArr as $item) {
+                    $initialPreviewConfig[] = [
+                        'caption' => basename($item),
+                        'url' => Url::to(['upload', 'action' => 'delete']),//ajax删除路径
+                        'key' => $item
+                    ];
+                }
                 $tag = Html::hiddenInput($name, $value);//隐藏字段，用于ajax提交后将保存图片路径传递过来提交
                 $tag .= FileInput::widget([
                     'name' => $name,
-                    'value' => $value,
-                    'options' => ['multiple' => true],
+                    'options' => ['multiple' => $multiple],
                     'pluginOptions' => [
                         'uploadUrl' => Url::to(['upload', 'action' => 'upload']),//ajax上传路径
                         'uploadExtraData' => [
@@ -388,23 +402,45 @@ class Setting extends \yii\db\ActiveRecord
                         ],
                         'showPreview' => true,
                         'showClose' => false,
-                        'initialPreview' => empty($value) ? [] : [$value],
-                        'initialPreviewConfig' => [
-                            [
-                                'url' => Url::to(['upload', 'action' => 'delete']),//ajax删除路径
-                                'key' => $value
-                            ]
-                        ],
+                        'initialPreview' => empty($value) ? [] : $valueArr,
+                        'initialPreviewConfig' => $initialPreviewConfig,
                         'initialPreviewAsData' => true,
+                        'overwriteInitial' => $multiple ? false : true,//多文件不覆盖原有的，单文件覆盖
                     ],
                     'pluginEvents' => [
-                        //上传完毕后给隐藏表单赋值
-                        'fileuploaded' => "function (event,data){
-                        $('input[type=\'hidden\'][name=\'" . $name . "\']').val(data.response.initialPreview[0]);
+                        //批量上传按钮
+                        'filebatchuploadcomplete' => "function (event, files, extra){
+                        var arr=[];
+                        $('.kv-file-remove').each(function(){
+                            var key=$(this).data('key');
+                            if(key && arr.indexOf(key)=='-1'){
+                                arr.push(key)
+                            }
+                        })
+                        $('input[type=\'hidden\'][name=\'" . $name . "\']').val(arr.join(','));
                        }",
-                        //删除时清空隐藏表单
-                        'filedeleted ' => "function (event,data){
-                        $('input[type=\'hidden\'][name=\'" . $name . "\']').val('');
+                        //单个点击上传完毕后给隐藏表单赋值
+                        'fileuploaded' => "function (event,data){
+                        var arr=[];
+                        $('.kv-file-remove').each(function(){
+                            var key=$(this).data('key');
+                            if(key && arr.indexOf(key)=='-1'){
+                                arr.push(key)
+                            }
+                        })
+                        $('input[type=\'hidden\'][name=\'" . $name . "\']').val(arr.join(','));
+                       }",
+                        //单个点击删除时清空隐藏表单(由于触发时，kv-file-remove还存在，所以需要去除本身)
+                        'filedeleted' => "function (event,key,jqXHR,data){
+                        var arr=[];
+                        var self=key;
+                        $('.kv-file-remove').each(function(){
+                            var key=$(this).data('key');
+                            if(key && key!=self && arr.indexOf(key)=='-1'){
+                                arr.push(key)
+                            }
+                        })
+                        $('input[type=\'hidden\'][name=\'" . $name . "\']').val(arr.join(','));
                        }",
                     ]
                 ]);
@@ -447,12 +483,12 @@ class Setting extends \yii\db\ActiveRecord
             self::RADIO => Yii::t('setting', "Example: \n\t value1:label1 \n\t value2:label2 \n\t ..."),
             self::CHECKBOX => Yii::t('setting', "Example: \n\t value1:label1 \n\t value2:label2 \n\t ..."),
             self::DATE => Yii::t('setting', "If you want show minutes ,please input:datetime"),
+            self::FILE => Yii::t('setting', 'If you want upload multiple file ,please input:multiple'),
             self::RADIO_SWITCH => Yii::t('setting', 'No necessary input!'),
             self::TEXT => Yii::t('setting', 'No necessary input!'),
             self::PASSWORD => Yii::t('setting', 'No necessary input!'),
             self::TEXTAREA => Yii::t('setting', 'No necessary input!'),
             self::RICKTEXT => Yii::t('setting', 'No necessary input!'),
-            self::FILE => Yii::t('setting', 'No necessary input!'),
         ];
         if ($type === false) {
             return $arr;

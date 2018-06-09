@@ -42,5 +42,6 @@ return [
     'No necessary input!'=>'无需填写',
     "Example: \n\t value1:showName1 \n\t value2:showName2 \n\t ..."=>"例如: \n\t 1:张三 \n\t 2:李四 \n\t ...",
     "Example: \n\t value1:label1 \n\t value2:label2 \n\t ..."=>"例如: \n\t 1:张三 \n\t 2:李四 \n\t ...",
-    'If you want show minutes ,please input:datetime'=>"不填写则只能选择日期\n如果想精确到分钟，请填写：datetime"
+    'If you want show minutes ,please input:datetime'=>"不填写则只能选择日期\n如果想精确到分钟，请填写：datetime",
+    'If you want upload multiple file ,please input:multiple'=>"不填写则只能上传单文件\n如果想上传多文件，请填写：multiple"
 ];
