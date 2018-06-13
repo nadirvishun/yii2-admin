@@ -12,7 +12,7 @@
         "irc": "irc://irc.freenode.net/yii",
         "source": "https://github.com/yiisoft/yii2"
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": "~2.0.14",
@@ -26,7 +26,9 @@
         "leandrogehlen/yii2-treegrid": "*",
         "dkhlystov/yii2-treegrid": "*",
         "kartik-v/yii2-widgets": "*",
-        "yiisoft/yii2-redis": "~2.0.0"
+        "yiisoft/yii2-redis": "~2.0.0",
+        "noam148/yii2-image-manager" : "*",
+        "creocoder/yii2-nested-sets": "0.9.*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

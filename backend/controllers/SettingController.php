@@ -3,11 +3,9 @@
 namespace backend\controllers;
 
 use backend\models\AdminLog;
-use common\components\Tree;
 use Yii;
 use backend\models\Setting;
 use backend\models\search\SettingSearch;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -133,6 +131,7 @@ class SettingController extends BaseController
      * Creates a new BackendSetting model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionCreate($pid = null)
     {
@@ -149,17 +148,10 @@ class SettingController extends BaseController
                 $model->pid = $pid;
             }
             $data['model'] = $model;
-            $list = Setting::find()->select('id,pid,name')
-                ->where(['status' => Setting::STATUS_VISIBLE])//不显示隐藏的
-                ->asArray()
-                ->all();
-            //创建树实例
-            $tree = new Tree();
-            $rootOption = ['0' => Yii::t('setting', 'Root Tree')];
-            $data['treeOptions'] = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
+            //显示树下拉菜单
+            $data['treeOptions'] = Setting::getSettingTreeOptions();
             //用于给js赋值，切换不同的提示信息
             $data['placeholderOptions'] = json_encode(Setting::getPlaceholderOptions());
-
             return $this->render('create', $data);
         }
     }
@@ -169,6 +161,7 @@ class SettingController extends BaseController
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionUpdate($id)
     {
@@ -178,16 +171,7 @@ class SettingController extends BaseController
             return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
         } else {
             //显示树下拉菜单
-            $list = Setting::find()->select('id,pid,name')
-                ->where(['status' => Setting::STATUS_VISIBLE])//不显示隐藏的
-                ->asArray()
-                ->all();
-            //创建树实例
-            $tree = new Tree();
-            $rootOption = ['0' => Yii::t('setting', 'Root Tree')];
-            $treeOptions = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
-            //获取提示信息
-            $placeholder = Setting::getPlaceholderOptions($model->type);
+            $treeOptions = Setting::getSettingTreeOptions();
             //用于给js赋值，切换不同的提示信息
             $placeholderOptions = json_encode(Setting::getPlaceholderOptions());
             return $this->render('update', [
@@ -203,6 +187,7 @@ class SettingController extends BaseController
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionDelete($id)
     {

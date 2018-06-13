@@ -254,7 +254,7 @@ class BackendMenu extends \yii\db\ActiveRecord
                 ->asArray()
                 ->all();
             //创建树实例
-            $tree = new Tree();
+            $tree = new Tree(['icon' => '']);
             $rootOption = ['0' => Yii::t('backend_menu', 'Root Tree')];//顶级显示
             $data = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
             //写入缓存

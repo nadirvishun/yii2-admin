@@ -1,5 +1,9 @@
 <?php
 return [
+    'aliases' => [
+        '@bower' => '@vendor/bower-asset',
+        '@npm'   => '@vendor/npm-asset',
+    ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     //设置i18n语言，前后台通用
     'sourceLanguage' => 'en-US',

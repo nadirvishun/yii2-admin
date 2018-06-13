@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use common\components\Tree;
 use kartik\datetime\DateTimePicker;
 use kartik\file\FileInput;
 use kartik\widgets\Select2;
@@ -10,6 +11,7 @@ use kucha\ueditor\UEditor;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\caching\DbDependency;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -225,9 +227,34 @@ class Setting extends \yii\db\ActiveRecord
     }
 
     /**
+     * 获取分类下拉菜单选项
+     */
+    public static function getSettingTreeOptions()
+    {
+        $cache = Yii::$app->cache;
+        //增加缓存获取
+        $data = $cache->get('setting_tree_options');
+        if ($data == false) {
+            $list = static::find()->select('id,pid,name')
+                ->where(['status' => self::STATUS_VISIBLE])//不显示隐藏的
+                ->orderBy(['sort' => SORT_DESC, 'id' => SORT_ASC])
+                ->asArray()
+                ->all();
+            //创建树实例
+            $tree = new Tree(['icon' => '']);
+            $rootOption = ['0' => Yii::t('setting', 'Root Tree')];//顶级显示
+            $data = ArrayHelper::merge($rootOption, $tree->getTreeOptions($list));
+            //写入缓存
+            $dependency = new DbDependency(['sql' => 'SELECT max(updated_at) FROM ' . static::tableName()]);
+            $cache->set('setting_tree_options', $data, 0, $dependency);
+        }
+        return $data;
+    }
+
+    /**
      * 根据Alias获取对应的value值
      * @param $alias
-     * @return
+     * @return string
      */
     public static function getValueByAlias($alias)
     {
@@ -237,13 +264,13 @@ class Setting extends \yii\db\ActiveRecord
         $setting = $cache->get('setting');
         if ($setting[$alias] == false) {
             $setting = static::find()
-                ->select('value,alias')
+                ->select('value')
                 ->where(['status' => self::STATUS_VISIBLE])
                 ->indexBy('alias')
                 ->asArray()
                 ->column();
             //添加缓存依赖，当最新的更新时间变更，则说明有数据更新
-            $dependency = new \yii\caching\DbDependency(['sql' => 'SELECT max(updated_at) FROM ' . ' {{%setting}}']);
+            $dependency = new DbDependency(['sql' => 'SELECT max(updated_at) FROM ' . static::tableName()]);
             //写入缓存
             $cache->set('setting', $setting, 0, $dependency);
         }
@@ -263,7 +290,6 @@ class Setting extends \yii\db\ActiveRecord
      */
     public static function createInputTag($type, $name, $value, $extra = '', $options = [])
     {
-
         if (empty($options)) {
             $options = ['class' => 'form-control', 'id' => $name];
         }
