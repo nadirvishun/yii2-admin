@@ -5,7 +5,6 @@ namespace backend\controllers;
 use Yii;
 use backend\models\AdminLog;
 use backend\models\search\AdminLogSearch;
-use yii\helpers\Inflector;
 use yii\web\NotFoundHttpException;
 
 /**

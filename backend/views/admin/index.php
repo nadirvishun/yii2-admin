@@ -1,10 +1,8 @@
 <?php
 
 use backend\models\Admin;
-use backend\models\BackendRole;
 use kartik\editable\Editable;
 use kartik\popover\PopoverX;
-use kartik\widgets\Select2;
 use yii\helpers\Html;
 use kartik\grid\GridView;
 

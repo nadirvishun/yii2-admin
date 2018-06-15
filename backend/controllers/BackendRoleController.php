@@ -4,7 +4,6 @@ namespace backend\controllers;
 
 use backend\models\AdminLog;
 use backend\models\BackendMenu;
-use common\components\Tree;
 use Yii;
 use backend\models\BackendRole;
 use backend\models\search\BackendRoleSearch;

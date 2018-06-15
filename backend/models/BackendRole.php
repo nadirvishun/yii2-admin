@@ -3,8 +3,6 @@
 namespace backend\models;
 
 use Yii;
-use yii\behaviors\BlameableBehavior;
-use yii\behaviors\TimestampBehavior;
 use yii\rbac\Item;
 
 /**
@@ -26,17 +24,6 @@ class BackendRole extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%backend_auth_item}}';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-//            TimestampBehavior::className(),
-//            BlameableBehavior::className()
-        ];
     }
 
     /**

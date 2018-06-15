@@ -10,7 +10,6 @@ use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\filters\VerbFilter;
 use backend\models\LoginForm;
-use yii\web\UploadedFile;
 
 /**
  * Site controller
