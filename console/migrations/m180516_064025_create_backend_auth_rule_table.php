@@ -16,14 +16,14 @@ class m180516_064025_create_backend_auth_rule_table extends Migration
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
-            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB COMMENT="规则表"';
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB COMMENT="规则表"';
         }
 
         $this->createTable(self::TBL_NAME, [
-            'name' => $this->string(64)->notNull()->comment('规则名称'),
+            'name' => $this->string(64)->notNull()->defaultValue('')->comment('规则名称'),
             'data' => $this->text()->comment('数据'),
-            'created_at' => $this->bigInteger()->unsigned()->notNull()->comment('创建时间'),
-            'updated_at' => $this->bigInteger()->unsigned()->notNull()->comment('更新时间')
+            'created_at' => $this->bigInteger()->unsigned()->notNull()->defaultValue(0)->comment('创建时间'),
+            'updated_at' => $this->bigInteger()->unsigned()->notNull()->defaultValue(0)->comment('更新时间')
         ], $tableOptions);
 
         //增加主键
