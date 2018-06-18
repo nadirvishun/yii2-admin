@@ -35,6 +35,7 @@ class Admin extends ActiveRecord implements IdentityInterface
     const SEX_MAN = 1;//性别男
     const SEX_WOMAN = 2;//性别女
 
+    public $password;//秘密
     public $passwordRepeat;//确认密码
     public $role;//所属角色
 
@@ -68,11 +69,11 @@ class Admin extends ActiveRecord implements IdentityInterface
             [['username'], 'match', 'pattern' => '/^[a-zA-Z]\w*$/i'],
             [['username'], 'unique'],
             //由于下三个都是唯一的所以必须填写，但是由于console中的初始化后台用户时越简单越好，所以设定场景
-            [['username', 'email', 'mobile'], 'required', 'on' => ['create', 'update', 'modify']],
+            [['username'], 'required'],
             //创建时必须填写确认密码
-            [['password_hash', 'passwordRepeat'], 'required', 'on' => 'create'],
+            [['password', 'passwordRepeat'], 'required', 'on' => 'create'],
             //在创建和修改自身时需要填写确认密码
-            ['passwordRepeat', 'compare', 'compareAttribute' => 'password_hash', 'on' => ['create', 'modify']],
+            ['passwordRepeat', 'compare', 'compareAttribute' => 'password', 'on' => ['create', 'modify']],
             ['email', 'email'],
             ['email', 'unique'],
             ['mobile', 'match', 'pattern' => '/^1(3|4|5|7|8)[0-9]\d{8}$/'],
@@ -98,6 +99,7 @@ class Admin extends ActiveRecord implements IdentityInterface
             'id' => Yii::t('admin', 'ID'),
             'username' => Yii::t('admin', 'Username'),
             'auth_key' => Yii::t('admin', 'Auth Key'),
+            'password' => Yii::t('admin', 'Password'),
             'password_hash' => Yii::t('admin', 'Password Hash'),
             'passwordRepeat' => Yii::t('admin', 'Password Repeat'),//增加确认密码
             'password_reset_token' => Yii::t('admin', 'Password Reset Token'),
@@ -296,8 +298,7 @@ class Admin extends ActiveRecord implements IdentityInterface
         //如果是新增，则自动产生
         if ($this->isNewRecord) {
             $this->generateAuthKey();
-            $this->generatePasswordResetToken();
-            $this->setPassword($this->password_hash);
+            $this->setPassword($this->password);
         }
         return parent::beforeSave($insert);
     }

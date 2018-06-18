@@ -27,7 +27,7 @@ use yii\widgets\ActiveForm;
 
     <!--如果是新增或者是修改自身，则需要显示密码-->
     <?php if ($act == 'create' || $act == 'modify'): ?>
-        <?php $input = $form->field($model, 'password_hash', ['options' => ['class' => 'form-group c-md-5']])
+        <?php $input = $form->field($model, 'password', ['options' => ['class' => 'form-group c-md-5']])
             ->passwordInput(['maxlength' => true]);
         if ($act == 'modify') {//如果是修改自身，需要加提示
             echo $input->hint('不填写则不更改密码');

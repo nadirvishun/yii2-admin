@@ -29,7 +29,7 @@ class m170424_062025_create_setting_table extends Migration
             'extra' => $this->string()->notNull()->defaultValue('')->comment('配置参数'),
             'hint' => $this->string(100)->notNull()->defaultValue('')->comment('提示说明'),
             'sort' => $this->integer()->notNull()->defaultValue(0)->comment('排序'),
-            'status' => $this->boolean()->unsigned()->notNull()->defaultValue(1)->comment('状态:0隐藏，1显示'),
+            'status' => $this->tinyInteger(1)->unsigned()->notNull()->defaultValue(1)->comment('状态:0隐藏，1显示'),
             'created_by' => $this->integer()->unsigned()->notNull()->defaultValue(0)->comment('创建人'),
             'created_at' => $this->bigInteger()->unsigned()->notNull()->defaultValue(0)->comment('创建时间'),
             'updated_by' => $this->integer()->unsigned()->notNull()->defaultValue(0)->comment('更新人'),

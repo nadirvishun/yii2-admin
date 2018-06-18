@@ -69,6 +69,8 @@ class ResetPasswordForm extends Model
         $admin = $this->_admin;
         $admin->setPassword($this->password);
         $admin->removePasswordResetToken();
+        //取消管理员操作日志的记录
+        \yii\base\Event::off(\yii\db\BaseActiveRecord::className(), \yii\db\BaseActiveRecord::EVENT_AFTER_UPDATE, ['backend\modules\system\models\AdminLog', 'eventUpdate']);
 
         return $admin->save(false);
     }

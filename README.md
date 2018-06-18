@@ -16,10 +16,10 @@ AdminLTE模板的后台样式，可作为基础的后台管理
 
 ## 安装
 1.  下载后运行：`composer install`，安装所需的组件
-2.  初始化：`php init`，然后配置自己的数据库参数
-3.  数据库：`yii migrate`，来生成表
-4.  创建后台账户：`yii init/admin`，按照提示创建后台管理员
-5.  登陆后台，进行相关操作
+2.  初始化：`php init`，选择开发环境
+3.  配置自己的数据库参数,然后运行`php yii migrate`，来生成表
+4.  创建后台账户：`php yii init/admin`，按照提示创建后台管理员
+5.  参照yii2高级模板的教程配置服务器环境及url美化，登陆后台，进行相关操作
 
 ## 截图
 ![菜单](https://github.com/nadirvishun/yii2-admin/blob/master/backend/web/img/menu.png)

@@ -7,6 +7,7 @@ return [
     'ID' => 'ID',
     'Username' => '用户名',
     'Auth Key' => '认证Key',
+    'Password' => '密码',
     'Password Hash' => '密码',
     'Password Repeat' => '确认密码',
     'Password Reset Token' => '密码重置Token',

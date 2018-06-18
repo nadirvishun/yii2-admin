@@ -84,7 +84,6 @@ class User extends \api\common\models\User implements Linkable
         //如果是新增，则自动产生
         if ($this->isNewRecord) {
             $this->generateAuthKey();
-            $this->generatePasswordResetToken();
             $this->setPassword($this->password);
         }
         return parent::beforeSave($insert);
