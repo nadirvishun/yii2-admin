@@ -27,7 +27,7 @@ return [
     'Parent ID can not be itself or its subordinate node' => '父ID不能是自身或其下级节点',
     'like "index/index"' => '例如："index/index',
     'like "id=1&pid=2"' => '例如："id=1&pid=2"',
-    'support font awesome icon' => '支持font awesome 图标 ',
-
+    'support font awesome icon' => '支持font awesome 图标',
+    'This node has children ,please delete children first' => '该菜单存在下级菜单，请先删除下级菜单'
 
 ];

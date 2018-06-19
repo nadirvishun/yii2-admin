@@ -37,6 +37,7 @@ return [
     'Unless you know it not use in code,otherwise do not change it' => '除非你确认程序中没有用到此参数，否则请不要轻易修改',
     'Parent ID can not be itself or its subordinate node' => '父ID不能是自身或其下级节点',
     'Only support two levels' => '只支持两级的层级关系',
+    'This node has children ,please delete children first' => '该节点存在下级节点，请先删除下级节点',
 
     'change setting'=>'修改系统设置',
     'No necessary input!'=>'无需填写',

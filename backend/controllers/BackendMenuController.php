@@ -166,6 +166,12 @@ class BackendMenuController extends BaseController
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
+        //判定是否有下级菜单，如果有则提示先删除下级
+        $children = BackendMenu::getChildIds([$id], false);
+        if (!empty($children)) {
+            return $this->redirectError(['index'],
+                Yii::t('backend-menu', 'This node has children ,please delete children first'));
+        }
         $transaction = Yii::$app->db->beginTransaction();
         try {
             $model->delete();

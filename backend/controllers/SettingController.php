@@ -191,7 +191,15 @@ class SettingController extends BaseController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model=$this->findModel($id);
+        //判定是否有下级，如果有则提示先删除下级
+        $children = Setting::getChildIds([$id], false);
+        if (!empty($children)) {
+            return $this->redirectError(['index'],
+                Yii::t('setting', 'This node has children ,please delete children first'));
+        }
+
+        $model->delete();
 
         return $this->redirectSuccess(['index'], Yii::t('common', 'Delete Success'));
     }
