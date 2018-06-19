@@ -34,6 +34,19 @@ class <?= $className ?> extends Migration
      */
     public function up()
     {
+        if ($this->db->driverName === 'mysql') {
+            //获取mysql版本
+            $version = $this->db->getServerVersion();
+            //获取字符集
+            $charset = $this->db->charset;
+            if($charset === 'utf8mb4'){
+                //如果mysql数据库版本小于5.7.7，则需要将varchar默认值修改为191，否则报错：Specified key was too long error
+                if (version_compare($version, '5.7.7', '<')) {
+                    $queryBuilder = $this->db->getQueryBuilder();
+                    $queryBuilder->typeMap[\yii\db\mysql\Schema::TYPE_STRING] = 'varchar(191)';
+                }
+            }
+        }
 <?= $this->render('_addColumns', [
     'table' => $table,
     'fields' => $fields,
