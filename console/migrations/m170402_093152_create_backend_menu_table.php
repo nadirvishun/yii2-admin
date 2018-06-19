@@ -32,7 +32,9 @@ class m170402_093152_create_backend_menu_table extends Migration
         }
         $this->createTable(self::TBL_NAME, [
             'id' => $this->primaryKey()->unsigned()->comment('菜单ID'),
-            'pid' => $this->integer()->unsigned()->notNull()->defaultValue(0)->comment('父ID'),
+            'pid' => $this->integer()->notNull()->defaultValue(0)->comment('父ID'),
+            //与tree-grid冲突，https://github.com/dkhlystov/yii2-treegrid/issues/6
+//            'pid' => $this->integer()->unsigned()->notNull()->defaultValue(0)->comment('父ID'),
             'name' => $this->string(64)->notNull()->defaultValue('')->comment('菜单名称'),
             'url' => $this->string(64)->notNull()->defaultValue('')->comment('菜单链接'),
             'url_param' => $this->string()->notNull()->defaultValue('')->comment('菜单链接参数'),
