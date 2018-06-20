@@ -33,13 +33,13 @@ class m170328_083427_create_user_token_table extends Migration
 
         $this->createTable(self::TBL_NAME, [
             'access_token' => $this->string(40)->notNull()->comment('接口token'),
-            'user_id' => $this->integer()->unsigned()->notNull()->defaultValue(0)->comment('用户ID'),
-            'access_expires' => $this->bigInteger()->unsigned()->notNull()->defaultValue(0)->comment('access_token过期时间'),
-            'client_type' => $this->tinyInteger()->unsigned()->notNull()->defaultValue(0)->comment('客户端类型，0未知，1为安卓，2为ios，3为wap'),
+            'user_id' => $this->integer()->notNull()->defaultValue(0)->comment('用户ID'),
+            'access_expires' => $this->bigInteger()->notNull()->defaultValue(0)->comment('access_token过期时间'),
+            'client_type' => $this->tinyInteger()->notNull()->defaultValue(0)->comment('客户端类型，0未知，1为安卓，2为ios，3为wap'),
             'refresh_token'=>$this->string(40)->notNull()->defaultValue('')->comment('刷新token'),
-            'refresh_expires'=>$this->bigInteger()->unsigned()->notNull()->defaultValue(0)->comment('refresh_token过期时间'),
-            'created_at' => $this->bigInteger()->unsigned()->notNull()->defaultValue(0)->comment('创建时间'),
-            'updated_at' => $this->bigInteger()->unsigned()->notNull()->defaultValue(0)->comment('更新时间')
+            'refresh_expires'=>$this->bigInteger()->notNull()->defaultValue(0)->comment('refresh_token过期时间'),
+            'created_at' => $this->bigInteger()->notNull()->defaultValue(0)->comment('创建时间'),
+            'updated_at' => $this->bigInteger()->notNull()->defaultValue(0)->comment('更新时间')
         ], $tableOptions);
         //添加主键及索引
         $this->addPrimaryKey('access_token', self::TBL_NAME, 'access_token');

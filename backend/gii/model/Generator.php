@@ -22,7 +22,7 @@ class Generator extends \yii\gii\generators\model\Generator
     public $messagePath = 'backend/messages/zh-CN';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function generate()
     {

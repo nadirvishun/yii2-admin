@@ -38,8 +38,8 @@ class m180516_071815_create_backend_auth_item_table extends Migration
             'description' => $this->text()->comment('描述'),
             'rule_name' => $this->string(64)->defaultValue('')->comment('规则名称'),
             'data' => $this->text()->comment('数据'),
-            'created_at' => $this->bigInteger()->unsigned()->notNull()->defaultValue(0)->comment('创建时间'),
-            'updated_at' => $this->bigInteger()->unsigned()->notNull()->defaultValue(0)->comment('更新时间')
+            'created_at' => $this->bigInteger()->notNull()->defaultValue(0)->comment('创建时间'),
+            'updated_at' => $this->bigInteger()->notNull()->defaultValue(0)->comment('更新时间')
         ], $tableOptions);
         //添加主键及索引
         $this->addPrimaryKey('name', self::TBL_NAME, 'name');

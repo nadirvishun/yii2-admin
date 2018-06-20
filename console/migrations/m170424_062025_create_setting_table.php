@@ -32,10 +32,8 @@ class m170424_062025_create_setting_table extends Migration
         }
 
         $this->createTable(self::TBL_NAME, [
-            'id' => $this->primaryKey()->unsigned()->comment('配置ID'),
+            'id' => $this->primaryKey()->comment('配置ID'),
             'pid' => $this->integer()->notNull()->defaultValue(0)->comment('父ID'),
-            //与tree-grid冲突，https://github.com/dkhlystov/yii2-treegrid/issues/6
-//            'pid' => $this->integer()->unsigned()->notNull()->defaultValue(0)->comment('父ID'),
             'name' => $this->string(64)->notNull()->defaultValue(0)->comment('配置名称'),
             'alias' => $this->string(64)->notNull()->unique()->defaultValue('')->comment('配置别名'),
             'type' => $this->tinyInteger()->notNull()->defaultValue(1)->comment('类别，例如1代表text，2代表radio等'),
@@ -43,11 +41,11 @@ class m170424_062025_create_setting_table extends Migration
             'extra' => $this->string()->notNull()->defaultValue('')->comment('配置参数'),
             'hint' => $this->string(100)->notNull()->defaultValue('')->comment('提示说明'),
             'sort' => $this->integer()->notNull()->defaultValue(0)->comment('排序'),
-            'status' => $this->tinyInteger(1)->unsigned()->notNull()->defaultValue(1)->comment('状态:0隐藏，1显示'),
-            'created_by' => $this->integer()->unsigned()->notNull()->defaultValue(0)->comment('创建人'),
-            'created_at' => $this->bigInteger()->unsigned()->notNull()->defaultValue(0)->comment('创建时间'),
-            'updated_by' => $this->integer()->unsigned()->notNull()->defaultValue(0)->comment('更新人'),
-            'updated_at' => $this->bigInteger()->unsigned()->notNull()->defaultValue(0)->comment('更新时间')
+            'status' => $this->tinyInteger(1)->notNull()->defaultValue(1)->comment('状态:0隐藏，1显示'),
+            'created_by' => $this->integer()->notNull()->defaultValue(0)->comment('创建人'),
+            'created_at' => $this->bigInteger()->notNull()->defaultValue(0)->comment('创建时间'),
+            'updated_by' => $this->integer()->notNull()->defaultValue(0)->comment('更新人'),
+            'updated_at' => $this->bigInteger()->notNull()->defaultValue(0)->comment('更新时间')
         ], $tableOptions);
 
         //增加配置基础显示
@@ -63,6 +61,6 @@ class m170424_062025_create_setting_table extends Migration
      */
     public function down()
     {
-//        $this->dropTable(self::TBL_NAME);
+        $this->dropTable(self::TBL_NAME);
     }
 }

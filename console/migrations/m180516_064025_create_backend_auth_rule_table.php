@@ -34,8 +34,8 @@ class m180516_064025_create_backend_auth_rule_table extends Migration
         $this->createTable(self::TBL_NAME, [
             'name' => $this->string(64)->notNull()->defaultValue('')->comment('规则名称'),
             'data' => $this->text()->comment('数据'),
-            'created_at' => $this->bigInteger()->unsigned()->notNull()->defaultValue(0)->comment('创建时间'),
-            'updated_at' => $this->bigInteger()->unsigned()->notNull()->defaultValue(0)->comment('更新时间')
+            'created_at' => $this->bigInteger()->notNull()->defaultValue(0)->comment('创建时间'),
+            'updated_at' => $this->bigInteger()->notNull()->defaultValue(0)->comment('更新时间')
         ], $tableOptions);
 
         //增加主键

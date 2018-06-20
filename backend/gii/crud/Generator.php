@@ -20,7 +20,7 @@ class Generator extends \yii\gii\generators\crud\Generator
 {
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {

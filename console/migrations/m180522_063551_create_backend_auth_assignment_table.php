@@ -34,7 +34,7 @@ class m180522_063551_create_backend_auth_assignment_table extends Migration
         $this->createTable(self::TBL_NAME, [
             'item_name' => $this->string(64)->notNull()->defaultValue('')->comment('权限角色名称'),
             'user_id' => $this->string(64)->notNull()->defaultValue('')->comment('用户ID'),
-            'created_at' => $this->bigInteger()->unsigned()->notNull()->defaultValue(0)->comment('创建时间'),
+            'created_at' => $this->bigInteger()->notNull()->defaultValue(0)->comment('创建时间'),
         ], $tableOptions);
         //联合主键
         $this->addPrimaryKey('item_user', self::TBL_NAME, ['item_name', 'user_id']);
