@@ -281,15 +281,16 @@ class Setting extends \yii\db\ActiveRecord
      * 根据不同的类型创建不同的input表单
      * 只能封装成通用的样式
      * @param integer $type
-     * @param string $name 如果是多维的，需提前组装好
+     * @param string $alias
      * @param string $value
      * @param string $extra
      * @param array $options
      * @return string
      * @throws \Exception
      */
-    public static function createInputTag($type, $name, $value, $extra = '', $options = [])
+    public static function createInputTag($type, $alias, $value, $extra = '', $options = [])
     {
+        $name = "Setting[$alias]";
         if (empty($options)) {
             $options = ['class' => 'form-control', 'id' => $name];
         }
@@ -437,7 +438,7 @@ class Setting extends \yii\db\ActiveRecord
                         //批量上传按钮
                         'filebatchuploadcomplete' => "function (event, files, extra){
                         var arr=[];
-                        $('.kv-file-remove').each(function(){
+                        $('.field-setting-".$alias." .kv-file-remove').each(function(){
                             var key=$(this).data('key');
                             if(key && arr.indexOf(key)=='-1'){
                                 arr.push(key)
@@ -448,7 +449,7 @@ class Setting extends \yii\db\ActiveRecord
                         //单个点击上传完毕后给隐藏表单赋值
                         'fileuploaded' => "function (event,data){
                         var arr=[];
-                        $('.kv-file-remove').each(function(){
+                        $('.field-setting-".$alias." .kv-file-remove').each(function(){
                             var key=$(this).data('key');
                             if(key && arr.indexOf(key)=='-1'){
                                 arr.push(key)
@@ -460,7 +461,7 @@ class Setting extends \yii\db\ActiveRecord
                         'filedeleted' => "function (event,key,jqXHR,data){
                         var arr=[];
                         var self=key;
-                        $('.kv-file-remove').each(function(){
+                        $('.field-setting-".$alias." .kv-file-remove').each(function(){
                             var key=$(this).data('key');
                             if(key && key!=self && arr.indexOf(key)=='-1'){
                                 arr.push(key)

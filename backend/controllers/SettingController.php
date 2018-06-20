@@ -67,9 +67,9 @@ class SettingController extends BaseController
                 $children = Setting::getSettingList($list['id']);
                 if (!empty($children)) {
                     foreach ($children as $key => $child) {
-                        $str .= Html::beginTag('div', ['class' => 'form-group  c-md-5']);
+                        $str .= Html::beginTag('div', ['class' => 'form-group  c-md-5 field-setting-'.$child['alias']]);
                         $str .= Html::label($child['name'], "Setting[{$child['alias']}]");
-                        $str .= Setting::createInputTag($child['type'], "Setting[{$child['alias']}]", $child['value'], $child['extra']);
+                        $str .= Setting::createInputTag($child['type'], $child['alias'], $child['value'], $child['extra']);
                         //增加提示
                         if (!empty($child['hint'])) {
                             $str .= Html::tag('div', $child['hint'], ['class' => 'hint-block']);
