@@ -10,7 +10,6 @@ use yii\widgets\ActiveForm;
 /* @var $model backend\models\Admin */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $act backend\controllers\AdminController */
-/* @var $avatarUrl backend\controllers\AdminController */
 ?>
 
 <div class="admin-form">
@@ -56,7 +55,7 @@ use yii\widgets\ActiveForm;
                 'showPreview' => true,
                 'showClose' => false,
                 'showUpload' => false,
-                'initialPreview' => empty($avatarUrl) ? [] : [$avatarUrl],
+                'initialPreview' => empty($model->avatar) ? [] : [$model->avatar],
                 'initialPreviewAsData' => true,
             ]
         ]); ?>

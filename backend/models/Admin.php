@@ -74,14 +74,17 @@ class Admin extends ActiveRecord implements IdentityInterface
             [['password', 'passwordRepeat'], 'required', 'on' => 'create'],
             //在创建和修改自身时需要填写确认密码
             ['passwordRepeat', 'compare', 'compareAttribute' => 'password', 'on' => ['create', 'modify']],
+            [['password'], 'string', 'max' => 255],//必须存在一个规则，否则前台js再比较时取不到password值
             ['email', 'email'],
             ['email', 'unique'],
             ['mobile', 'match', 'pattern' => '/^1(3|4|5|7|8)[0-9]\d{8}$/'],
             ['mobile', 'unique'],
+            //设置默认值为null，数据库中才能唯一索引但是多个null值
+            [['email', 'mobile'], 'default', 'value' => null],
             [['created_at', 'updated_at', 'last_login_time'], 'integer'],
             ['sex', 'in', 'range' => [self::SEX_SECRET, self::SEX_MAN, self::SEX_WOMAN]],
-            [['auth_key', 'last_login_ip', 'password_hash'], 'safe'],
-            [['avatar'], 'file', 'extensions' => 'png, jpg'],
+            [['auth_key', 'last_login_ip'], 'safe'],
+            [['avatar'], 'file', 'extensions' => 'png,jpg,jpeg,gif'],
         ];
     }
 

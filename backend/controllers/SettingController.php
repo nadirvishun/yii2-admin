@@ -148,8 +148,6 @@ class SettingController extends BaseController
                 $model->pid = $pid;
             }
             $data['model'] = $model;
-            //显示树下拉菜单
-            $data['treeOptions'] = Setting::getSettingTreeOptions();
             //用于给js赋值，切换不同的提示信息
             $data['placeholderOptions'] = json_encode(Setting::getPlaceholderOptions());
             return $this->render('create', $data);
@@ -170,13 +168,10 @@ class SettingController extends BaseController
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
         } else {
-            //显示树下拉菜单
-            $treeOptions = Setting::getSettingTreeOptions();
             //用于给js赋值，切换不同的提示信息
             $placeholderOptions = json_encode(Setting::getPlaceholderOptions());
             return $this->render('update', [
                 'model' => $model,
-                'treeOptions' => $treeOptions,
                 'placeholderOptions' => $placeholderOptions
             ]);
         }

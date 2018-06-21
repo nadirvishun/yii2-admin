@@ -9,8 +9,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Setting */
 /* @var $form yii\widgets\ActiveForm */
-/* @var $treeOptions backend\controllers\SettingController */
-/* @var $placeholder backend\controllers\SettingController */
+/* @var $placeholderOptions backend\controllers\SettingController */
 ?>
 
 <div class="backend-setting-form">
@@ -22,7 +21,7 @@ use yii\widgets\ActiveForm;
 
     <?=
     $form->field($model, 'pid', ['options' => ['class' => 'form-group c-md-5']])->widget(Select2::classname(), [
-        'data' => $treeOptions,
+        'data' => Setting::getSettingTreeOptions(),
         'options' => [
             'prompt' => Yii::t('common', 'Please Select...'),
             'encode' => false,

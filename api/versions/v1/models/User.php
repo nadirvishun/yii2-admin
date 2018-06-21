@@ -66,6 +66,8 @@ class User extends \api\common\models\User implements Linkable
             [['username', 'password'], 'required', 'on' => 'create'],
             ['email', 'email'],
             ['email', 'unique'],
+            //设置默认值为null，数据库中才能唯一索引但是多个null值
+            [['email'], 'default', 'value' => null],
             ['mobile', 'match', 'pattern' => '/^1(3|4|5|7|8)[0-9]\d{8}$/'],
             ['mobile', 'unique'],
             [['created_at', 'updated_at', 'last_login_time'], 'integer'],

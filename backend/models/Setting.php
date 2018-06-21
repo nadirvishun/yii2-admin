@@ -79,8 +79,8 @@ class Setting extends \yii\db\ActiveRecord
             [['pid', 'name', 'alias'], 'required'],
             [['pid', 'type', 'sort', 'status'], 'integer'],
             [['value'], 'string'],
-            ['sort', 'default', 'value' => 0],
-            ['type', 'default', 'value' => 1],
+            //严格模式下text不能设置默认值，否则migrate出错，但是如果value字段不填写，新增时还是会报错，所以这里增加默认值
+            [['value'], 'default', 'value' => ''],
             //父ID有效性,当为0时不验证
             ['pid', 'exist', 'targetAttribute' => 'id', 'isEmpty' => function ($value) {
                 return empty($value);
