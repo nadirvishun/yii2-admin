@@ -6,7 +6,6 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Admin */
 /* @var $act backend\controllers\AdminController */
-/* @var $avatarUrl backend\controllers\AdminController */
 
 $this->title = Yii::t('admin', 'Create Admin');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('admin', 'Admins'), 'url' => ['index']];
@@ -20,6 +19,5 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $this->render('_form', [
         'model' => $model,
         'act' => $act,
-        'avatarUrl'=>$avatarUrl,
     ]) ?>
 </div>

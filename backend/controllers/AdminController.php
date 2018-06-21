@@ -181,8 +181,6 @@ class AdminController extends BaseController
         }
         //为了更新完成后返回列表检索页数原有状态，所以这里先纪录下来
         $this->rememberReferrerUrl('admin-update');
-        //将密码字段清空
-        $model->password_hash = '';
         $act = 'update';
         return $this->render('update', [
             'model' => $model,
@@ -221,28 +219,18 @@ class AdminController extends BaseController
             }
 
             //如果传递过来的密码为空,则不更新密码
-            if (empty($model->password_hash)) {
-                unset($model->password_hash);
-            } else {//否则重新加密后的密码写入
-                $model->setPassword($model->password_hash);
+            if (!empty($model->password)) {
+                $model->setPassword($model->password);
             }
             //必须在上面先validate，然后save必须为false，否则由于密码被加密后导致确认密码不一致
             if (!$model->hasErrors() && $model->save(false)) {
                 return $this->redirectSuccess(['modify'], Yii::t('common', 'Update Success'));
             }
         }
-        //将密码字段清空
-        $model->password_hash = '';
-        if ($model->avatar) {
-            $avatarUrl = Yii::$app->request->hostInfo . $model->avatar;
-        } else {
-            $avatarUrl = null;
-        }
         $act = 'modify';
         return $this->render('update', [
             'model' => $model,
             'act' => $act,
-            'avatarUrl' => $avatarUrl
         ]);
 
     }

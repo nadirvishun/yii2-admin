@@ -1,5 +1,6 @@
 <?php
 
+use backend\models\BackendMenu;
 use kartik\widgets\Select2;
 use kartik\widgets\SwitchInput;
 use yii\helpers\Html;
@@ -8,7 +9,6 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model backend\models\BackendMenu */
 /* @var $form yii\widgets\ActiveForm */
-/* @var $treeOptions backend\controllers\BackendMenuController*/
 ?>
 
 <div class="backend-menu-form">
@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
     ]); ?>
 
     <?= $form->field($model, 'pid', ['options' => ['class' => 'form-group c-md-5']])->widget(Select2::classname(), [
-        'data' => $treeOptions,
+        'data' => BackendMenu::getMenuTreeOptions(),
         'options' => [
             'prompt' => Yii::t('common', 'Please Select...'),
             'encode' => false,
