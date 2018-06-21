@@ -44,3 +44,14 @@ use yii\widgets\ActiveForm;
     <?= "<?php " ?>ActiveForm::end(); ?>
 
 </div>
+<?= "<?php " ?>
+//增加必填字段红星提示
+$js = <<<eof
+    $(".required").each(function(){
+    var label=$(this).children(':first');
+    label.html(label.html()+'<i style="color:red">*</i>');
+    })
+eof;
+$this->registerJs($js);
+?>
+

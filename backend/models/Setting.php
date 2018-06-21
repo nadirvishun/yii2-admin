@@ -72,6 +72,7 @@ class Setting extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
+     * todo,增加相关字段和验证规则，可参照yii-user相关的设计，用tab区分下然后设置规则，用场景来区分
      */
     public function rules()
     {
