@@ -1,8 +1,11 @@
 <?php
 /**
  * fileInput上传独立控制器
- * 异步上传
- * 多文件上传时，需要设置'showUpload' => false，然后一个个上传，因为测试一键上传时很大概率第一张图会被第二张覆盖，原因暂未查明
+ * 同步上传
+ * 前端设置：'uploadAsync' => false
+ * 如果是多图，必须必须设置maxFiles规则不为1，且上传字段最后加[],例如Post['img'][]
+ * 如果是单图，则不需要设置maxFiles，且上传字段不要加[]
+ * 目前项目未采用此种上传，如果要用，还需要更改各种回调事件中的逻辑
  */
 
 namespace common\components;
@@ -18,7 +21,7 @@ use yii\web\UploadedFile;
 /**
  * ajax上传文件action
  */
-class UploadAction extends Action
+class UploadSyncAction extends Action
 {
     /**
      * 上传字段名称
@@ -33,7 +36,7 @@ class UploadAction extends Action
     public $path;
     /**
      * 验证规则
-     * ['extensions'=>'png,jpg,gif',...]
+     * ['extensions'=>'png,jpg,gif','maxFiles' => 2,...]
      * @var array
      */
     public $rule = [];
@@ -80,7 +83,6 @@ class UploadAction extends Action
     /**
      * 上传文件
      * 由于用的是kartik的yii2-widget-fileinput组件，所以需要返回组件需要的格式
-     * 目前用的是同步单个文件上传，后期可以考虑改为异步多文件同时上传，否则多文件时前端回调要遍历各种元素
      * @throws \yii\base\Exception
      */
     public function upload()
@@ -90,36 +92,51 @@ class UploadAction extends Action
         if (empty($name)) {
             $name = $this->name;
         }
-        //上传的文件
-        $fileInstance = UploadedFile::getInstanceByName($name);
+        //上传的文件,判断是单图上传还是多图上传
+        if (isset($this->rule['maxFiles']) && ($this->rule['maxFiles'] != 1 || $this->rule['maxFiles'] > 1)) {
+            $fileInstances = UploadedFile::getInstancesByName($name);
+            $uploadFile = $fileInstances;
+        } else {
+            $fileInstance = UploadedFile::getInstanceByName($name);
+            $uploadFile = $fileInstance;
+            $fileInstances[0] = $fileInstance;
+        }
         //验证文件上传
-        $model = new DynamicModel([$name => $fileInstance]);
+        $model = new DynamicModel([$name => $uploadFile]);
         $model->addRule($name, 'file', $this->rule)->validate();
         if ($model->hasErrors()) {
-            return ['error' => $model->getFirstError($name)];
+            $error = $model->getFirstError($name);
+            return ['error' => $error];
         }
         //如果没有目录，则创建目录
         FileHelper::createDirectory(Yii::getAlias('@webroot') . $this->path);
-        //保存文件
-        $newName = time() . rand(1000, 9999);//文件重命名
-        if (!$fileInstance->saveAs(Yii::getAlias('@webroot') . $this->path . $newName . '.' . $fileInstance->extension)) {
-            return ['error' => Yii::t('common', 'Upload failed!')];
+        $saveFiles = [];
+        $configs = [];
+        foreach ($fileInstances as $key => $fileInstance) {
+            //保存文件
+            $newName = time() . rand(1000, 9999) . $key;//文件重命名
+            if (!$fileInstance->saveAs(Yii::getAlias('@webroot') . $this->path . $newName . '.' . $fileInstance->extension)) {
+                $uploadError = Yii::t('common', 'Upload failed!');
+                //如果一个出错，将所有上传的都删除掉
+                foreach ($saveFiles as $item) {
+                    @unlink(Yii::getAlias('@webroot') . $item);
+                }
+                return ['error' => $uploadError];
+            }
+            //返回正确信息
+            $saveFile = $this->path . $newName . '.' . $fileInstance->extension;
+            $saveFiles[] = $saveFile;
+            $configs[] = [
+                'caption' => $newName . '.' . $fileInstance->extension,
+                'url' => Url::to(['upload', 'action' => 'delete']),
+                //todo,后续如果用数据库存储，则需要返回对应的id，方便删除
+                'key' => $saveFile,
+            ];
         }
-        //返回正确信息
-        $saveFile = $this->path . $newName . '.' . $fileInstance->extension;
         return [
-            'initialPreview' => [
-                $saveFile//必须返回数据才能调用ajax删除
-            ],
-            'initialPreviewConfig' => [
-                [
-                    'caption' => $newName . '.' . $fileInstance->extension,
-                    'url' => Url::to(['upload', 'action' => 'delete']),
-                    //todo,后续如果用数据库存储，则需要返回对应的id，方便删除
-                    'key' => $saveFile
-                ]
-            ],
-            'key' => $saveFile//单独自定义，不用上面的值了
+            'initialPreview' => $saveFiles, //必须返回数据才能调用ajax删除
+            'initialPreviewConfig' => $configs,
+            'keys' => $saveFiles//单独自定义，不用上面的值了
         ];
     }
 

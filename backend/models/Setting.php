@@ -15,6 +15,7 @@ use yii\caching\DbDependency;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\web\JsExpression;
 
 /**
  * This is the model class for table "{{%setting}}".
@@ -430,46 +431,48 @@ class Setting extends \yii\db\ActiveRecord
                         ],
                         'showPreview' => true,
                         'showClose' => false,
+                        'showUpload' => false,//异步上传时，批量上传很大概率会出现第一个被第二个覆盖的bug，所以这里设置只能单个点击上传
                         'initialPreview' => empty($value) ? [] : $valueArr,
                         'initialPreviewConfig' => $initialPreviewConfig,
                         'initialPreviewAsData' => true,
                         'overwriteInitial' => $multiple ? false : true,//多文件不覆盖原有的，单文件覆盖
                     ],
                     'pluginEvents' => [
-                        //批量上传按钮
-                        'filebatchuploadcomplete' => "function (event, files, extra){
-                        var arr=[];
-                        $('.field-setting-".$alias." .kv-file-remove').each(function(){
-                            var key=$(this).data('key');
-                            if(key && arr.indexOf(key)=='-1'){
-                                arr.push(key)
-                            }
-                        })
-                        $('input[type=\'hidden\'][name=\'" . $name . "\']').val(arr.join(','));
-                       }",
                         //单个点击上传完毕后给隐藏表单赋值
-                        'fileuploaded' => "function (event,data){
-                        var arr=[];
-                        $('.field-setting-".$alias." .kv-file-remove').each(function(){
-                            var key=$(this).data('key');
-                            if(key && arr.indexOf(key)=='-1'){
-                                arr.push(key)
+                        'fileuploaded' => new JsExpression("function (event,data,previewId,index){
+                            var hiddenEle=$('input[type=\'hidden\'][name=\'" . $name . "\']');
+                            var hiddenValue=hiddenEle.val();
+                            var key=data.response.key;
+                            if(hiddenValue){
+                                hiddenValue=hiddenValue+','+key;
+                            }else{
+                                hiddenValue=key;
                             }
-                        })
-                        $('input[type=\'hidden\'][name=\'" . $name . "\']').val(arr.join(','));
-                       }",
-                        //单个点击删除时清空隐藏表单(由于触发时，kv-file-remove还存在，所以需要去除本身)
-                        'filedeleted' => "function (event,key,jqXHR,data){
-                        var arr=[];
-                        var self=key;
-                        $('.field-setting-".$alias." .kv-file-remove').each(function(){
-                            var key=$(this).data('key');
-                            if(key && key!=self && arr.indexOf(key)=='-1'){
-                                arr.push(key)
+                            hiddenEle.val(hiddenValue);
+                       }"),
+                        //移动排序后交换隐藏表单值的位置
+                        'filesorted' => new JsExpression("function (event,params){
+                            var hiddenEle=$('input[type=\'hidden\'][name=\'" . $name . "\']');
+                            var hiddenValue=hiddenEle.val();
+                            var hiddenValueArr=hiddenValue.split(',');
+                            var oldIndex=params.oldIndex;
+                            var newIndex=params.newIndex;
+                            var tmp=hiddenValueArr[oldIndex];
+                            hiddenValueArr[oldIndex]=hiddenValueArr[newIndex];
+                            hiddenValueArr[newIndex]=tmp;
+                            hiddenEle.val(hiddenValueArr.join(','));
+                       }"),
+                        //单个点击删除时移除本隐藏表单值
+                        'filedeleted' => new JsExpression("function (event,key,jqXHR,data){
+                            var hiddenEle=$('input[type=\'hidden\'][name=\'" . $name . "\']');
+                            var hiddenValue=hiddenEle.val();
+                            var hiddenValueArr=hiddenValue.split(',');
+                            var index=$.inArray(key,hiddenValueArr);
+                            if(index!==-1){
+                                hiddenValueArr.splice(index,1);
+                                hiddenEle.val(hiddenValueArr.join(','));
                             }
-                        })
-                        $('input[type=\'hidden\'][name=\'" . $name . "\']').val(arr.join(','));
-                       }",
+                       }"),
                     ]
                 ]);
                 break;

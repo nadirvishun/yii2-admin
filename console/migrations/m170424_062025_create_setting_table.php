@@ -34,7 +34,7 @@ class m170424_062025_create_setting_table extends Migration
         $this->createTable(self::TBL_NAME, [
             'id' => $this->primaryKey()->comment('配置ID'),
             'pid' => $this->integer()->notNull()->defaultValue(0)->comment('父ID'),
-            'name' => $this->string(64)->notNull()->defaultValue(0)->comment('配置名称'),
+            'name' => $this->string(64)->notNull()->defaultValue('')->comment('配置名称'),
             'alias' => $this->string(64)->notNull()->unique()->defaultValue('')->comment('配置别名'),
             'type' => $this->tinyInteger()->notNull()->defaultValue(1)->comment('类别，例如1代表text，2代表radio等'),
             'value' => $this->text()->notNull()->comment('值'),
