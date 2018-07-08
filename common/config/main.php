@@ -28,6 +28,23 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        //方便清理其它模块的缓存,也方便在命令行中yii cache/flush-all 可以清除全部的缓存
+        'cacheConsole' => [
+            'class' => 'yii\caching\FileCache',
+            'cachePath' => '@console/runtime/cache'
+        ],
+        'cacheFrontend' => [
+            'class' => 'yii\caching\FileCache',
+            'cachePath' => '@frontend/runtime/cache'
+        ],
+        'cacheBackend' => [
+            'class' => 'yii\caching\FileCache',
+            'cachePath' => '@backend/runtime/cache'
+        ],
+        'cacheApi' => [
+            'class' => 'yii\caching\FileCache',
+            'cachePath' => '@api/runtime/cache'
+        ],
         //相关格式默认值,否则默认英文类的格式，调用Yii::$app->formatter->asDateTime()等函数时还需要设置第二个参数
         'formatter' => [
             'dateFormat' => 'yyyy-MM-dd',
