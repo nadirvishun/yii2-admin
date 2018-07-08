@@ -46,7 +46,7 @@ class SettingController extends BaseController
             foreach ($settings as $key => $value) {
                 //如果是checkboxlist类似的数组形式，则用json存储
                 if (is_array($value)) {
-                    $value = json_encode($value);
+                    $value = json_encode($value,JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
                 }
                 Setting::updateAll(['value' => $value], ['alias' => $key]);
             }
@@ -149,7 +149,7 @@ class SettingController extends BaseController
             }
             $data['model'] = $model;
             //用于给js赋值，切换不同的提示信息
-            $data['placeholderOptions'] = json_encode(Setting::getPlaceholderOptions());
+            $data['placeholderOptions'] = json_encode(Setting::getPlaceholderOptions(),JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             return $this->render('create', $data);
         }
     }
@@ -169,7 +169,7 @@ class SettingController extends BaseController
             return $this->redirectSuccess(['index'], Yii::t('common', 'Update Success'));
         } else {
             //用于给js赋值，切换不同的提示信息
-            $placeholderOptions = json_encode(Setting::getPlaceholderOptions());
+            $placeholderOptions = json_encode(Setting::getPlaceholderOptions(),JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             return $this->render('update', [
                 'model' => $model,
                 'placeholderOptions' => $placeholderOptions

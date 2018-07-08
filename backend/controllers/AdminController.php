@@ -103,7 +103,7 @@ class AdminController extends BaseController
                 'admin_id' => $id,
                 'roles' => $roles
             ];
-            AdminLog::saveAdminLog(Admin::className(), AdminLog::TYPE_UPDATE, json_encode($description), $title);
+            AdminLog::saveAdminLog(Admin::className(), AdminLog::TYPE_UPDATE, json_encode($description,JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), $title);
 
             $url = $this->getReferrerUrl('admin-role');
             return $this->redirectSuccess($url, Yii::t('admin', 'Set Role Success'));

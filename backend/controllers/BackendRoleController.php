@@ -82,7 +82,7 @@ class BackendRoleController extends BaseController
                     'role' => $name,
                     'permissions' => $permissions
                 ];
-                AdminLog::saveAdminLog(BackendRole::className(), AdminLog::TYPE_UPDATE, json_encode($description), $title);
+                AdminLog::saveAdminLog(BackendRole::className(), AdminLog::TYPE_UPDATE, json_encode($description,JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), $title);
 
                 $transaction->commit();
                 $url = $this->getReferrerUrl('backend-role-auth');

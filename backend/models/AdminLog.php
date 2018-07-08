@@ -94,7 +94,7 @@ class AdminLog extends \yii\db\ActiveRecord
             foreach ($event->sender as $key => $value) {
                 $arr[$key] = $value;
             }
-            $description = json_encode($arr);
+            $description = json_encode($arr,JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             static::saveAdminLog($modelName, self::TYPE_INSERT, $description);
         }
     }
@@ -113,7 +113,7 @@ class AdminLog extends \yii\db\ActiveRecord
             foreach ($event->sender as $key => $value) {
                 $arr['oldAttributes'][$key] = $value;
             }
-            $description = json_encode($arr);
+            $description = json_encode($arr,JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             //模型名称
             $modelName = get_class($event->sender);
             //管理员登陆修改标题名称，而不是统一的更新xxx
@@ -138,7 +138,7 @@ class AdminLog extends \yii\db\ActiveRecord
         foreach ($event->sender as $key => $value) {
             $arr[$key] = $value;
         }
-        $description = json_encode($arr);
+        $description = json_encode($arr,JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         //模型名称
         $modelName = get_class($event->sender);
         static::saveAdminLog($modelName, self::TYPE_DELETE, $description);
